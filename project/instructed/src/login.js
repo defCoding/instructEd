@@ -1,15 +1,22 @@
 import React from 'react';
 
 export default class Login extends React.Component {
-    state = {
-        userName: '',
-        password: ''
+    constructor() {
+      super();
+      this.state = {
+          userName: '',
+          password: ''
+      };
     }
 
-    change = e => {
+    change = ({ target }) => {
         this.setState({
-            [e.target.name]: e.target.value
+            [target.name]: target.value
         });
+    };
+
+    onSubmit = () => {
+      console.log(this.state);
     };
 
     render() {
@@ -17,18 +24,19 @@ export default class Login extends React.Component {
             <form>
                 <input 
                     name="userName"
-                    placeholder='userName' 
+                    placeholder="Username"
                     value={this.state.userName}
-                    onChange={e => this.change(e)} 
-                /><br/>
+                    onChange={this.change} 
+                />
+                <br />
                 <input 
                     name="password"
-                    placeholder="password" 
+                    placeholder="Password" 
                     value={this.state.password}
-                    onChange={e => this.change(e)}  
+                    onChange={this.change}  
                 />
-                <br/>
-                <button onClick = {() => this.onSubmit()}>Submit</button>
+                <br />
+                <button onClick={this.onSubmit}>Submit</button>
             </form>
         )
     }
