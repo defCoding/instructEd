@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 export default class Registration extends React.Component {
   constructor() {
@@ -19,8 +20,14 @@ export default class Registration extends React.Component {
     });
   };
 
-  onSubmit = () => {
-    console.log(this.state);
+  onSubmit = (e) => {
+    e.preventDefault();
+    if (this.state.password != this.state.confirmPassword) {
+      console.log("PASSWORD IS NOT THE SAME!");
+    } else {
+      axios.post('/', this.state);
+      console.log(this.state);
+    }
   };
 
 
@@ -43,6 +50,7 @@ export default class Registration extends React.Component {
         <br />
         <input
           name="email"
+          type="email"
           placeholder="email@email.com"
           value={this.state.email}
           onChange={this.change}
