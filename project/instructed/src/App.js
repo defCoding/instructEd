@@ -1,8 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Registration from "./registration";
-import Login from "./login";
+import Registration from "./components/registration";
+import Login from "./components/login";
 
 function App() {
   return (
