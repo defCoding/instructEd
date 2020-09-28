@@ -1,10 +1,19 @@
 import React from 'react';
-import {BrowserRouter, Route} from 'react-router-dom';
+import Navbar from './components/Navbar';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
+import Login from './components/pages/Login'
 
 function App() {
   return (
-    <h1>Hello</h1>
+    <>
+      <Router>
+        <Navbar />
+        <Switch>
+          <Route path="/" exact component={Login} />
+        </Switch>
+      </Router>
+    </>
   );
 }
 
