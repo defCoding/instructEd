@@ -1,9 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import '../../styles/LoginAndRegistration.css';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 
 export default class Registration extends React.Component {
   constructor() {
@@ -39,8 +39,9 @@ export default class Registration extends React.Component {
     return (
       <>
       <div>
-        <Typography variant="h1">Sign Up</Typography>
+        <Typography variant="h2">Sign Up</Typography>
           <form>
+
             <TextField
               name="firstName"
               placeholder="First Name"
@@ -86,9 +87,9 @@ export default class Registration extends React.Component {
               onChange={this.change}
             />
             <br />
-            <button onClick={this.onSubmit}>Submit</button>
+            <Button size="medium" variant="outlined" onClick={this.onSubmit}>Submit</Button>
           </form>
-          <Link to="/login"><Typography>Login to account</Typography></Link>
+          <Link to="/login"><Typography variant="overline">Login to account</Typography></Link>
       </div>
       </>
     );
