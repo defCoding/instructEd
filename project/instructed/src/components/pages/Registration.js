@@ -1,5 +1,7 @@
 import React from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import '../../styles/LoginAndRegistration.css';
 
 export default class Registration extends React.Component {
   constructor() {
@@ -33,54 +35,60 @@ export default class Registration extends React.Component {
 
   render() {
     return (
-      <form>
-        <input
-          name="firstName"
-          placeholder="First Name"
-          value={this.state.firstName}
-          onChange={this.change}
-        />
-        <br />
-        <input
-          name="lastName"
-          placeholder="Last Name"
-          value={this.state.lastName}
-          onChange={this.change}
-        />
-        <br />
-        <input
-          name="email"
-          type="email"
-          placeholder="email@email.com"
-          value={this.state.email}
-          onChange={this.change}
-        />
-        <br />
-        <input
-          name="userName"
-          placeholder="Username"
-          value={this.state.userName}
-          onChange={this.change}
-        />
-        <br />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          value={this.state.password}
-          onChange={this.change}
-        />
-        <br />
-        <input
-          name="confirmPassword"
-          type="password"
-          placeholder="Confirm Password"
-          value={this.state.confirmPassword}
-          onChange={this.change}
-        />
-        <br />
-        <button onClick={this.onSubmit}>Submit</button>
-      </form>
+      <>
+      <div>
+        <h1 className="vertical-center">Sign Up</h1>
+          <form>
+            <input
+              name="firstName"
+              placeholder="First Name"
+              value={this.state.firstName}
+              onChange={this.change}
+            />
+            <br />
+            <input
+              name="lastName"
+              placeholder="Last Name"
+              value={this.state.lastName}
+              onChange={this.change}
+            />
+            <br />
+            <input
+              name="email"
+              type="email"
+              placeholder="email@email.com"
+              value={this.state.email}
+              onChange={this.change}
+            />
+            <br />
+            <input
+              name="userName"
+              placeholder="Username"
+              value={this.state.userName}
+              onChange={this.change}
+            />
+            <br />
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              value={this.state.password}
+              onChange={this.change}
+            />
+            <br />
+            <input
+              name="confirmPassword"
+              type="password"
+              placeholder="Confirm Password"
+              value={this.state.confirmPassword}
+              onChange={this.change}
+            />
+            <br />
+            <button onClick={this.onSubmit}>Submit</button>
+          </form>
+          <Link to="/login">Login to account</Link>
+      </div>
+      </>
     );
   }
 }
