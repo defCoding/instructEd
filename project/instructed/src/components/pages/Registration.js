@@ -5,17 +5,14 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-export default class Registration extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      userName: '',
-      password: '',
-      confirmPassword: ''
-    }
+export class Registration extends React.Component {
+  state = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    userName: '',
+    password: '',
+    confirmPassword: ''
   }
 
   change = ({ target }) => {
@@ -96,3 +93,4 @@ export default class Registration extends React.Component {
   }
 }
 
+export default Registration
