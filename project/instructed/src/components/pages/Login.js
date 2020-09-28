@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/LoginAndRegistration.css';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 
 export default class Login extends React.Component {
     constructor() {
@@ -25,16 +27,16 @@ export default class Login extends React.Component {
         return (
           <>
           <div>
-            <h1>Login</h1>
+            <Typography variant="h1">Login</Typography>
               <form>
-                  <input 
+                  <TextField
                     name="userName"
                     placeholder="Username"
                     value={this.state.userName}
                     onChange={this.change} 
                   />
                   <br />
-                  <input 
+                  <TextField 
                     name="password"
                     type="password"
                     placeholder="Password" 
@@ -44,7 +46,7 @@ export default class Login extends React.Component {
                   <br />
                   <button onClick={this.onSubmit}>Submit</button>
                 </form>
-                <Link to="/registration">Create an account</Link>
+                <Link to="/registration"><Typography>Create an account</Typography></Link>
           </div>
           </>
         )

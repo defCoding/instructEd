@@ -2,6 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import '../../styles/LoginAndRegistration.css';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
 
 export default class Registration extends React.Component {
   constructor() {
@@ -37,23 +39,23 @@ export default class Registration extends React.Component {
     return (
       <>
       <div>
-        <h1 className="vertical-center">Sign Up</h1>
+        <Typography variant="h1">Sign Up</Typography>
           <form>
-            <input
+            <TextField
               name="firstName"
               placeholder="First Name"
               value={this.state.firstName}
               onChange={this.change}
             />
             <br />
-            <input
+            <TextField
               name="lastName"
               placeholder="Last Name"
               value={this.state.lastName}
               onChange={this.change}
             />
             <br />
-            <input
+            <TextField
               name="email"
               type="email"
               placeholder="email@email.com"
@@ -61,14 +63,14 @@ export default class Registration extends React.Component {
               onChange={this.change}
             />
             <br />
-            <input
+            <TextField
               name="userName"
               placeholder="Username"
               value={this.state.userName}
               onChange={this.change}
             />
             <br />
-            <input
+            <TextField
               name="password"
               type="password"
               placeholder="Password"
@@ -76,7 +78,7 @@ export default class Registration extends React.Component {
               onChange={this.change}
             />
             <br />
-            <input
+            <TextField
               name="confirmPassword"
               type="password"
               placeholder="Confirm Password"
@@ -86,7 +88,7 @@ export default class Registration extends React.Component {
             <br />
             <button onClick={this.onSubmit}>Submit</button>
           </form>
-          <Link to="/login">Login to account</Link>
+          <Link to="/login"><Typography>Login to account</Typography></Link>
       </div>
       </>
     );
