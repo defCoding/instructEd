@@ -24,7 +24,8 @@ export default class Registration extends React.Component {
     e.preventDefault();
     if (this.state.password !== this.state.confirmPassword) {
       console.log("PASSWORD IS NOT THE SAME!");
-    } else {
+    } 
+    else {
       axios.post('/', this.state);
       console.log(this.state);
     }
