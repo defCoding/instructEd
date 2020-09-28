@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
 export default class Login extends React.Component {
     constructor() {
@@ -38,6 +39,7 @@ export default class Login extends React.Component {
                 />
                 <br />
                 <button onClick={this.onSubmit}>Submit</button>
+                <Link to="/registration">Create an account</Link>
             </form>
         )
     }
