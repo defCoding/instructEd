@@ -1,5 +1,29 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+
+/* function Login() {
+  return (
+    <>
+    <div className="input-areas">
+      <form>
+      <input 
+        name="userName"
+        placeholder="Username"
+      /><br />
+      <input 
+        name="password"
+        type="password"
+        placeholder="Password"
+      /><br />
+      <button>Submit</button>
+      </form>
+    </div>
+    </>
+  )
+}
+
+export default Login; */
+
+
 
 export default class Login extends React.Component {
     constructor() {
