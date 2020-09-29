@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Button, Typography, Grid, TextField, Paper } from '@material-ui/core';
+import { Link as MuiLink, Button, Typography, Grid, TextField, Paper } from '@material-ui/core';
 import useForm from './useForm';
+import { Link } from 'react-router-dom';
 
 const initialValues = {
   userName: '',
@@ -19,19 +20,27 @@ export default function Login() {
   const onSubmit = () => {
     console.log(values.state)
   };
+  const preventDefault = (event) => event.preventDefault();
 
   return (
     <>
-      <Paper>
+      <Paper className={classes.paper}>
         <form className={classes.root}>
-          <Grid container>
+          <Grid 
+            container
+            direction="column"
+            justify="flex-start"
+            alignItems="center"
+            >
             <Grid item xs={12} className={classes.title}>
               <Typography
                 variant="h1">
                 Login
               </Typography>
             </Grid>
-            <Grid item xs={12} className={classes.form}>
+            <Grid item 
+              xs={12} 
+              className={classes.form}>
               <TextField 
                 variant="outlined"
                 label="Username"
@@ -39,6 +48,10 @@ export default function Login() {
                 value={values.userName}
                 onChange={handleInputChange}
               />
+            </Grid>
+            <Grid item 
+              xs={12} 
+              className={classes.form}>
               <TextField 
                 variant="outlined"
                 label="Password"
@@ -48,7 +61,9 @@ export default function Login() {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} className={classes.submit}>
+            <Grid item 
+              xs={12} 
+              className={classes.submit}>
               <Button
                 variant="contained"
                 color="primary"
@@ -57,98 +72,29 @@ export default function Login() {
                 Submit
               </Button>
             </Grid>
+            <Grid item 
+              xs={12} 
+              className={classes.link}>
+              <MuiLink 
+                component={Link} 
+                to="/Registration"
+                variant="body1">
+                Create account
+              </MuiLink>
+            </Grid>
+            <Grid item 
+              xs={12} 
+              className={classes.link}>
+              <MuiLink 
+                component={Link}
+                to="/ForgotPassword"
+                variant="body1">
+                Forgot password?
+              </MuiLink>
+            </Grid>
           </Grid>
         </form>
       </Paper>
     </>
   )
 }
-
-
-/* import React from 'react'; 
-import { Link } from 'react-router-dom';
-import Typography from '@material-ui/core/Typography';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core';
-
-export default function Login {
-  state = {
-    userName: '',
-    password: ''
-  }
-
-  change = ({ target }) => {
-    this.setState({
-      [target.name]: target.value
-    });
-  };
-
-  onSubmit = () => {
-    console.log(this.state);
-  };
-
-  return (
-    <form className={classes.root}>
-      <Grid container
-
-    </form>
-  )
-    return (
-      <>
-      <div>
-        <Typography 
-          variant="h2">
-            Login
-        </Typography>
-          <form>
-            <TextField
-              name="userName"
-              placeholder="Username"
-              variant="outlined"
-              style={styles.TextField}
-              value={this.state.userName}
-              onChange={this.change} 
-            />
-            <br />
-            <TextField 
-              name="password"
-              type="password"
-              variant="outlined"
-              style={styles.TextField}
-              placeholder="Password" 
-              value={this.state.password}
-              onChange={this.change}  
-            />
-            <br />
-            <Button 
-              size="medium" 
-              variant="outlined" 
-              style={styles.button}
-              onClick={this.onSubmit}>
-                Submit
-            </Button>
-          </form>
-          <Link 
-            to="/registration">
-              <Typography 
-                variant="overline">
-                  Create an account
-              </Typography>
-          </Link>
-      </div>
-      </>
-    )
-  }
-}
-
-const styles = {
-  button: {
-    margin: 25
-  },
-  TextField: {
-    margin: 7
-  }
-}
-
-export default Login */

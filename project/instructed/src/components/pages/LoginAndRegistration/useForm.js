@@ -12,14 +12,24 @@ export default function useForm(initialValues) {
     })
   }
   const useStyle = makeStyles(theme => ({
+    paper: {
+      margin: theme.spacing(3)
+    },
     root: {
-      '& .MuiFormControl-root': {
-        width:'80%',
-        margin:theme.spacing(1)
-      }
+      margin:theme.spacing(1)
     },
     title: {
-      color: 'blue'
+      color: 'blue',
+      margin:theme.spacing(1)
+    },
+    form: {
+      margin:theme.spacing(1)
+    },
+    submit: {
+      margin:theme.spacing(1)
+    },
+    link: {
+      margin:theme.spacing(0.5)
     }
   }))
 
