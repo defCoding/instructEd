@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Link as MuiLink, Button, Typography, Grid, TextField, Paper } from '@material-ui/core';
 import useForm from './useForm';
 import { Link } from 'react-router-dom';
+import Navbar from './Navbar';
 
 const initialValues = {
   userName: '',
@@ -9,7 +10,7 @@ const initialValues = {
 }
 
 export default function Login() {
-
+  
   const {
     values,
     setValues,
@@ -24,6 +25,7 @@ export default function Login() {
 
   return (
     <>
+      <Navbar />
       <Paper className={classes.paper}>
         <form className={classes.root}>
           <Grid 
@@ -66,8 +68,8 @@ export default function Login() {
               className={classes.submit}>
               <Button
                 variant="contained"
-                color="primary"
                 size="large"
+                color="secondary"
                 onClick={onSubmit}>
                 Submit
               </Button>
@@ -78,7 +80,8 @@ export default function Login() {
               <MuiLink 
                 component={Link} 
                 to="/Registration"
-                variant="body1">
+                variant="body1"
+                color="secondary">
                 Create account
               </MuiLink>
             </Grid>
@@ -88,7 +91,8 @@ export default function Login() {
               <MuiLink 
                 component={Link}
                 to="/ForgotPassword"
-                variant="body1">
+                variant="body1"
+                color="secondary">
                 Forgot password?
               </MuiLink>
             </Grid>

@@ -3,6 +3,7 @@ import React from 'react'
 import useForm from './useForm';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Navbar from './Navbar';
 
 const initialValues = {
   firstName: '',
@@ -36,6 +37,7 @@ export default function Registration() {
 
   return (
     <>
+      <Navbar />
       <Paper className={classes.paper}>
         <form className={classes.root}>
           <Grid 
@@ -124,7 +126,7 @@ export default function Registration() {
               className={classes.submit}>
               <Button
                 variant="contained"
-                color="primary"
+                color='secondary'
                 size="large"
                 onClick={onSubmit}>
                 Submit
@@ -136,7 +138,8 @@ export default function Registration() {
               <MuiLink 
                 component={Link}
                 to="/Login"
-                variant="body1">
+                variant="body1"
+                color="secondary">
                 Already have an account?
               </MuiLink>
             </Grid>

@@ -18,17 +18,21 @@ export default function useForm(initialValues) {
     root: {
       margin:theme.spacing(1)
     },
+    navbar: {
+      margin:theme.spacing(0)
+    },
     title: {
-      color: 'blue',
+      color: 'secondary',
       margin:theme.spacing(1)
     },
     form: {
-      margin:theme.spacing(1)
+      margin:theme.spacing(0.75)
     },
     submit: {
       margin:theme.spacing(1)
     },
     link: {
+      color:'secondary',
       margin:theme.spacing(0.5)
     }
   }))
