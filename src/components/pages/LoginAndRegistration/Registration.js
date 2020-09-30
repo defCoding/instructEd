@@ -1,4 +1,4 @@
-import { Link as MuiLink, Paper, Button, Grid, TextField, Typography } from '@material-ui/core';
+import { Link as MuiLink, Paper, Button, Grid, TextField, Typography, InputLabel } from '@material-ui/core';
 import React from 'react'
 import useForm from './useForm';
 import axios from 'axios';
@@ -10,7 +10,11 @@ const initialValues = {
   lastName: '',
   email: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
+  securityQuestion1: '',
+  securityAnswer1: '',
+  securityQuestion2: '',
+  securityAnswer2: ''
 }
 
 export default function Registration() {
@@ -37,92 +41,34 @@ export default function Registration() {
   return (
     <>
       <Navbar />
-      <form>
-        <Grid container>
-          <Grid item xs={6}>
-            <TextField variant="outlined" label="First Name" name="firstName" value={values.firstName} onChange={handleInputChange} className={classes.textFieldForm}/>
-            <TextField variant="outlined" label="Last Name" name="lastName" value={values.lastName} onChange={handleInputChange} className={classes.textFieldForm}/>
+      <Paper className={classes.paperContent}>
+        <form className={classes.root}>
+          <Grid container justify="center">
+            <Typography variant="h1">Create Account</Typography>
           </Grid>
-          <Grid item xs={6}></Grid>
-        </Grid>
-      </form>
+          <Grid container>
+            <Grid item xs={6}>
+              <TextField variant="outlined" label="First Name" name="firstName" value={values.firstName} onChange={handleInputChange} className={classes.textFieldForm}/>
+              <TextField variant="outlined" label="Last Name" name="lastName" value={values.lastName} onChange={handleInputChange} className={classes.textFieldForm}/>
+              <TextField variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
+              <TextField variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
+              <TextField variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField variant="outlined" label="Security Question 1" name="securityQuestion1" value={values.securityQuestion1} onChange={handleInputChange} className={classes.textFieldForm}/>
+              <TextField variant="outlined" label="Security Answer 1" name="securityAnswer1" value={values.securityAnswer1} onChange={handleInputChange} className={classes.textFieldForm} />
+              <TextField variant="outlined" label="Security Question 2" name="securityQuestion2" value={values.securityQuestion2} onChange={handleInputChange} className={classes.textFieldForm} />
+              <TextField variant="outlined" label="Security Answer 2" name="securityQuestion2" value={values.securityQuestion2} onChange={handleInputChange} className={classes.textFieldForm} />
+            </Grid>
+          </Grid>
+          <Grid container justify="center">
+            <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
+          </Grid>
+          <Grid container justify="center">
+            <MuiLink component={Link} to="/login" variant="body1" color="primary" className={classes.extraItemsForm}>Already have an account?</MuiLink>
+          </Grid>
+        </form>
+      </Paper>
     </>
   )
 }
-
-
-/*
-<Grid item xs={11}>
-              <Typography
-                variant="h1">
-                Create Account
-              </Typography>
-            </Grid>
-            <Grid item
-              xs={6}
-              className={classes.form}>
-            <TextField
-              variant="outlined"
-              label="First Name"
-              name="firstName"
-              className={classes.form}
-              value={values.firstName}
-              onChange={handleInputChange}
-            />
-            <TextField 
-              variant="outlined"
-              label="Last Name"
-              name="lastName"
-              value={values.lastName}
-              className={classes.form}
-              onChange={handleInputChange}
-            />
-            <TextField 
-              variant="outlined"
-              label="Email"
-              name="email"
-              value={values.email}
-              className={classes.form}
-              onChange={handleInputChange}
-            />
-            <TextField 
-              variant="outlined"
-              label="Password"
-              name="password"
-              type="password"
-              value={values.password}
-              className={classes.form}
-              onChange={handleInputChange}
-            />
-            <TextField 
-              variant="outlined"
-              label="Confirm Password"
-              name="confirmPassword"
-              type="password"
-              value={values.confirmPassword}
-              className={classes.form}
-              onChange={handleInputChange}
-            />
-            </Grid>
-            <Grid item 
-              xs={12} 
-              className={classes.submit}>
-              <Button
-                variant="contained"
-                size="large"
-                onClick={onSubmit}>
-                Submit
-              </Button>
-            </Grid>
-            <Grid item 
-              xs={12} 
-              className={classes.link}>
-              <MuiLink 
-                component={Link}
-                to="/Login"
-                variant="body1"
-                color="secondary">
-                Already have an account?
-              </MuiLink>
-            </Grid>
-*/

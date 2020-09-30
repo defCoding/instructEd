@@ -12,11 +12,16 @@ export default function useForm(initialValues) {
     })
   }
   const useStyle = makeStyles(theme => ({
-    paper: {
-      margin: theme.spacing(3)
-    },
     root: {
-      margin:theme.spacing(1)
+      '& .MuiFormControl-root': {
+        width:'95%',
+        margin:theme.spacing(1),
+        display:'flex'
+      }
+    },
+    paperContent: {
+      margin: theme.spacing(4),
+      padding: theme.spacing(2)
     },
     navbar: {
       margin:theme.spacing(0)
@@ -27,11 +32,8 @@ export default function useForm(initialValues) {
     textFieldForm: {
       margin:theme.spacing(1)
     },
-    submit: {
+    extraItemsForm: {
       margin:theme.spacing(1)
-    },
-    link: {
-      margin:theme.spacing(0.5)
     }
   }))
 
