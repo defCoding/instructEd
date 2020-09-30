@@ -1,5 +1,5 @@
 import React from 'react'
-import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem, Link as MuiLink } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem } from '@material-ui/core';
 import useForm from './useForm';
 import MenuIcon from '@material-ui/icons/Menu'
 import { Link } from 'react-router-dom';
@@ -20,19 +20,6 @@ export default function Navbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const sendToLogin = () => {
-    return <Link to="/login" />
-  }
-
-  const sendToRegistration = () => {
-    return <Link to="/registration" />
-  }
-
-  const sendToForgotPassword = () => {
-    return <Link to="/forgotpassword" />
-  }
-
 
   const {
     useStyle
