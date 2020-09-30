@@ -13,3 +13,11 @@ CREATE TABLE Users (
   oauth text,
   PRIMARY KEY (id)
 );
+
+CREATE TABLE PasswordTokens (
+  id uuid NOT NULL,
+  token VARCHAR(40),
+  expiration TIMESTAMP,
+  PRIMARY KEY (token),
+  FOREIGN KEY (id) REFERENCES Users (id)
+);

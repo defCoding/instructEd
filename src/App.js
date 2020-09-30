@@ -20,12 +20,12 @@ function App() {
     <>
       <MuiThemeProvider theme={theme}>
         <Router>
-            <Switch>
-              <Route path="/" exact component={Login} />
-              <Route path="/login" exact component={Login} />
-              <Route path='/registration' component={Registration} />
-            </Switch>
-          </Router>
+          <Switch>
+            <Route path="/" exact component={Login} />
+            <Route path="/login" exact component={Login} />
+            <Route path='/registration' component={Registration} />
+          </Switch>
+        </Router>
       </MuiThemeProvider>
     </>
   );
