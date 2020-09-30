@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Login from './components/pages/LoginAndRegistration/Login'
 import Registration from './components/pages/LoginAndRegistration/Registration';
+import ForgotPassword from './components/pages/LoginAndRegistration/ForgotPassword';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 
 const theme = createMuiTheme({
@@ -20,12 +21,13 @@ function App() {
     <>
       <MuiThemeProvider theme={theme}>
         <Router>
-          <Switch>
-            <Route path="/" exact component={Login} />
-            <Route path="/login" exact component={Login} />
-            <Route path='/registration' component={Registration} />
-          </Switch>
-        </Router>
+            <Switch>
+              <Route path="/" exact component={Login} />
+              <Route path="/login" exact component={Login} />
+              <Route path='/registration' component={Registration} />
+              <Route path='/forgotpassword' component={ForgotPassword} />
+            </Switch>
+          </Router>
       </MuiThemeProvider>
     </>
   );
