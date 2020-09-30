@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Navbar from './Navbar';
 
 const initialValues = {
-  userName: '',
+  email: '',
   password: ''
 }
 
@@ -34,7 +34,9 @@ export default function Login() {
             justify="flex-start"
             alignItems="center"
             >
-            <Grid item xs={12} className={classes.title}>
+            <Grid item 
+              xs={12} 
+              className={classes.title}>
               <Typography
                 variant="h1">
                 Login
@@ -45,8 +47,8 @@ export default function Login() {
               className={classes.form}>
               <TextField 
                 variant="outlined"
-                label="Username"
-                name="userName"
+                label="Email"
+                name="email"
                 value={values.userName}
                 onChange={handleInputChange}
               />
@@ -69,7 +71,7 @@ export default function Login() {
               <Button
                 variant="contained"
                 size="large"
-                color="secondary"
+                color="primary"
                 onClick={onSubmit}>
                 Submit
               </Button>

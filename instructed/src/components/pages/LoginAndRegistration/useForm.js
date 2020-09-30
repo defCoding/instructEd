@@ -22,17 +22,15 @@ export default function useForm(initialValues) {
       margin:theme.spacing(0)
     },
     title: {
-      color: 'secondary',
       margin:theme.spacing(1)
     },
-    form: {
-      margin:theme.spacing(0.75)
+    textFieldForm: {
+      margin:theme.spacing(1)
     },
     submit: {
       margin:theme.spacing(1)
     },
     link: {
-      color:'secondary',
       margin:theme.spacing(0.5)
     }
   }))
