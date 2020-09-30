@@ -1,12 +1,38 @@
 import React from 'react'
-import { AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem, Link as MuiLink } from '@material-ui/core';
 import useForm from './useForm';
 import MenuIcon from '@material-ui/icons/Menu'
+import { Link } from 'react-router-dom';
 
 const initialValues = {
 }
 
 export default function Navbar() {
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const sendToLogin = () => {
+    return <Link to="/login" />
+  }
+
+  const sendToRegistration = () => {
+    return <Link to="/registration" />
+  }
+
+  const sendToForgotPassword = () => {
+    return <Link to="/forgotpassword" />
+  }
+
 
   const {
     useStyle
@@ -23,9 +49,24 @@ export default function Navbar() {
         <Toolbar>
         <IconButton 
           edge="start"
-          aria-label="menu">
+          aria-label="menu"
+          onClick={handleClick}>
             <MenuIcon style={{ color:'#ffffff' }} />
         </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          keepMounted
+          open={open}
+          onClose={handleClose}
+          PaperProps={{
+            style: {
+            }
+          }}>
+          <MenuItem component={Link} to="/login">Login</MenuItem>
+          <MenuItem component={Link} to="/registration">Create Account</MenuItem>
+          <MenuItem component={Link} to="/forgotpassword">Forgot Password</MenuItem>
+        </Menu>
+          
         <Typography 
           variant="h6"
           style={{ color:'#ffffff' }}

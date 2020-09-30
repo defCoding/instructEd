@@ -26,78 +26,23 @@ export default function Login() {
   return (
     <>
       <Navbar />
-      <Paper className={classes.paper}>
+      <Paper className={classes.paperContent}>
         <form className={classes.root}>
-          <Grid 
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="center"
-            >
-            <Grid item 
-              xs={12} 
-              className={classes.title}>
-              <Typography
-                variant="h1">
-                Login
-              </Typography>
-            </Grid>
-            <Grid item 
-              xs={12} 
-              className={classes.form}>
-              <TextField 
-                variant="outlined"
-                label="Email"
-                name="email"
-                value={values.userName}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item 
-              xs={12} 
-              className={classes.form}>
-              <TextField 
-                variant="outlined"
-                label="Password"
-                name="password"
-                type="password"
-                value={values.password}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item 
-              xs={12} 
-              className={classes.submit}>
-              <Button
-                variant="contained"
-                size="large"
-                color="primary"
-                onClick={onSubmit}>
-                Submit
-              </Button>
-            </Grid>
-            <Grid item 
-              xs={12} 
-              className={classes.link}>
-              <MuiLink 
-                component={Link} 
-                to="/Registration"
-                variant="body1"
-                color="secondary">
-                Create account
-              </MuiLink>
-            </Grid>
-            <Grid item 
-              xs={12} 
-              className={classes.link}>
-              <MuiLink 
-                component={Link}
-                to="/ForgotPassword"
-                variant="body1"
-                color="secondary">
-                Forgot password?
-              </MuiLink>
-            </Grid>
+          <Grid container justify="center">
+            <Typography variant="h1">Login</Typography>
+          </Grid>
+          <Grid container>
+            <TextField variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
+            <TextField variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
+          </Grid>
+          <Grid container justify="center">
+            <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
+          </Grid>
+          <Grid container justify="center">
+            <MuiLink component={Link} to="/registration" variant="body1" color="primary" className={classes.extraItemsForm}>Sign up for an account</MuiLink>
+          </Grid>
+          <Grid container justify="center">
+            <MuiLink component={Link} to="/forgotpassword" variant="body1" color="primary" className={classes.extraItemsForm}>Forgot password?</MuiLink>
           </Grid>
         </form>
       </Paper>
