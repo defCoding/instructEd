@@ -45,20 +45,12 @@ export default function Registration() {
           <Grid container justify="center">
             <Typography variant="h2" color="primary" className={classes.extraItemsForm}>Create Account</Typography>
           </Grid>
-          <Grid container>
-            <Grid item xs={6}>
-              <TextField variant="outlined" label="First Name" name="firstName" value={values.firstName} onChange={handleInputChange} className={classes.textFieldForm}/>
-              <TextField variant="outlined" label="Last Name" name="lastName" value={values.lastName} onChange={handleInputChange} className={classes.textFieldForm}/>
-              <TextField variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
-              <TextField variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
-              <TextField variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
-            </Grid>
-            <Grid item xs={6}>
-              <TextField variant="outlined" label="Security Question 1" name="securityQuestion1" value={values.securityQuestion1} onChange={handleInputChange} className={classes.textFieldForm}/>
-              <TextField variant="outlined" label="Security Answer 1" name="securityAnswer1" value={values.securityAnswer1} onChange={handleInputChange} className={classes.textFieldForm} />
-              <TextField variant="outlined" label="Security Question 2" name="securityQuestion2" value={values.securityQuestion2} onChange={handleInputChange} className={classes.textFieldForm} />
-              <TextField variant="outlined" label="Security Answer 2" name="securityQuestion2" value={values.securityQuestion2} onChange={handleInputChange} className={classes.textFieldForm} />
-            </Grid>
+          <Grid container justify="center">
+            <TextField variant="outlined" label="First Name" name="firstName" value={values.firstName} onChange={handleInputChange} className={classes.textFieldForm}/>
+            <TextField variant="outlined" label="Last Name" name="lastName" value={values.lastName} onChange={handleInputChange} className={classes.textFieldForm}/>
+            <TextField variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
+            <TextField variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
+            <TextField variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
           </Grid>
           <Grid container justify="center">
             <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>

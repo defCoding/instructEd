@@ -29,7 +29,7 @@ export default function Login() {
           <Grid container justify="center">
             <Typography variant="h2" color="primary" className={classes.extraItemsForm}>Login</Typography>
           </Grid>
-          <Grid container>
+          <Grid container justify="center">
             <TextField variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
             <TextField variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
           </Grid>

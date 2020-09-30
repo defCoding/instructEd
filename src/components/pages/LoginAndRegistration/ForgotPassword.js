@@ -31,6 +31,8 @@ export default function ForgotPassword() {
           </Grid>
           <Grid container justify="center">
             <TextField variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
+          </Grid>
+          <Grid container justify="center">
             <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
           </Grid>
           <Grid container justify="center">
