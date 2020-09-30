@@ -9,7 +9,6 @@ const initialValues = {
   firstName: '',
   lastName: '',
   email: '',
-  userName: '',
   password: '',
   confirmPassword: ''
 }
@@ -38,95 +37,78 @@ export default function Registration() {
   return (
     <>
       <Navbar />
-      <Paper className={classes.paper}>
-        <form className={classes.root}>
-          <Grid 
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="center">
-            <Grid item 
-              xs={12} 
-              className={classes.title}>
+      <form>
+        <Grid container>
+          <Grid item xs={6}>
+            <TextField variant="outlined" label="First Name" name="firstName" value={values.firstName} onChange={handleInputChange} className={classes.textFieldForm}/>
+            <TextField variant="outlined" label="Last Name" name="lastName" value={values.lastName} onChange={handleInputChange} className={classes.textFieldForm}/>
+          </Grid>
+          <Grid item xs={6}></Grid>
+        </Grid>
+      </form>
+    </>
+  )
+}
+
+
+/*
+<Grid item xs={11}>
               <Typography
                 variant="h1">
-                Registration
+                Create Account
               </Typography>
             </Grid>
-            <Grid item 
-              xs={12}
+            <Grid item
+              xs={6}
               className={classes.form}>
-              <TextField
-                variant="outlined"
-                label="First Name"
-                name="firstName"
-                value={values.firstName}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item 
-              xs={12}
-              className={classes.form}>
-              <TextField 
-                variant="outlined"
-                label="Last Name"
-                name="lastName"
-                value={values.lastName}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item 
-              xs={12}
-              className={classes.form}>
-              <TextField 
-                variant="outlined"
-                label="Email"
-                name="email"
-                value={values.email}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item 
-              xs={12}
-              className={classes.form}>
-              <TextField 
-                variant="outlined"
-                label="Username"
-                name="userName"
-                value={values.userName}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item 
-              xs={12}
-              className={classes.form}>
-              <TextField 
-                variant="outlined"
-                label="Password"
-                name="password"
-                type="password"
-                value={values.password}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item 
-              xs={12}
-              className={classes.form}>
-              <TextField 
-                variant="outlined"
-                label="Confirm Password"
-                name="confirmPassword"
-                type="password"
-                value={values.confirmPassword}
-                onChange={handleInputChange}
-              />
+            <TextField
+              variant="outlined"
+              label="First Name"
+              name="firstName"
+              className={classes.form}
+              value={values.firstName}
+              onChange={handleInputChange}
+            />
+            <TextField 
+              variant="outlined"
+              label="Last Name"
+              name="lastName"
+              value={values.lastName}
+              className={classes.form}
+              onChange={handleInputChange}
+            />
+            <TextField 
+              variant="outlined"
+              label="Email"
+              name="email"
+              value={values.email}
+              className={classes.form}
+              onChange={handleInputChange}
+            />
+            <TextField 
+              variant="outlined"
+              label="Password"
+              name="password"
+              type="password"
+              value={values.password}
+              className={classes.form}
+              onChange={handleInputChange}
+            />
+            <TextField 
+              variant="outlined"
+              label="Confirm Password"
+              name="confirmPassword"
+              type="password"
+              value={values.confirmPassword}
+              className={classes.form}
+              onChange={handleInputChange}
+            />
             </Grid>
             <Grid item 
               xs={12} 
               className={classes.submit}>
               <Button
                 variant="contained"
-                color='secondary'
                 size="large"
                 onClick={onSubmit}>
                 Submit
@@ -143,9 +125,4 @@ export default function Registration() {
                 Already have an account?
               </MuiLink>
             </Grid>
-          </Grid>
-        </form>
-      </Paper>
-    </>
-  )
-}
+*/

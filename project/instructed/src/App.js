@@ -6,14 +6,14 @@ import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 
 const theme = createMuiTheme({
   palette: {
-       primary: {
-         main: '#cccccc'
-       },
-       secondary: {
-         main: '#2E4057'
-       }
-     }
-   });
+    primary: {
+      main: '#2E4057'
+    },
+    secondary: {
+      main:'#ffffff'
+    }
+  }
+});
 
 function App() {
   return (

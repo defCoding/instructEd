@@ -1,6 +1,7 @@
 import React from 'react'
-import { AppBar, Toolbar } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import useForm from './useForm';
+import MenuIcon from '@material-ui/icons/Menu'
 
 const initialValues = {
 }
@@ -17,9 +18,20 @@ export default function Navbar() {
     <>
       <AppBar 
         position="static"
-        color="secondary"
-        className={classes.navbar}>
+        className={classes.navbar}
+        color="primary">
         <Toolbar>
+        <IconButton 
+          edge="start"
+          aria-label="menu">
+            <MenuIcon style={{ color:'#ffffff' }} />
+        </IconButton>
+        <Typography 
+          variant="h6"
+          style={{ color:'#ffffff' }}
+          className={classes.title}>
+          instructED
+        </Typography>
         </Toolbar>
       </AppBar>
     </>
