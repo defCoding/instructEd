@@ -1,9 +1,9 @@
 const mysql = require('mysql');
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'kevin',
-  password: '12345',
-  database: 'instructED_1'
+  host: process.env.DATABASE_URL,
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME
 });
 
 connection.connect();
@@ -23,4 +23,3 @@ app.post('/', (req, res) => {
 });
 
 app.listen(process.env.PORT || 3000);
-//app.listen(8080);
