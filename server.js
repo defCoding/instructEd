@@ -17,10 +17,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json())
 
 app.post('/', (req, res) => {
-  const info = req.body;
-  connection.query(`insert into users values('${info.userName}', '${info.email}', '${info.password}', '', '');`, (err) => {
-    console.log(err);
-  });
 });
 
 app.listen(process.env.PORT || 3000);
