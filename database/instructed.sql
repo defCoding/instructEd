@@ -18,3 +18,9 @@ CREATE TABLE PasswordTokens (
   PRIMARY KEY (token),
   FOREIGN KEY (id) REFERENCES Users (id)
 );
+
+CREATE TABLE Roles (
+  id uuid NOT NULL,
+  roles VARCHAR(20),
+  FOREIGN KEY (id) REFERENCES Users (id)
+);

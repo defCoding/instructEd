@@ -18,7 +18,9 @@ export default function Login() {
   } = useForm(initialValues);
   const classes = useStyle();
   const onSubmit = () => {
-    console.log(values.state)
+    axios.post("/login", values).then(response => {
+      console.log(response.data);
+    });
   };
 
   return (
