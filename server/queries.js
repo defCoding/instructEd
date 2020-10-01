@@ -16,8 +16,8 @@ const createUser = ((req, res) => {
   
   client.query(`INSERT INTO Users (default, '${body.email}', '${body.firstname}', '${body.lastname}', crypt('${body.password}', gen_salt('bf')), null);`,
     (err, result) => {
-      if (error) {
-        throw error;
+      if (err) {
+        throw err;
       }
       res.send(`User added with ID: ${result.insertID}`);
     });
