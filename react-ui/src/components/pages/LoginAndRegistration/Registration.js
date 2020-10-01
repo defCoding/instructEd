@@ -28,8 +28,8 @@ export default function Registration() {
       window.alert("Password is not the same");
     } 
     else {
-      axios.post('/users', values.state);
-      console.log(values.state);
+      axios.post('/users', values);
+      console.log(values);
     }
   };
 

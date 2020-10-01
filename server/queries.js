@@ -12,9 +12,11 @@ client.connect(() => {
 });
 
 const createUser = ((req, res) => {
-  const body = req.body;
+  const info = req.body;
+  console.log(`${info.email}`);
+  console.log(`${info.password}`);
   
-  client.query(`INSERT INTO Users values (default, '${body.email}', '${body.firstname}', '${body.lastname}', crypt('${body.password}', gen_salt('bf')), null);`,
+  client.query(`INSERT INTO Users values(default, '${info.email}', '${info.firstname}', '${info.lastname}', crypt('${info.password}', gen_salt('bf')), null);`,
     (err, result) => {
       if (err) {
         throw err;
