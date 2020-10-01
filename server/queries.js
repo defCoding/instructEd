@@ -7,6 +7,7 @@ const client = new Client({
   }
 });
 
+
 client.connect(() => {
   console.log("Connected to database.");
 });
@@ -14,7 +15,7 @@ client.connect(() => {
 const createUser = ((req, res) => {
   const info = req.body;
   
-  client.query(`INSERT INTO Users values(default, '${info.email}', '${info.firstName}', '${info.lastName}', crypt('${info.password}', gen_salt('bf')), null);`,
+  client.query(`INSERT INTO Users VALUES(default, '${info.email}', '${info.firstName}', '${info.lastName}', crypt('${info.password}', gen_salt('bf')), null);`,
     (err, result) => {
       if (err) {
         throw err;
@@ -26,13 +27,14 @@ const createUser = ((req, res) => {
 const loginUser = ((req, res) => {
   const info = req.body;
 
-  client.query(`SELECT * FROM Users where email='${info.email}' and password=crypt('${info.password}', password);`,
+  client.query(`SELECT * FROM Users WHERE email='${info.email}' AND password=crypt('${info.password}', password);`,
     (err, result) => {
+      console.log(result);
       if (err) {
         throw err;
       }
 
-      if (!result.length) {
+      if (!result.rows.length) {
         res.status(403).send('Incorrect email or password.');
       } else {
         res.send('Logged in!');
@@ -43,5 +45,6 @@ const loginUser = ((req, res) => {
 
 
 module.exports = {
-  createUser
+  createUser,
+  loginUser
 };

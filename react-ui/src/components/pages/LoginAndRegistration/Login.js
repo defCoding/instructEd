@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'; 
 import { Link as MuiLink, Button, Typography, Grid, TextField, Paper } from '@material-ui/core';
 import useForm from './useForm';
 import { Link } from 'react-router-dom';
@@ -17,7 +18,8 @@ export default function Login() {
     useStyle
   } = useForm(initialValues);
   const classes = useStyle();
-  const onSubmit = () => {
+  const onSubmit = (e) => {
+    e.preventDefault();
     axios.post("/login", values).then(response => {
       console.log(response.data);
     });

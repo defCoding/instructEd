@@ -29,7 +29,6 @@ export default function Registration() {
     } 
     else {
       axios.post('/users', values);
-      console.log(values);
     }
   };
 
