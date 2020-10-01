@@ -16,7 +16,7 @@ const createUser = ((req, res) => {
   console.log(`${info.email}`);
   console.log(`${info.password}`);
   
-  client.query(`INSERT INTO Users values(default, '${info.email}', '${info.firstname}', '${info.lastname}', crypt('${info.password}', gen_salt('bf')), null);`,
+  client.query(`INSERT INTO Users values(default, '${info.email}', '${info.firstName}', '${info.lastName}', crypt('${info.password}', gen_salt('bf')), null);`,
     (err, result) => {
       if (err) {
         throw err;
