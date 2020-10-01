@@ -12,6 +12,7 @@
     "express": "^4.17.1",
     "fontsource-roboto": "^3.0.3",
     "mysql": "^2.18.1",
+    "pg": "^8.3.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",

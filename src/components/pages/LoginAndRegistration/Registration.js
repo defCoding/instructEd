@@ -11,10 +11,6 @@ const initialValues = {
   email: '',
   password: '',
   confirmPassword: '',
-  securityQuestion1: '',
-  securityAnswer1: '',
-  securityQuestion2: '',
-  securityAnswer2: ''
 }
 
 export default function Registration() {
@@ -32,7 +28,7 @@ export default function Registration() {
       window.alert("Password is not the same");
     } 
     else {
-      axios.post('/', values.state);
+      axios.post('/users', values.state);
       console.log(values.state);
     }
   };
