@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Login from './components/pages/LoginAndRegistration/Login'
-import Registration from './components/pages/LoginAndRegistration/Registration';
-import ForgotPassword from './components/pages/LoginAndRegistration/ForgotPassword';
+import Login from './components/LoginAndRegistration/Login'
+import Registration from './components/LoginAndRegistration/Registration';
+import ForgotPassword from './components/LoginAndRegistration/ForgotPassword';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 
 const theme = createMuiTheme({
