@@ -36,14 +36,17 @@ export default function Login(props) {
 
   const [login, setLogin] = useState(false);
   const [data, setData] = useState({});
+  const [email, setEmail] = useState({});
 
   const responseFacebook = (response) => {
     console.log(response);
     setData(response);
+    setEmail(response);
     if (response.accessToken) {
       setLogin(true);
       console.log(login);
       console.log(data);
+      console.log(email);
     } else {
       setLogin(false);
     }
@@ -65,7 +68,7 @@ export default function Login(props) {
             <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
           </Grid>
           <Grid container justify="center">
-            <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email" scope="public_profile" callback={responseFacebook} icon="fa-facebook" className={classes.extraItemsForm} />
+            <FacebookLogin appId="350577486197278" autoLoad={false} fields="name" scope="public_profile" callback={responseFacebook} icon="fa-facebook" className={classes.extraItemsForm} />
           </Grid>
           <Grid container justify="center">
             <MuiLink component={Link} to="/registration" variant="body1" color="primary" className={classes.links}>Sign up for an account</MuiLink>
