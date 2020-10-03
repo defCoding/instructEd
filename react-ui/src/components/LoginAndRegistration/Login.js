@@ -36,14 +36,17 @@ export default function Login(props) {
 
   const [login, setLogin] = useState(false);
   const [data, setData] = useState({});
+  const [email, setEmail] = useState({});
 
   const responseFacebook = (response) => {
     console.log(response);
     setData(response);
+    setEmail(response);
     if (response.accessToken) {
       setLogin(true);
       console.log(login);
       console.log(data);
+      console.log(email);
     } else {
       setLogin(false);
     }
