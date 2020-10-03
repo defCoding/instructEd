@@ -1,4 +1,6 @@
 const { Client } = require('pg');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
@@ -30,8 +32,7 @@ const createUser = ((req, res) => {
     if (err) {
       res.status(409).send('Email has already been taken by another account.');
     } else {
-      console.log(result);
-      res.send(``);
+      res.send('User created!');
     }
   });
 });
@@ -48,7 +49,11 @@ const loginUser = ((req, res) => {
     } else if (!result.rows.length) {
       res.status(403).send('Incorrect email or password.');
     } else {
-      res.send('Logged in!');
+      // Issue authorization token.
+      const userID = result.rows[0]['id'];
+      const payload = { userID };
+      const token = jwt.sign(payload, process.env.JWT_KEY);
+      res.cookie('LOGIN_TOKEN', token, { httpOnly: true }).status(200).send('Token sent!');
     }
   });
 });

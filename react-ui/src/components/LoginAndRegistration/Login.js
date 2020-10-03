@@ -10,7 +10,7 @@ const initialValues = {
   password: ''
 }
 
-export default function Login() {
+export default function Login(props) {
   
   const {
     values,
@@ -20,9 +20,15 @@ export default function Login() {
   const classes = useStyle();
   const onSubmit = (e) => {
     e.preventDefault();
-    axios.post("/login", values).then(response => {
-      console.log(response.data);
-    });
+    axios.post("/authenticate", values)
+      .then(res => {
+        if (res.status === 200) {
+          props.history.push('/dashboard');
+        }
+      })
+      .catch(err => {
+        alert(err.response.data);
+      });
   };
 
   return (
@@ -49,5 +55,5 @@ export default function Login() {
         </form>
       </Paper>
     </>
-  )
+  );
 }
