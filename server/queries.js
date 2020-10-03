@@ -18,7 +18,7 @@ const createUser = ((req, res) => {
   client.query(`INSERT INTO Users VALUES(default, '${info.email}', '${info.firstName}', '${info.lastName}', crypt('${info.password}', gen_salt('bf')), null);`,
     (err, result) => {
       if (err) {
-        throw err;
+        res.status(409).send('Email has already been taken by another account.');
       }
       res.send(`User added with ID: ${result.insertID}`);
     });
@@ -31,7 +31,7 @@ const loginUser = ((req, res) => {
     (err, result) => {
       console.log(result);
       if (err) {
-        throw err;
+        res.status(400).send('Something went wrong.');
       }
 
       if (!result.rows.length) {
