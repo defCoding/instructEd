@@ -4,6 +4,7 @@ import useForm from './useForm';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Navbar from './Navbar';
+import FacebookLogin from 'react-facebook-login';
 
 const initialValues = {
   firstName: '',
@@ -20,6 +21,7 @@ export default function Registration() {
     handleInputChange,
     useStyle
   } = useForm(initialValues);
+
   const classes = useStyle();
 
   const onSubmit = (e) => {
@@ -31,6 +33,40 @@ export default function Registration() {
       axios.post('/users', values);
     }
   };
+
+  /* 
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '350577486197278',
+      xfbml      : true,
+      version    : 'v8.0'
+    });
+    FB.AppEvents.logPageView();
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+ */
+
+const [login, setLogin] = useState(false);
+const [data, setData] = useState({});
+
+const responseFacebook = (response) => {
+  console.log(response);
+  setData(response);
+  if (response.accessToken) {
+    setLogin(true);
+    console.log(login);
+    console.log(data);
+  } else {
+    setLogin(false);
+  }
+}
 
   return (
     <>
@@ -51,10 +87,13 @@ export default function Registration() {
             <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
           </Grid>
           <Grid container justify="center">
-            <MuiLink component={Link} to="/login" variant="body1" color="primary" className={classes.extraItemsForm}>Already have an account?</MuiLink>
+            <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email" scope="public_profile" callback={responseFacebook} icon="fa-facebook" className={classes.extraItemsForm} />
           </Grid>
           <Grid container justify="center">
-            <MuiLink component={Link} to="/forgotpassword" variant="body1" color="primary" className={classes.extraItemsForm}>Forgot password?</MuiLink>
+            <MuiLink component={Link} to="/login" variant="body1" color="primary" className={classes.links}>Already have an account?</MuiLink>
+          </Grid>
+          <Grid container justify="center">
+            <MuiLink component={Link} to="/forgotpassword" variant="body1" color="primary" className={classes.links}>Forgot password?</MuiLink>
           </Grid>
         </form>
       </Paper>
