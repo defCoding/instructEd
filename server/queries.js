@@ -2,20 +2,20 @@ const { Client } = require('pg');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+/*
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
+*/
 
-/*
 const client = new Client({
   host: 'localhost',
   database: 'demo',
   user: 'demo'
 });
-*/
 
 
 client.connect(() => {

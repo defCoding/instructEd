@@ -1,5 +1,5 @@
 import { Link as MuiLink, Paper, Button, Grid, TextField, Typography } from '@material-ui/core';
-import React from 'react'
+import React, { useState } from 'react'
 import useForm from './useForm';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -51,22 +51,22 @@ export default function Registration() {
      js.src = "https://connect.facebook.net/en_US/sdk.js";
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
- */
+   */
 
-const [login, setLogin] = useState(false);
-const [data, setData] = useState({});
+  const [login, setLogin] = useState(false);
+  const [data, setData] = useState({});
 
-const responseFacebook = (response) => {
-  console.log(response);
-  setData(response);
-  if (response.accessToken) {
-    setLogin(true);
-    console.log(login);
-    console.log(data);
-  } else {
-    setLogin(false);
+  const responseFacebook = (response) => {
+    console.log(response);
+    setData(response);
+    if (response.accessToken) {
+      setLogin(true);
+      console.log(login);
+      console.log(data);
+    } else {
+      setLogin(false);
+    }
   }
-}
 
   return (
     <>
@@ -98,5 +98,5 @@ const responseFacebook = (response) => {
         </form>
       </Paper>
     </>
-  )
+  );
 }
