@@ -3,10 +3,10 @@ let url = require('url')
 let qs = require('querystring')
 let duo_web = require('../../index.js')
 
-const ikey = ''
+const ikey = 'DINHYZQWA6MDHCLH1YK7'
 const skey = ''
 const akey = ''
-const api_hostname = ''
+const api_hostname = 'api-2eb7c9d4.duosecurity.com'
 const post_action = ''
 
 /**
