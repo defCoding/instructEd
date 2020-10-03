@@ -7,6 +7,14 @@ const client = new Client({
   }
 });
 
+/*
+const client = new Client({
+  host: 'localhost',
+  database: 'demo',
+  user: 'demo'
+});
+*/
+
 
 client.connect(() => {
   console.log("Connected to database.");
@@ -14,33 +22,35 @@ client.connect(() => {
 
 const createUser = ((req, res) => {
   const info = req.body;
-  
-  client.query(`INSERT INTO Users VALUES(default, '${info.email}', '${info.firstName}', '${info.lastName}', crypt('${info.password}', gen_salt('bf')), null);`,
-    (err, result) => {
-      if (err) {
-        res.status(409).send('Email has already been taken by another account.');
-      }
-      res.send(`User added with ID: ${result.insertID}`);
-    });
+ 
+  const sql = "INSERT INTO Users VALUES(default, $1, $2, $3, crypt($4, gen_salt('bf')), null);"
+  const values = [info.email, info.firstName, info.lastName, info.password];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(409).send('Email has already been taken by another account.');
+    } else {
+      console.log(result);
+      res.send(``);
+    }
+  });
 });
 
 const loginUser = ((req, res) => {
   const info = req.body;
 
-  client.query(`SELECT * FROM Users WHERE email='${info.email}' AND password=crypt('${info.password}', password);`,
-    (err, result) => {
-      console.log(result);
-      if (err) {
-        res.status(400).send('Something went wrong.');
-      }
+  const sql = "SELECT * FROM Users WHERE email=$1 AND password=crypt($2, password);"
+  const values = [info.email, info.password]
 
-      if (!result.rows.length) {
-        res.status(403).send('Incorrect email or password.');
-      } else {
-        res.send('Logged in!');
-      }
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send('Something went wrong.');
+    } else if (!result.rows.length) {
+      res.status(403).send('Incorrect email or password.');
+    } else {
+      res.send('Logged in!');
     }
-  );
+  });
 });
 
 
