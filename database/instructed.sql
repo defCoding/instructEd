@@ -7,12 +7,12 @@ CREATE TABLE Users (
   first_name VARCHAR(50),
   last_name VARCHAR(50),
   password VARCHAR(64),
-  oauth text,
+  oauth bool,
   PRIMARY KEY (id)
 );
 
 CREATE TABLE PasswordTokens (
-  id uuid NOT NULL,
+  id uuid NOT NULL UNIQUE,
   token VARCHAR(40),
   expiration TIMESTAMP,
   PRIMARY KEY (token),
@@ -24,6 +24,7 @@ CREATE TABLE Roles (
   roles VARCHAR(20),
   FOREIGN KEY (id) REFERENCES Users (id)
 );
+
 
 CREATE TABLE OauthInfo (
   id INT IDENTITY(1,1) NOT NULL,

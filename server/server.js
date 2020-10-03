@@ -14,6 +14,9 @@ app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
 app.post('/users', db.createUser);
 app.post('/authenticate', db.loginUser);
+app.post('/forgotPassword', db.forgotPassword);
+app.post('/updatePassword', db.updatePassword);
+app.get('/resetPassword/:token', db.resetPassword);
 app.get('/dashboard', withAuth, (req, res) => {
   res.send('HI');
 });
