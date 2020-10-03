@@ -69,8 +69,8 @@ export default function ResetPassword(props) {
       </>
     );
   } else {
+    console.log('SENDING BAD TOKEN PAGE');
     return (
-      console.log('SENDING BAD TOKEN PAGE');
       <>
         <Navbar />
         <Paper className={classes.paperContent}>
