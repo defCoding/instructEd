@@ -33,6 +33,9 @@ export default function useForm(initialValues) {
       margin:theme.spacing(1)
     },
     extraItemsForm: {
+      margin:theme.spacing(2)
+    },
+    links: {
       margin:theme.spacing(1)
     }
   }))

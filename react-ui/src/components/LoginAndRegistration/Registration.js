@@ -4,7 +4,7 @@ import useForm from './useForm';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Navbar from './Navbar';
-import GoogleLogin from 'react-google-login';
+import FacebookLogin from 'react-facebook-login';
 
 const initialValues = {
   firstName: '',
@@ -34,32 +34,39 @@ export default function Registration() {
     }
   };
 
-  const signup = (res) => {
-    const googleresponse = {
-      Name: res.profileObj.name,
-      email: res.profileObj.email,
-      token: res.googleId,
-      Image: res.profileObj.imageUrl,
-      ProviderId: 'Google'
-    };
-    
-    console.log(googleresponse);
-  
-    axios.post('http://localhost:60200/Api/Login/SocialmediaData', googleresponse)
-      .then((result) => {
-        let responseJson = result;
-        sessionStorage.setItem("userData", JSON.stringify(result));
-        props.history.push('/Registration')
-      });
+  /* 
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '350577486197278',
+      xfbml      : true,
+      version    : 'v8.0'
+    });
+    FB.AppEvents.logPageView();
   };
 
-  const responseGoogle = (response) => {
-    console.log(response);
-    var res = response.profileObj;
-    console.log(res);
-    debugger;
-    signup(response);
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "https://connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+ */
+
+const [login, setLogin] = useState(false);
+const [data, setData] = useState({});
+
+const responseFacebook = (response) => {
+  console.log(response);
+  setData(response);
+  if (response.accessToken) {
+    setLogin(true);
+    console.log(login);
+    console.log(data);
+  } else {
+    setLogin(false);
   }
+}
 
   return (
     <>
@@ -78,13 +85,15 @@ export default function Registration() {
           </Grid>
           <Grid container justify="center">
             <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
-            <GoogleLogin clientId="788786912619-k4tb19vgofvmn97q1vsti1u8fnf8j6pa.apps.googleusercontent.com" buttonText="Login with Google" onSuccess={responseGoogle} onFailure={responseGoogle} className={classes.extraItemsForm} ></GoogleLogin>
           </Grid>
           <Grid container justify="center">
-            <MuiLink component={Link} to="/login" variant="body1" color="primary" className={classes.extraItemsForm}>Already have an account?</MuiLink>
+            <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email" scope="public_profile" callback={responseFacebook} icon="fa-facebook" className={classes.extraItemsForm} />
           </Grid>
           <Grid container justify="center">
-            <MuiLink component={Link} to="/forgotpassword" variant="body1" color="primary" className={classes.extraItemsForm}>Forgot password?</MuiLink>
+            <MuiLink component={Link} to="/login" variant="body1" color="primary" className={classes.links}>Already have an account?</MuiLink>
+          </Grid>
+          <Grid container justify="center">
+            <MuiLink component={Link} to="/forgotpassword" variant="body1" color="primary" className={classes.links}>Forgot password?</MuiLink>
           </Grid>
         </form>
       </Paper>
