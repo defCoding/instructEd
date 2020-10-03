@@ -34,17 +34,21 @@ export default function ResetPassword(props) {
   };
 
   useEffect(() => {
+    console.log('CHECKING TOKEN');
     axios.get(`/resetPassword/${props.match.params.token}`)
       .then(res => {
         if (res.status === 200) {
+          console.log('GOOD TOKEN');
           updateValidity(true);
         }
       }).catch(err => {
+        console.log('BAD TOKEN');
         updateValidity(false);
       });
   }, []);
 
   if (validToken) {
+    console.log('SENDING GOOD TOKEN PAGE');
     return (
       <>
         <Navbar />
@@ -66,6 +70,7 @@ export default function ResetPassword(props) {
     );
   } else {
     return (
+      console.log('SENDING BAD TOKEN PAGE');
       <>
         <Navbar />
         <Paper className={classes.paperContent}>
