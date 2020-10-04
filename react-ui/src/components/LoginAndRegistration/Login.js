@@ -26,7 +26,7 @@ export default function Login(props) {
     axios.post("/authenticate", values)
       .then(res => {
         if (res.status === 200) {
-          props.history.push('/dashboard');
+          props.history.push('/duologin');
         }
       })
       .catch(err => {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import 'whatwg-fetch'
 import DuoWebSDK from 'duo_web_sdk';
+import axios from 'axios';
 
 const STATE_AUTH_PASSED = 'STATE_AUTH_PASSED';
 const STATE_AUTH_FAILED = 'STATE_AUTH_FAILED';
@@ -17,10 +18,9 @@ class DuoLogin extends Component {
   componentDidMount() {
     // get the host and signed request from the server
     // so we can initialize the Duo Prompt
-
-    fetch(`/frame_data${window.location.search}`)
-      .then(response => response.json())
-      .then(this.initDuoFrame.bind(this))
+    axios.get('/duo_frame')
+      .then(res => res.data)
+      .then(this.initDuoFrame.bind(this));
   }
 
   initDuoFrame(json) {
@@ -38,20 +38,20 @@ class DuoLogin extends Component {
   submitPostAction(form) {
     // Submit the signed response to our backend for verification.
     const data = JSON.stringify({signedResponse: form.sig_response.value});
-    fetch('/post_action',
-      {
-        headers: {'Content-Type': 'application/json'},
-        method: 'POST',
-        body: data,
-      }
-    )
-    .then(response => {
-      if (response.ok) {
-        this.setState({duoAuthState: STATE_AUTH_PASSED});
-      } else {
-        this.setState({duoAuthState: STATE_AUTH_FAILED});
-      }
-    });
+
+    axios.post('/duo_login', data)
+      .then(res => {
+        if (res.ok) {
+          console.log("PASSED"); 
+          this.setState({ duoAuthState: STATE_AUTH_PASSED });
+        } else {
+          console.log("FAILED"); 
+          this.setState({ duoAuthState: STATE_AUTH_FAILED });
+        }
+      }).catch(err => {
+        console.log("ERROR"); 
+        console.log(err);
+      });
   }
 
   render() {
@@ -65,7 +65,7 @@ class DuoLogin extends Component {
        content = <h3>Failed Duo Authentication.</h3>
        break;
     default:
-      content = <iframe id="duo-frame" />;
+      content = <iframe width="1280" height="720" id="duo-frame" />;
       break;
     }
 

@@ -31,7 +31,7 @@ function App() {
               <Route path='/forgotpassword' component={ForgotPassword} />
               <Route path='/resetpassword/:token' component={ResetPassword} />
               <Route path='/dashboard' component={Dashboard} />
-		  	  <Route path='/duologin' component={DuoLogin} />
+              <Route path='/duologin' component={DuoLogin} />
             </Switch>
           </Router>
       </MuiThemeProvider>

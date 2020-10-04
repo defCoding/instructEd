@@ -43,7 +43,7 @@ const createUser = ((req, res) => {
   });
 });
 
-const loginUser = ((req, res) => {
+const loginUser = ((req, res, next) => {
   const info = req.body;
 
   const sql = "SELECT * FROM Users WHERE email=$1 AND password=crypt($2, password);";
@@ -53,7 +53,7 @@ const loginUser = ((req, res) => {
     if (err) {
       res.status(400).send('Something went wrong.');
     } else if (!result.rows.length) {
-      res.status(403).send('Incorrect email or password.');
+      res.status(403).send('Invalid email or password.');
     } else {
       // Issue authorization token.
       const userID = result.rows[0]['id'];

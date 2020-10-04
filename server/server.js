@@ -1,13 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 const path = require('path');
+const Duo = require('@duosecurity/duo_web');
 const app = express();
 const db = require('./queries');
-const { withAuth } = require('./middleware');
+const { withAuth, withDuoAuth} = require('./middleware');
 
 // Set up Facebook OAuth Login
 const passport = require('passport');
+const { JsonWebTokenError } = require('jsonwebtoken');
 const Strategy = require('passport-facebook').Strategy;
 
 passport.use(new Strategy({
@@ -60,8 +63,34 @@ app.post('/authenticate', db.loginUser);
 app.post('/forgotPassword', db.forgotPassword);
 app.post('/updatePassword', db.updatePassword);
 app.get('/resetPassword/:token', db.resetPassword, serveIndex);
-app.get('/dashboard', withAuth, (req, res) => {
+app.get('/dashboard', withDuoAuth, (req, res) => {
   res.send('HI');
+});
+
+app.get('/duo_frame', withAuth, (req, res) => {
+  console.log("Making sign request.");
+  const sigRequest = Duo.sign_request(process.env.DUO_IKEY, process.env.DUO_SKEY, process.env.DUO_AKEY, req.userID);
+  res.json({sigRequest, host: process.env.DUO_HOST});
+});
+
+app.post('/duo_login', withAuth, (req, res) => {
+  const signedResponse = req.body.signedResponse;
+  console.log(signedResponse);
+  const authenticatedUsername = Duo.verify_response(process.env.DUO_IKEY,
+    process.env.DUO_SKEY,
+    process.env.DUO_AKEY,
+    signedResponse);
+
+  console.log(authenticatedUsername);
+  if (authenticatedUsername) {
+    console.log("Signed response is valid.");
+    const userID = req.userID;
+    const token = jwt.sign({ userID }, process.env.DUO_JWT_KEY);
+    res.cookie('DUO_TOKEN', token, { httpOnly: true }).status(200).send();
+  } else {
+    console.log("Signed response is invalid.");
+    res.status(403).send('Duo login failed.');
+  }
 });
 
 // Catch All
