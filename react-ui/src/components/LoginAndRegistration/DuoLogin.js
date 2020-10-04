@@ -72,10 +72,7 @@ class DuoLogin extends Component {
     }
 
     return (
-<<<<<<< HEAD
-=======
       <Navbar />
->>>>>>> e1eab0fa41c902a8d4451e84d4f5969c9e2aa556
       <Paper>
         <Grid container justify="center">
           <div className="app">
