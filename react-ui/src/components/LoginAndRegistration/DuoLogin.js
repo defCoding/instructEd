@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import 'whatwg-fetch'
 import DuoWebSDK from 'duo_web_sdk';
+import { Link as MuiLink, Button, Typography, Grid, TextField, Paper } from '@material-ui/core';
 
 const STATE_AUTH_PASSED = 'STATE_AUTH_PASSED';
 const STATE_AUTH_FAILED = 'STATE_AUTH_FAILED';
@@ -70,9 +71,13 @@ class DuoLogin extends Component {
     }
 
     return (
-      <div className="app">
-        {content}
-      </div>
+      <Paper>
+        <Grid container justify="center">
+          <div className="app">
+            {content}
+          </div>
+        </Grid>
+      </Paper>
     );
   }
 }
