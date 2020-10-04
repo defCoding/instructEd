@@ -159,8 +159,6 @@ const checkResetExpiration = async (token) => {
         const row = result.rows[0];
         const expiration = moment(row['expiration']).utc();
         const now = moment(Date.now()).utc();
-        console.log("NOT FOUND");
-        console.log(row);
 
         if (now.isAfter(expiration)) {
           return 408;

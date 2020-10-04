@@ -65,9 +65,7 @@ app.post('/authenticate', db.loginUser);
 app.post('/forgotPassword', db.forgotPassword);
 app.post('/updatePassword', db.updatePassword);
 app.get('/resetPassword/:token', db.resetPassword, serveIndex);
-app.get('/dashboard', withDuoAuth, (req, res) => {
-  res.send('HI');
-});
+app.get('/dashboard', withDuoAuth);
 
 app.get('/duo_frame', withAuth, (req, res) => {
   console.log("Making sign request.");
@@ -82,7 +80,6 @@ app.post('/duo_login', withAuth, (req, res) => {
     process.env.DUO_AKEY,
     signedResponse);
 
-  console.log(authenticatedUsername);
   if (authenticatedUsername) {
     const userID = req.userID;
     const token = jwt.sign({ userID }, process.env.DUO_JWT_KEY);
