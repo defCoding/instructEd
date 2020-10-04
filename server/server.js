@@ -7,7 +7,7 @@ const db = require('./queries');
 const { withAuth } = require('./middleware');
 
 // Set up Facebook OAuth Login
-const passport = require('password');
+const passport = require('passport');
 const Strategy = require('passport-facebook').Strategy;
 
 passport.use(new Strategy({
@@ -17,11 +17,11 @@ passport.use(new Strategy({
   profileFields: ['id', 'displayName', 'email', 'name', 'photos'],
   passReqToCallBack: true
 },
-  (accessToken, refreshToken, profile, cb) {
+  (accessToken, refreshToken, profile, cb) => {
     console.log(profile);
     return cb(null, profile);
   }
-);
+));
 
 passport.serializeUser((user, cb) => {
   cb(null, user);
@@ -34,7 +34,7 @@ passport.deserializeUser((obj, cb) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/facebook', pass.authenticate('facebook'));
+app.get('/facebook', passport.authenticate('facebook'));
 app.get('/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: `${process.env.FRONTEND_HOST}/error` }), 
   (req, res) => {
