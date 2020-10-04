@@ -35,13 +35,7 @@ export default function Login(props) {
   };
 
   const responseFacebook = (response) => {
-    console.log("logged in: true");
-    var userID = response.userID;
-    console.log(userID);
-    var name = response.name;
-    console.log(name);
-    var email = response.email;
-    console.log(email);
+    console.log(response);
   };
 
   return (
@@ -60,7 +54,7 @@ export default function Login(props) {
             <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
           </Grid>
           <Grid container justify="center">
-            <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email,picture" callback={responseFacebook} className={classes.extraItemsForm} />
+            <FacebookLogin appId={process.env.FACEBOOK_CLIENT_ID} autoLoad={false} fields="name,email,picture" callback={responseFacebook} className={classes.extraItemsForm} />
           </Grid>
           <Grid container justify="center">
             <MuiLink component={Link} to="/registration" variant="body1" color="primary" className={classes.links}>Sign up for an account</MuiLink>

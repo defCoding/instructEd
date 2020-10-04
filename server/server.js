@@ -6,46 +6,7 @@ const path = require('path');
 const Duo = require('@duosecurity/duo_web');
 const app = express();
 const db = require('./queries');
-const { withAuth, withDuoAuth} = require('./middleware');
-
-// Set up Facebook OAuth Login
-/*
-const passport = require('passport');
-const { JsonWebTokenError } = require('jsonwebtoken');
-const Strategy = require('passport-facebook').Strategy;
-
-passport.use(new Strategy({
-  clientID: process.env.FACEBOOK_CLIENT_ID,
-  clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-  callbackURL: '/facebook/callback',
-  profileFields: ['id', 'displayName', 'email', 'name', 'photos'],
-  passReqToCallBack: true
-},
-  (accessToken, refreshToken, profile, cb) => {
-    console.log(profile);
-    return cb(null, profile);
-  }
-));
-
-passport.serializeUser((user, cb) => {
-  cb(null, user);
-});
-
-passport.deserializeUser((obj, cb) => {
-  cb(null, obj);
-});
-
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.get('/facebook', passport.authenticate('facebook'));
-app.get('/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: `${process.env.FRONTEND_HOST}/error` }), 
-  (req, res) => {
-    console.log('Callback success.');
-    res.send(`${process.env.FRONTEND_HOST}/success`);
-  });
-  */
+const { withAuth, withDuoAuth } = require('./middleware');
 
 // Serve static file of index.html to allow Router to initialize.
 const serveIndex = (req, res) => {
@@ -68,7 +29,6 @@ app.get('/resetPassword/:token', db.resetPassword, serveIndex);
 app.get('/dashboard', withDuoAuth);
 
 app.get('/duo_frame', withAuth, (req, res) => {
-  console.log("Making sign request.");
   const sigRequest = Duo.sign_request(process.env.DUO_IKEY, process.env.DUO_SKEY, process.env.DUO_AKEY, req.userID);
   res.json({sigRequest, host: process.env.DUO_HOST});
 });
