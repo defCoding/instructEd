@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import 'whatwg-fetch'
 import DuoWebSDK from 'duo_web_sdk';
-import { Link as MuiLink, Button, Typography, Grid, TextField, Paper } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
 
 const STATE_AUTH_PASSED = 'STATE_AUTH_PASSED';
 const STATE_AUTH_FAILED = 'STATE_AUTH_FAILED';
