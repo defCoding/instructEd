@@ -14,7 +14,7 @@ app.post('/users', db.createUser);
 app.post('/authenticate', db.loginUser);
 app.post('/forgotPassword', db.forgotPassword);
 app.post('/updatePassword', db.updatePassword);
-app.get('/resetPassword/:token', db.resetPassword);
+app.get('/resetPassword/:token', db.resetPassword, serveIndex);
 app.get('/dashboard', withAuth, (req, res) => {
   res.send('HI');
 });
@@ -22,12 +22,16 @@ app.get('/dashboard', withAuth, (req, res) => {
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));
 app.get('*', (req, res) => {
+	serveIndex(res);
+});
+
+const serveIndex = (res) => {
   res.sendFile(path.join(__dirname, '../react-ui/build/index.html'), err => {
 	  if (err) {
 		  res.status(500).send(err);
 		}
 	});
-});
+}
 
 app.listen(process.env.PORT || 5000);
 console.log(`Server started. Listening on port ${process.env.PORT || 5000}`);

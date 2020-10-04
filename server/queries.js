@@ -138,11 +138,12 @@ const createPasswordResetToken = async (id) => {
   return result;
 };
 
-const resetPassword = async (req, res) => {
+const resetPassword = async (req, res, next) => {
   const token = req.params.token;
 
   const expirationCode = await checkResetExpiration(token);
-  res.status(expirationCode).send();
+  res.status(expirationCode);
+  next();
 };
 
 const checkResetExpiration = async (token) => {
