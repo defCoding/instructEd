@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import 'whatwg-fetch'
 import DuoWebSDK from 'duo_web_sdk';
 import { Grid, Paper } from '@material-ui/core';
+import Navbar from './Navbar';
 
 const STATE_AUTH_PASSED = 'STATE_AUTH_PASSED';
 const STATE_AUTH_FAILED = 'STATE_AUTH_FAILED';
@@ -71,6 +72,7 @@ class DuoLogin extends Component {
     }
 
     return (
+      <Navbar />
       <Paper>
         <Grid container justify="center">
           <div className="app">
