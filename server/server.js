@@ -9,7 +9,6 @@ const { withAuth } = require('./middleware');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
 app.post('/users', db.createUser);
 app.post('/authenticate', db.loginUser);
@@ -21,14 +20,12 @@ app.get('/dashboard', withAuth, (req, res) => {
 });
 
 // Catch All
-app.use('/static', express.static(path.join(__dirname, '../react-ui/build/static')));
-
+app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 app.get('*', (req, res) => {
-  res.sendFile('index.html', { root: path.join(__dirname, '../../react-ui/build/') }, (err) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-  });
+  res.sendFile(path.join(__dirname, '../react-ui/build/index.html'), err => {
+		if (err) {
+			res.status(500).send(err); 
+			});
 });
 
 app.listen(process.env.PORT || 5000);
