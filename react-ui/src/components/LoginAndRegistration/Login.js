@@ -36,10 +36,7 @@ export default function Login(props) {
 
   const responseFacebook = (response) => {
     console.log("logged in: true");
-    console.log(response.userID);
-    console.log(response.name);
-    console.log(response.email);
-    console.log(response.picture.data.url);
+    console.log(response);
   };
 
   return (
