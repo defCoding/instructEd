@@ -35,6 +35,7 @@ export default function ResetPassword(props) {
 
   useEffect(() => {
     console.log('CHECKING TOKEN');
+    console.log(props.match.params.token);
     axios.get(`/resetPassword/${props.match.params.token}`)
       .then(res => {
         if (res.status === 200) {
