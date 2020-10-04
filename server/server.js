@@ -13,7 +13,7 @@ const Strategy = require('passport-facebook').Strategy;
 passport.use(new Strategy({
   clientID: process.env.FACEBOOK_CLIENT_ID,
   clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-  callbackURL: '/facebook/callback'
+  callbackURL: '/facebook/callback',
   profileFields: ['id', 'displayName', 'email', 'name', 'photos'],
   passReqToCallBack: true
 },
@@ -41,6 +41,11 @@ app.get('/facebook/callback',
     console.log('Callback success.');
     res.send(`${process.env.FRONTEND_HOST}/success`);
   });
+
+// SSL
+app.get('/.well-known/acme-challenge/oe8pkwZTMA9XQDpeSKKE_4yJySobiSmFYWwt8mqWPso', (req, res) => {
+  res.send('oe8pkwZTMA9XQDpeSKKE_4yJySobiSmFYWwt8mqWPso.eLY7VehRJXPIpdwdnRO8FOpe6-KhokXVj56Wy97EWro');
+});
 
 // Serve static file of index.html to allow Router to initialize.
 const serveIndex = (req, res) => {
