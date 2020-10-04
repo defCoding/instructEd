@@ -22,11 +22,12 @@ const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo'
 });
+*/
+
 
 client.connect(() => {
   console.log("Connected to database.");
 });
-*/
 
 const createUser = ((req, res) => {
   const info = req.body;

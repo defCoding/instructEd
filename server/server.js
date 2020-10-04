@@ -77,7 +77,6 @@ app.get('/duo_frame', withAuth, (req, res) => {
 
 app.post('/duo_login', withAuth, (req, res) => {
   const signedResponse = req.body.signedResponse;
-  console.log(signedResponse);
   const authenticatedUsername = Duo.verify_response(process.env.DUO_IKEY,
     process.env.DUO_SKEY,
     process.env.DUO_AKEY,
@@ -85,12 +84,10 @@ app.post('/duo_login', withAuth, (req, res) => {
 
   console.log(authenticatedUsername);
   if (authenticatedUsername) {
-    console.log("Signed response is valid.");
     const userID = req.userID;
     const token = jwt.sign({ userID }, process.env.DUO_JWT_KEY);
     res.cookie('DUO_TOKEN', token, { httpOnly: true }).status(200).send();
   } else {
-    console.log("Signed response is invalid.");
     res.status(403).send('Duo login failed.');
   }
 });

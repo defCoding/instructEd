@@ -39,19 +39,16 @@ class DuoLogin extends Component {
 
   submitPostAction(form) {
     // Submit the signed response to our backend for verification.
-    const data = JSON.stringify({signedResponse: form.sig_response.value});
+    const data = {signedResponse: form.sig_response.value};
 
     axios.post('/duo_login', data)
       .then(res => {
-        if (res.ok) {
-          console.log("PASSED"); 
+        if (res.status === 200) {
           this.setState({ duoAuthState: STATE_AUTH_PASSED });
         } else {
-          console.log("FAILED"); 
           this.setState({ duoAuthState: STATE_AUTH_FAILED });
         }
       }).catch(err => {
-        console.log("ERROR"); 
         console.log(err);
       });
   }
@@ -72,14 +69,9 @@ class DuoLogin extends Component {
     }
 
     return (
-      <Navbar />
-      <Paper>
-        <Grid container justify="center">
           <div className="app">
             {content}
           </div>
-        </Grid>
-      </Paper>
     );
   }
 }
