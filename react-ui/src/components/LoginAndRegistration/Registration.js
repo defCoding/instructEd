@@ -72,10 +72,13 @@ export default function Registration() {
   const responseFacebook = (response) => {
     // console.log(response);
     console.log("logged in: true");
-    console.log(response.userID);
-    console.log(response.name);
-    console.log(response.email);
-    console.log(response.picture.data.url);
+    var userID = response.userID;
+    console.log(userID);
+    var name = response.name;
+    console.log(name);
+    var email = response.email;
+    console.log(email);
+    // console.log(response.picture.data.url);
   };
 
   return (
