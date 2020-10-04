@@ -21,8 +21,10 @@ app.get('/dashboard', withAuth, (req, res) => {
 });
 
 // Catch All
+app.use('/static', express.static(path.join(__dirname, '../react-ui/build/static')));
+
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, '../react-ui/public/index.html'), (err) => {
+  res.sendFile('index.html', { root: path.join(__dirname, '../../client/build/') }, (err) => {
     if (err) {
       res.status(500).send(err);
     }
