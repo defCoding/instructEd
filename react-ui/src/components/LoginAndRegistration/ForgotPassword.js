@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import axios from 'axios';
 import { Link as MuiLink, Button, Typography, Grid, TextField, Paper } from '@material-ui/core';
 import useForm from './useForm';
 import { Link } from 'react-router-dom';
 import Navbar from './Navbar';
 
 const initialValues = {
-  email: '',
-  password: ''
+  email: ''
 }
 
 export default function ForgotPassword() {
@@ -17,8 +17,17 @@ export default function ForgotPassword() {
     useStyle
   } = useForm(initialValues);
   const classes = useStyle();
-  const onSubmit = () => {
-    console.log(values.state)
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    axios.post('/forgotPassword', values)
+      .then(res => {
+        if (res.status === 200) {
+          alert(res.data);
+        }
+      }).catch(err => {
+        alert(err.response.data);
+      });
   };
 
   return(
