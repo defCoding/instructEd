@@ -4,6 +4,7 @@ import Login from './components/LoginAndRegistration/Login'
 import Registration from './components/LoginAndRegistration/Registration';
 import ForgotPassword from './components/LoginAndRegistration/ForgotPassword';
 import ResetPassword from './components/LoginAndRegistration/ResetPassword';
+import DuoLogin from './components/LoginAndRegistration/DuoLogin';
 import Dashboard from './components/Dashboard/Dashboard';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core';
 
@@ -30,6 +31,7 @@ function App() {
               <Route path='/forgotpassword' component={ForgotPassword} />
               <Route path='/resetpassword/:token' component={ResetPassword} />
               <Route path='/dashboard' component={Dashboard} />
+		  	  <Route path='/duologin' component={DuoLogin} />
             </Switch>
           </Router>
       </MuiThemeProvider>

@@ -6,7 +6,7 @@ const STATE_AUTH_PASSED = 'STATE_AUTH_PASSED';
 const STATE_AUTH_FAILED = 'STATE_AUTH_FAILED';
 const STATE_AUTH_PENDING = 'STATE_AUTH_PENDING';
 
-class App extends Component {
+class DuoLogin extends Component {
   constructor() {
     super();
     this.state = {
@@ -77,8 +77,4 @@ class App extends Component {
   }
 }
 
-<<<<<<< HEAD
-export default App;
-=======
-export default App;
->>>>>>> 3f5f01d3c5f2540e4e21e42098a4bbd332bc60aa
+export default DuoLogin;
