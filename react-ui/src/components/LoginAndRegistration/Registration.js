@@ -43,7 +43,6 @@ export default function Registration() {
     });
     FB.AppEvents.logPageView();
   };
-
   (function(d, s, id){
      var js, fjs = d.getElementsByTagName(s)[0];
      if (d.getElementById(id)) {return;}
@@ -52,11 +51,10 @@ export default function Registration() {
      fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
    */
-
+/*
   const [login, setLogin] = useState(false);
   const [data, setData] = useState({});
   const [email, setEmail] = useState({});
-
   const responseFacebook = (response) => {
     console.log(response);
     setData(response);
@@ -70,6 +68,15 @@ export default function Registration() {
       setLogin(false);
     }
   }
+*/
+  const responseFacebook = (response) => {
+    // console.log(response);
+    console.log("logged in: true");
+    console.log(response.userID);
+    console.log(response.name);
+    console.log(response.email);
+    console.log(response.picture.data.url);
+  };
 
   return (
     <>
@@ -90,7 +97,7 @@ export default function Registration() {
             <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
           </Grid>
           <Grid container justify="center">
-            <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email" scope="public_profile" callback={responseFacebook} icon="fa-facebook" className={classes.extraItemsForm} />
+           <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email,picture" callback={responseFacebook} className={classes.extraItemsForm} />
           </Grid>
           <Grid container justify="center">
             <MuiLink component={Link} to="/login" variant="body1" color="primary" className={classes.links}>Already have an account?</MuiLink>
