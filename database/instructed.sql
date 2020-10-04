@@ -26,8 +26,8 @@ CREATE TABLE Roles (
 );
 
 CREATE TABLE DuoInfo (
-  ikey VARCHAR(40),
-  skey VARCHAR(60),
-  akey VARCHAR(40),
-  apihostname VARCHAR(40)
+  ikey VARCHAR(40) NOT NULL,
+  skey VARCHAR(60) NOT NULL,
+  akey VARCHAR(40) NOT NULL,
+  apihostname VARCHAR(40) NOT NULL
 );
