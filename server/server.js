@@ -23,9 +23,10 @@ app.get('/dashboard', withAuth, (req, res) => {
 app.use(express.static(path.join(__dirname, '../react-ui/build')));
 app.get('*', (req, res) => {
   res.sendFile("index.html", path.join(__dirname, '../react-ui/build/'), err => {
-		if (err) {
-			res.status(500).send(err); 
-			});
+	  if (err) {
+		  res.status(500).send(err);
+		}
+	});
 });
 
 app.listen(process.env.PORT || 5000);
