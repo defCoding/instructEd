@@ -7,6 +7,7 @@ const db = require('./queries');
 const { withAuth } = require('./middleware');
 
 // Set up Facebook OAuth Login
+/*
 const passport = require('passport');
 const Strategy = require('passport-facebook').Strategy;
 
@@ -41,6 +42,7 @@ app.get('/facebook/callback',
     console.log('Callback success.');
     res.send(`${process.env.FRONTEND_HOST}/success`);
   });
+  */
 
 // Serve static file of index.html to allow Router to initialize.
 const serveIndex = (req, res) => {
