@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link as Button, Typography, Grid, TextField, Paper } from '@material-ui/core';
+import { Button, Typography, Grid, TextField, Paper } from '@material-ui/core';
 import useForm from './useForm';
 import Navbar from './Navbar';
 
