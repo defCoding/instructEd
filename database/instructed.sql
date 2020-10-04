@@ -24,3 +24,10 @@ CREATE TABLE Roles (
   roles VARCHAR(20),
   FOREIGN KEY (id) REFERENCES Users (id)
 );
+
+CREATE TABLE DuoInfo (
+  ikey VARCHAR(40),
+  skey VARCHAR(60),
+  akey VARCHAR(40),
+  apihostname VARCHAR(40)
+);
