@@ -42,11 +42,6 @@ app.get('/facebook/callback',
     res.send(`${process.env.FRONTEND_HOST}/success`);
   });
 
-// SSL
-app.get('/.well-known/acme-challenge/oe8pkwZTMA9XQDpeSKKE_4yJySobiSmFYWwt8mqWPso', (req, res) => {
-  res.send('oe8pkwZTMA9XQDpeSKKE_4yJySobiSmFYWwt8mqWPso.eLY7VehRJXPIpdwdnRO8FOpe6-KhokXVj56Wy97EWro');
-});
-
 // Serve static file of index.html to allow Router to initialize.
 const serveIndex = (req, res) => {
   res.sendFile(path.join(__dirname, '../react-ui/build/index.html'), err => {
