@@ -14,10 +14,12 @@ passport.use(new Strategy({
       clientID: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET
     },
-    function (accessToken, refreshToken, profile, done) {
+    (accessToken, refreshToken, profile, done) => {
       console.log(profile);
     }));
 
+app.use(passport.initialize());
+app.use(passport.session());
 // Serve static file of index.html to allow Router to initialize.
 const serveIndex = (req, res) => {
   res.sendFile(path.join(__dirname, '../react-ui/build/index.html'), err => {
