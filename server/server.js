@@ -14,7 +14,7 @@ const { withAuth, withDuoAuth } = require('./middleware');
 passport.use(new Strategy({
       clientID: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-      callbackURL: `${process.env.FRONTEND_HOST}/authenticate/facebook/callback`
+      callbackURL: `/authenticate/facebook/callback`
     },
     (accessToken, refreshToken, profile, done) => {
       console.log(profile);
@@ -40,10 +40,9 @@ app.post('/users', db.createUser);
 app.post('/authenticate', db.loginUser);
 
 app.post('/authenticate/facebook', passport.authenticate('facebook'));
-app.post('/authenticate/facebook/callback',
-  (req, res) => {
-    console.log('Callback success.');
-  });
+app.post('/authenticate/facebook/callback', passport.authenticate('facebook', (err, user, info) => {
+  console.log(err, user, info);
+}));
 
 app.post('/forgotPassword', db.forgotPassword);
 app.post('/updatePassword', db.updatePassword);
