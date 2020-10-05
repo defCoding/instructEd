@@ -13,7 +13,7 @@ const { withAuth, withDuoAuth } = require('./middleware');
 passport.use(new Strategy({
       clientID: process.env.FACEBOOK_CLIENT_ID,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-      callbackURL: `/authenticate/facebook/callback`
+      callbackURL: `https://instructed.herokuapp.com/authenticate/facebook/callback`
     },
     (accessToken, refreshToken, profile) => {
       console.log(accessToken, refreshToken, profile);

@@ -41,7 +41,6 @@ export default function Login(props) {
       token: response.accessToken,
       signedRequest: response.signedRequest
     };
-    console.log(data);
   };
 
   return (
