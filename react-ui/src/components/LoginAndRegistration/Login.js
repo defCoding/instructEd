@@ -41,16 +41,7 @@ export default function Login(props) {
       token: response.accessToken,
       signedRequest: response.signedRequest
     };
-
-    axios.post('/authenticate/facebook', data)
-      .then(res => {
-        if (res.status === 200) {
-          props.history.push('/duologin');
-        }
-      })
-      .catch(err => {
-        alert(err.response.data);
-      });
+    console.log(data);
   };
 
   return (
