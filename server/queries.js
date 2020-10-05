@@ -101,14 +101,14 @@ const loginFacebook = (req, res) => {
 const forgotPassword = ((req, res) => {
   const info = req.body;
 
-  const sql = "SELECT id FROM Users WHERE email=$1;";
+  const sql = "SELECT id FROM Users WHERE email=$1 AND oauth!=true;";
   const values = [info.email];
 
   client.query(sql, values, async (err, result) => {
     if (err) {
       res.status(400).send('Something went wrong.');
     } else if (!result.rows.length) {
-      res.status(403).send('This email is not associated with an account.');
+      res.status(403).send('This email is not associated with an account. Did you create an account via Facebook?');
     } else {
       const id = result.rows[0]['id'];
       token = await createPasswordResetToken(id);
