@@ -54,7 +54,7 @@ const createLoginToken = (userID) => {
 const loginUser = ((req, res) => {
   const info = req.body;
 
-  const sql = "SELECT id FROM Users WHERE email=$1 AND password=crypt($2, password);";
+  const sql = "SELECT id FROM Users WHERE email=$1 AND password!='' AND password=crypt($2, password);";
   const values = [info.email, info.password];
 
   client.query(sql, values, (err, result) => {
