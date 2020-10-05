@@ -10,19 +10,19 @@ require('dotenv').config();
 const resetExpirationAmount = 15;
 const resetExpirationUnit = 'minutes';
 
+/*
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
+*/
 
-/*
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo'
 });
-*/
 
 
 client.connect(() => {
@@ -36,6 +36,7 @@ const createUser = ((req, res) => {
   const values = [info.email, info.firstName, info.lastName, info.password];
 
   client.query(sql, values, (err, result) => {
+    console.log(result);
     if (err) {
       res.status(409).send('Email has already been taken by another account.');
     } else {
@@ -53,7 +54,7 @@ const createLoginToken = (userID) => {
 const loginUser = ((req, res) => {
   const info = req.body;
 
-  const sql = "SELECT * FROM Users WHERE email=$1 AND password=crypt($2, password);";
+  const sql = "SELECT id FROM Users WHERE email=$1 AND password=crypt($2, password);";
   const values = [info.email, info.password];
 
   client.query(sql, values, (err, result) => {
@@ -72,19 +73,20 @@ const loginUser = ((req, res) => {
 const loginFacebook = (req, res) => {
   const info = req.body;
 
-  let sql = "SELECT * FROM Users WHERE email=$1 AND oauth=true;";
+  let sql = "SELECT id FROM Users WHERE email=$1 AND oauth=true;";
   let values = [info.email];
 
   client.query(sql, values, (err, result) => {
     if (err) {
       res.status(400).send('Something went wrong.');
     } else if (!result.rows.length) {
-      sql = "INSERT INTO Users VALUES(default, $1, $2, '', '', true);";
+      sql = "INSERT INTO Users VALUES(default, $1, $2, '', '', true) RETURNING id;";
       values = [info.email, info.name];
       client.query(sql, values, (err, result) => {
         if (err) {
           res.status(400).send('Something went wrong.');
         } else {
+          console.log(result);
           const token = createLoginToken(result.rows[0].id);
           res.cookie('LOGIN_TOKEN', token, { httpOnly: true }).status(200).send('Facebook account added.');
         }

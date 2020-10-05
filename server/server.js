@@ -23,9 +23,7 @@ app.use(cookieParser());
 
 app.post('/users', db.createUser);
 app.post('/authenticate', db.loginUser);
-
 app.post('/authenticate/facebook', db.loginFacebook);
-
 app.post('/forgotPassword', db.forgotPassword);
 app.post('/updatePassword', db.updatePassword);
 app.get('/resetPassword/:token', db.resetPassword, serveIndex);
