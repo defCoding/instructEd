@@ -42,7 +42,7 @@ export default function Login(props) {
       signedRequest: response.signedRequest
     };
 
-    axios.post("/authenticate", data)
+    axios.post("/authenticate/facebook", data)
       .then(res => {
         if (res.status === 200) {
           props.history.push('/duologin');
