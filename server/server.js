@@ -3,7 +3,6 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const Strategy = require('passport-facebook').Strategy;
-const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const Duo = require('@duosecurity/duo_web');
@@ -16,13 +15,12 @@ passport.use(new Strategy({
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
       callbackURL: `/authenticate/facebook/callback`
     },
-    (accessToken, refreshToken, profile, done) => {
-      console.log(profile);
+    (accessToken, refreshToken, profile) => {
+      console.log(accessToken, refreshToken, profile);
     }));
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(cors());
 // Serve static file of index.html to allow Router to initialize.
 const serveIndex = (req, res) => {
   res.sendFile(path.join(__dirname, '../react-ui/build/index.html'), err => {
@@ -40,7 +38,7 @@ app.post('/users', db.createUser);
 app.post('/authenticate', db.loginUser);
 
 app.post('/authenticate/facebook', passport.authenticate('facebook'));
-app.post('/authenticate/facebook/callback', passport.authenticate('facebook', (err, user, info) => {
+app.get('/authenticate/facebook/callback', passport.authenticate('facebook', (err, user, info) => {
   console.log(err, user, info);
 }));
 
