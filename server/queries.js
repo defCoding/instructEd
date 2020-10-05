@@ -54,14 +54,23 @@ const createLoginToken = (userID) => {
 const loginUser = ((req, res) => {
   const info = req.body;
 
-  const sql = "SELECT id FROM Users WHERE email=$1 AND oauth!=true AND password=crypt($2, password);";
+  let sql = "SELECT id FROM Users WHERE email=$1 AND oauth!=true AND password=crypt($2, password);";
   const values = [info.email, info.password];
 
   client.query(sql, values, (err, result) => {
     if (err) {
       res.status(400).send('Something went wrong.');
     } else if (!result.rows.length) {
-      res.status(403).send('Invalid email or password.');
+			let sql = "SELECT oauth FROM Users WHERE email=$1 AND oauth=true";
+			client.query(sql, values, (err, result) => {
+				if (err) {
+          res.status(400).send('Something went wrong.');
+        } else if (!result.rows.length) {
+          res.status(401).send('Invalid email or password.');
+        } else {
+          res.status(407).send('This account was created via Facebook.');
+        }
+      });
     } else {
       // Issue authorization token.
       const token = createLoginToken(result.rows[0].id);
@@ -101,14 +110,24 @@ const loginFacebook = (req, res) => {
 const forgotPassword = ((req, res) => {
   const info = req.body;
 
-  const sql = "SELECT id FROM Users WHERE email=$1 AND oauth!=true;";
+  let sql = "SELECT id FROM Users WHERE email=$1 AND oauth!=true;";
   const values = [info.email];
 
   client.query(sql, values, async (err, result) => {
     if (err) {
       res.status(400).send('Something went wrong.');
     } else if (!result.rows.length) {
-      res.status(403).send('This email is not associated with an account. Did you create an account via Facebook?');
+      sql = "SELECT id FROM Users WHERE email=$1 AND oauth==true;";
+
+      client.query(sql, values, (err, result) => {
+        if (err) {
+          res.status(400).send('Something went wrong.');
+        } else if (!result.rows.length) {
+          res.status(401).send('This email is not associated with an account.');
+        } else {
+          res.status(407).send('This account was created via Facebook.');
+        }
+      });
     } else {
       const id = result.rows[0]['id'];
       token = await createPasswordResetToken(id);
@@ -187,7 +206,7 @@ const checkResetExpiration = async (token) => {
   return await client.query(sql, values)
     .then(result => {
       if (!result.rows.length) {
-        return 403;
+        return 401;
       } else {
         const row = result.rows[0];
         const expiration = moment(row['expiration']).utc();
@@ -219,7 +238,7 @@ const updatePassword = async (req, res) => {
         res.status(400).send('Something went wrong.');
       } else {
         if (!result.rows.length) {
-          res.status(403).send('Could not find user.');
+          res.status(401).send('Could not find user.');
         } else {
           const id = result.rows[0]['id'];
           sql = "UPDATE Users SET password=crypt($1, gen_salt('bf')) WHERE id=$2;";
