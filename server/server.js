@@ -13,7 +13,8 @@ const { withAuth, withDuoAuth } = require('./middleware');
 
 passport.use(new Strategy({
       clientID: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+      callbackURL: `${process.env.FRONTEND_HOST}/authenticate/facebook/callback`
     },
     (accessToken, refreshToken, profile, done) => {
       console.log(profile);
@@ -38,7 +39,8 @@ app.use(cookieParser());
 app.post('/users', db.createUser);
 app.post('/authenticate', db.loginUser);
 
-app.post('/authenticate/facebook', passport.authenticate('facebook', { failureRedirect: `${process.env.FRONTEND_HOST}/error` }), 
+app.post('/authenticate/facebook', passport.authenticate('facebook'));
+app.post('/authenticate/facebook/callback',
   (req, res) => {
     console.log('Callback success.');
   });
