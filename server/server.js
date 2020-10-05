@@ -1,8 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
-const passport = require('passport');
-const Strategy = require('passport-facebook').Strategy;
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const Duo = require('@duosecurity/duo_web');
@@ -10,17 +8,6 @@ const app = express();
 const db = require('./queries');
 const { withAuth, withDuoAuth } = require('./middleware');
 
-passport.use(new Strategy({
-      clientID: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-      callbackURL: `https://instructed.herokuapp.com/authenticate/facebook/callback`
-    },
-    (accessToken, refreshToken, profile) => {
-      console.log(accessToken, refreshToken, profile);
-    }));
-
-app.use(passport.initialize());
-app.use(passport.session());
 // Serve static file of index.html to allow Router to initialize.
 const serveIndex = (req, res) => {
   res.sendFile(path.join(__dirname, '../react-ui/build/index.html'), err => {
@@ -37,10 +24,7 @@ app.use(cookieParser());
 app.post('/users', db.createUser);
 app.post('/authenticate', db.loginUser);
 
-app.post('/authenticate/facebook', passport.authenticate('facebook'));
-app.get('/authenticate/facebook/callback', passport.authenticate('facebook', (err, user, info) => {
-  console.log(err, user, info);
-}));
+app.post('/authenticate/facebook', db.loginFacebook);
 
 app.post('/forgotPassword', db.forgotPassword);
 app.post('/updatePassword', db.updatePassword);
