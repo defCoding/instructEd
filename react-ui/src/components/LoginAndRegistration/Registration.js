@@ -14,7 +14,7 @@ const initialValues = {
   confirmPassword: '',
 }
 
-export default function Registration() {
+export default function Registration(props) {
 
   const {
     values,
@@ -70,15 +70,23 @@ export default function Registration() {
   }
 */
   const responseFacebook = (response) => {
-    // console.log(response);
-    console.log("logged in: true");
-    var userID = response.userID;
-    console.log(userID);
-    var name = response.name;
-    console.log(name);
-    var email = response.email;
-    console.log(email);
-    // console.log(response.picture.data.url);
+    const data = {
+      email: response.email,
+      name: response.name,
+      fbID: response.userID,
+      token: response.accessToken,
+      signedRequest: response.signedRequest
+    };
+
+    axios.post('/authenticate/facebook', data)
+      .then(res => {
+        if (res.status === 200) {
+          props.history.push('/duologin');
+        }
+      })
+      .catch(err => {
+        alert(err.response.data);
+      });
   };
 
   return (

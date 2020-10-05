@@ -19,8 +19,12 @@ CREATE TABLE PasswordTokens (
   FOREIGN KEY (id) REFERENCES Users (id)
 );
 
-CREATE TABLE Roles (
-  id uuid NOT NULL,
-  roles VARCHAR(20),
+
+CREATE TABLE FacebookUsers (
+  id uuid,
+  fb_id text NOT NULL UNIQUE,
+  access_token text NOT NULL,
+  signed_request text NOT NULL,
+  PRIMARY KEY (id),
   FOREIGN KEY (id) REFERENCES Users (id)
 );

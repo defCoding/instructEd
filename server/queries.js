@@ -32,19 +32,25 @@ client.connect(() => {
 const createUser = ((req, res) => {
   const info = req.body;
  
-  const sql = "INSERT INTO Users VALUES(default, $1, $2, $3, crypt($4, gen_salt('bf')), null);";
+  const sql = "INSERT INTO Users VALUES(default, $1, $2, $3, crypt($4, gen_salt('bf')), false);";
   const values = [info.email, info.firstName, info.lastName, info.password];
 
   client.query(sql, values, (err, result) => {
     if (err) {
       res.status(409).send('Email has already been taken by another account.');
     } else {
-      res.send('User created!');
+      res.status(200).send('User created!');
     }
   });
 });
 
-const loginUser = ((req, res, next) => {
+const createLoginToken = (userID) => {
+  const payload = { userID };
+  const token = jwt.sign(payload, process.env.JWT_KEY);
+  return token;
+}
+
+const loginUser = ((req, res) => {
   const info = req.body;
 
   const sql = "SELECT * FROM Users WHERE email=$1 AND password=crypt($2, password);";
@@ -57,13 +63,38 @@ const loginUser = ((req, res, next) => {
       res.status(403).send('Invalid email or password.');
     } else {
       // Issue authorization token.
-      const userID = result.rows[0]['id'];
-      const payload = { userID };
-      const token = jwt.sign(payload, process.env.JWT_KEY);
+      const token = createLoginToken(result.rows[0].id);
       res.cookie('LOGIN_TOKEN', token, { httpOnly: true }).status(200).send('Token sent!');
     }
   });
 });
+
+const loginFacebook = (req, res) => {
+  const info = req.body;
+
+  let sql = "SELECT * FROM Users WHERE email=$1 AND oauth=true;";
+  let values = [info.email];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send('Something went wrong.');
+    } else if (!result.rows.length) {
+      sql = "INSERT INTO Users VALUES(default, $1, $2, '', '', true);";
+      values = [info.email, info.name];
+      client.query(sql, values, (err, result) => {
+        if (err) {
+          res.status(400).send('Something went wrong.');
+        } else {
+          const token = createLoginToken(result.rows[0].id);
+          res.cookie('LOGIN_TOKEN', token, { httpOnly: true }).status(200).send('Facebook account added.');
+        }
+      });
+    } else {
+      const token = createLoginToken(result.rows[0].id);
+      res.cookie('LOGIN_TOKEN', token, { httpOnly: true }).status(200).send('Facebook login accepted.');
+    }
+  })
+}
 
 const forgotPassword = ((req, res) => {
   const info = req.body;
@@ -209,6 +240,7 @@ const updatePassword = async (req, res) => {
 module.exports = {
   createUser,
   loginUser,
+  loginFacebook,
   forgotPassword,
   resetPassword,
   updatePassword

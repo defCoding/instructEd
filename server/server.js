@@ -1,12 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const Strategy = require('passport-facebook').Strategy;
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const Duo = require('@duosecurity/duo_web');
 const app = express();
 const db = require('./queries');
 const { withAuth, withDuoAuth } = require('./middleware');
+
+passport.use(new Strategy({
+      clientID: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET
+    },
+    function (accessToken, refreshToken, profile, done) {
+      console.log(profile);
+    }));
 
 // Serve static file of index.html to allow Router to initialize.
 const serveIndex = (req, res) => {
@@ -23,6 +33,12 @@ app.use(cookieParser());
 
 app.post('/users', db.createUser);
 app.post('/authenticate', db.loginUser);
+
+app.post('/authenticate/facebook', passport.authenticate('facebook', { failureRedirect: `${process.env.FRONTEND_HOST}/error` }), 
+  (req, res) => {
+    console.log('Callback success.');
+  });
+
 app.post('/forgotPassword', db.forgotPassword);
 app.post('/updatePassword', db.updatePassword);
 app.get('/resetPassword/:token', db.resetPassword, serveIndex);
