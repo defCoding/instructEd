@@ -61,15 +61,16 @@ const loginUser = ((req, res) => {
     if (err) {
       res.status(400).send('Something went wrong.');
     } else if (!result.rows.length) {
-			sql = "SELECT * FROM Users WHERE email=$1 AND oauth=true";
+      sql = "SELECT * FROM Users WHERE email=$1 AND oauth=true";
       values = [info.email];
 			client.query(sql, values, (err, result) => {
 				if (err) {
+          console.log(err);
           res.status(400).send('Something went wrong.');
         } else if (!result.rows.length) {
           res.status(401).send('Invalid email or password.');
         } else {
-          res.status(407).send('This account was created via Facebook.');
+          res.status(401).send('This account was created via Facebook.');
         }
       });
     } else {
@@ -125,7 +126,7 @@ const forgotPassword = ((req, res) => {
         } else if (!result.rows.length) {
           res.status(401).send('This email is not associated with an account.');
         } else {
-          res.status(407).send('This account was created via Facebook.');
+          res.status(401).send('This account was created via Facebook.');
         }
       });
     } else {
