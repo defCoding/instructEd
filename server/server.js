@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const Strategy = require('passport-facebook').Strategy;
+const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const path = require('path');
 const Duo = require('@duosecurity/duo_web');
@@ -20,6 +21,7 @@ passport.use(new Strategy({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cors());
 // Serve static file of index.html to allow Router to initialize.
 const serveIndex = (req, res) => {
   res.sendFile(path.join(__dirname, '../react-ui/build/index.html'), err => {
