@@ -117,7 +117,7 @@ const forgotPassword = ((req, res) => {
     if (err) {
       res.status(400).send('Something went wrong.');
     } else if (!result.rows.length) {
-      sql = "SELECT id FROM Users WHERE email=$1 AND oauth==true;";
+      sql = "SELECT id FROM Users WHERE email=$1 AND oauth=true;";
 
       client.query(sql, values, (err, result) => {
         if (err) {
