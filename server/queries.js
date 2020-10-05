@@ -55,13 +55,14 @@ const loginUser = ((req, res) => {
   const info = req.body;
 
   let sql = "SELECT id FROM Users WHERE email=$1 AND oauth!=true AND password=crypt($2, password);";
-  const values = [info.email, info.password];
+  let values = [info.email, info.password];
 
   client.query(sql, values, (err, result) => {
     if (err) {
       res.status(400).send('Something went wrong.');
     } else if (!result.rows.length) {
-			sql = "SELECT oauth FROM Users WHERE email=$1 AND oauth=true";
+			sql = "SELECT * FROM Users WHERE email=$1 AND oauth=true";
+      values = [info.email];
 			client.query(sql, values, (err, result) => {
 				if (err) {
           res.status(400).send('Something went wrong.');
@@ -118,7 +119,6 @@ const forgotPassword = ((req, res) => {
       res.status(400).send('Something went wrong.');
     } else if (!result.rows.length) {
       sql = "SELECT id FROM Users WHERE email=$1 AND oauth=true;";
-
       client.query(sql, values, (err, result) => {
         if (err) {
           res.status(400).send('Something went wrong.');
