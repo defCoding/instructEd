@@ -75,3 +75,5 @@ CREATE TABLE Assignments (
   PRIMARY KEY (assignment_id),
   FOREIGN KEY (course_id) REFERENCES Courses (course_id)
 );
+
+--Section for Functions
