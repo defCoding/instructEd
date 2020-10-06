@@ -72,4 +72,6 @@ CREATE TABLE Assignments (
   course_id VARCHAR(20) NOT NULL,
   deadline TIMESTAMP NOT NULL,
   submission_types VARCHAR(10) ARRAY NOT NULL,
+  PRIMARY KEY (assignment_id),
+  FOREIGN KEY (course_id) REFERENCES Courses (course_id)
 );
