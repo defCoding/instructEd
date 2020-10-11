@@ -30,7 +30,24 @@ export default function Registration(props) {
       window.alert("Password is not the same");
     } 
     else {
-      axios.post('/users', values);
+      //Attempts to insert the given values into the database
+      axios.post('/users', values)
+        .then(res => {
+          //If User creation was successful
+          if(res.status === 201){
+            alert("Account created successfully");
+            //Redirects to the login page
+            history.push('/login');
+          }
+          //If the given email is already in use
+          else if(res.status === 409){
+            alert("This email has already been taken");
+          }
+        })
+        //Catches another undefined error
+        .catch(err => {
+            alert(err.response.data);
+        });
     }
   };
 
