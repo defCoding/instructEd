@@ -37,7 +37,7 @@ export default function Registration(props) {
           if(res.status === 201){
             alert("Account created successfully");
             //Redirects to the login page
-            history.push('/login');
+            props.history.push('/login');
           }
           //If the given email is already in use
           else if(res.status === 409){

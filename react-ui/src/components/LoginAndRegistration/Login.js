@@ -22,10 +22,21 @@ export default function Login(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    //Attempts to log the user in using given credentials
     axios.post("/authenticate", values)
       .then(res => {
+        //If login is successful
         if (res.status === 200) {
+          //Begins Duo Authentication
           props.history.push('/duologin');
+        }
+        //If the email or password given is not correct
+        else if(res.status === 401){
+          alert("Invalid email or password");
+        }
+        //If an account with this email already exists, and is associated with a Facebook account
+        else if(res.status === 403){
+          alert("This account was already created with Facebook");
         }
       })
       .catch(err => {
@@ -44,8 +55,13 @@ export default function Login(props) {
 
     axios.post("/authenticate/facebook", data)
       .then(res => {
+        //If login through Facebook was successful
         if (res.status === 200) {
           props.history.push('/duologin');
+        }
+        //If no Facebook account for given credentials was in the database.
+        else if(res.status === 201){
+          alert("Facebook account added");
         }
       })
       .catch(err => {
