@@ -22,8 +22,18 @@ export default function ForgotPassword() {
     e.preventDefault();
     axios.post('/forgotPassword', values)
       .then(res => {
+        //If recovery email was accepted and sent
         if (res.status === 200) {
           alert(res.data);
+        }
+        else if(res.status === 404){
+          alert("Email provided is not associated with any account");
+        }
+        else if(res.status === 422){
+          alert("The account associated with this email was created via Facebook");
+        }
+        else if(res.status === 500){
+          alert("There was an error sending the recovery email")
         }
       }).catch(err => {
         alert(err.response.data);
