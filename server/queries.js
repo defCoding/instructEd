@@ -36,11 +36,10 @@ const createUser = ((req, res) => {
   const values = [info.email, info.firstName, info.lastName, info.password];
 
   client.query(sql, values, (err, result) => {
-    console.log(result);
     if (err) {
       res.status(409).send('Email has already been taken by another account.');
     } else {
-      res.status(200).send('User created!');
+      res.status(201).send('User created!');
     }
   });
 });
@@ -65,12 +64,11 @@ const loginUser = ((req, res) => {
       values = [info.email];
 			client.query(sql, values, (err, result) => {
 				if (err) {
-          console.log(err);
           res.status(400).send('Something went wrong.');
         } else if (!result.rows.length) {
           res.status(401).send('Invalid email or password.');
         } else {
-          res.status(401).send('This account was created via Facebook.');
+          res.status(403).send('This account was created via Facebook.');
         }
       });
     } else {
@@ -97,9 +95,8 @@ const loginFacebook = (req, res) => {
         if (err) {
           res.status(400).send('Something went wrong.');
         } else {
-          console.log(result);
           const token = createLoginToken(result.rows[0].id);
-          res.cookie('LOGIN_TOKEN', token, { httpOnly: true }).status(200).send('Facebook account added.');
+          res.cookie('LOGIN_TOKEN', token, { httpOnly: true }).status(201).send('Facebook account added.');
         }
       });
     } else {
@@ -124,9 +121,9 @@ const forgotPassword = ((req, res) => {
         if (err) {
           res.status(400).send('Something went wrong.');
         } else if (!result.rows.length) {
-          res.status(401).send('This email is not associated with an account.');
+          res.status(404).send('This email is not associated with an account.');
         } else {
-          res.status(401).send('This account was created via Facebook.');
+          res.status(422).send('This account was created via Facebook.');
         }
       });
     } else {
@@ -157,7 +154,7 @@ const forgotPassword = ((req, res) => {
 
         transporter.sendMail(mailOptions, (error, response) => {
           if (error) {
-            res.status(400).send('Something went wrong with sending the email.');
+            res.status(500).send('Something went wrong with sending the email.');
           } else {
             res.status(200).send('Recovery email sent.');
           }
@@ -239,7 +236,7 @@ const updatePassword = async (req, res) => {
         res.status(400).send('Something went wrong.');
       } else {
         if (!result.rows.length) {
-          res.status(401).send('Could not find user.');
+          res.status(401).send();
         } else {
           const id = result.rows[0]['id'];
           sql = "UPDATE Users SET password=crypt($1, gen_salt('bf')) WHERE id=$2;";
@@ -248,6 +245,8 @@ const updatePassword = async (req, res) => {
           client.query(sql, values, (err, result) => {
             if (err) {
               res.status(400).send('Something went wrong.');
+            } else {
+              res.status(201).send();
             }
           });
         }
