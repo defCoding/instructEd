@@ -76,4 +76,14 @@ CREATE TABLE Assignments (
   FOREIGN KEY (course_id) REFERENCES Courses (course_id)
 );
 
+CREATE TABLE Announcements (
+  announcement_id VARCHAR(40),
+  announcement_title VARCHAR(40),
+  announcement_body VARCHAR(1000),
+  instructor_id uuid,
+  course_id VARCHAR(20),
+  PRIMARY KEY (announcement_id) VARCHAR(40),
+  FOREIGN KEY (instructor_id, course_id) REFERENCES Instructing (instructor_id, course_id)
+);
+
 --Section for Functions
