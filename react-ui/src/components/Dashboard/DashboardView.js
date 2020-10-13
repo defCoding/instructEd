@@ -1,8 +1,8 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import UserDrawer from './Drawer';
-import WidgetView from './WidgetView';
 import Navbar from './Navbar';
+import WidgetView from './WidgetView';
 
 const drawerWidth = 250;
 
@@ -35,12 +35,10 @@ export default function WidgetCase() {
 
   return (
     <div className={classes.root}>
-    <Navbar />
+      <Navbar />
+      <div className={classes.toolbar} />
       <UserDrawer />
-      <main className={classes.content}>
-        <div className={classes.toolbar} />
-        <WidgetView />
-      </main>
+      <WidgetView />
     </div>
   );
 }
