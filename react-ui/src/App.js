@@ -5,7 +5,7 @@ import Registration from './components/LoginAndRegistration/Registration';
 import ForgotPassword from './components/LoginAndRegistration/ForgotPassword';
 import ResetPassword from './components/LoginAndRegistration/ResetPassword';
 import DuoLogin from './components/LoginAndRegistration/DuoLogin';
-import Dashboard from './components/Dashboard/Dashboard';
+import DashboardView from './components/Dashboard/DashboardView';
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
             <Route path='/registration' component={Registration} />
             <Route path='/forgotpassword' component={ForgotPassword} />
             <Route path='/resetpassword/:token' component={ResetPassword} />
-            <Route path='/dashboard' component={Dashboard} />
+            <Route path='/dashboard' component={DashboardView} />
             <Route path='/duologin' component={DuoLogin} />
           </Switch>
         </Router>
