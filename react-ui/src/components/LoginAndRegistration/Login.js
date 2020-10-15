@@ -78,11 +78,11 @@ export default function Login(props) {
             <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Login</Typography>
           </Grid>
           <Grid container justify="center">
-            <TextField variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
-            <TextField variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
+            <TextField color="secondary" variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
+            <TextField color="secondary" variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
           </Grid>
           <Grid container justify="center">
-            <Button variant="contained" size="large" color="secondary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
+            <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
           </Grid>
           <Grid container justify="center">
             <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email,picture" callback={responseFacebook} className={classes.extraItemsForm} />

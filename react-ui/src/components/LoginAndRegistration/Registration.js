@@ -112,26 +112,26 @@ export default function Registration(props) {
       <Paper className={classes.paperContent}>
         <form className={classes.root}>
           <Grid container justify="center">
-            <Typography variant="h2" color="primary" className={classes.extraItemsForm}>Create Account</Typography>
+            <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Create Account</Typography>
           </Grid>
           <Grid container justify="center">
-            <TextField variant="outlined" label="First Name" name="firstName" value={values.firstName} onChange={handleInputChange} className={classes.textFieldForm}/>
-            <TextField variant="outlined" label="Last Name" name="lastName" value={values.lastName} onChange={handleInputChange} className={classes.textFieldForm}/>
-            <TextField variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
-            <TextField variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
-            <TextField variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
+            <TextField color="secondary" variant="outlined" label="First Name" name="firstName" value={values.firstName} onChange={handleInputChange} className={classes.textFieldForm}/>
+            <TextField color="secondary" variant="outlined" label="Last Name" name="lastName" value={values.lastName} onChange={handleInputChange} className={classes.textFieldForm}/>
+            <TextField color="secondary" variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
+            <TextField color="secondary" variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
+            <TextField color="secondary" variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
           </Grid>
           <Grid container justify="center">
-            <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
+            <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
           </Grid>
           <Grid container justify="center">
            <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email,picture" callback={responseFacebook} className={classes.extraItemsForm} />
           </Grid>
           <Grid container justify="center">
-            <MuiLink component={Link} to="/login" variant="body1" color="primary" className={classes.links}>Already have an account?</MuiLink>
+            <MuiLink component={Link} to="/login" color="secondary" variant="body1" className={classes.links}>Already have an account?</MuiLink>
           </Grid>
           <Grid container justify="center">
-            <MuiLink component={Link} to="/forgotpassword" variant="body1" color="primary" className={classes.links}>Forgot password?</MuiLink>
+            <MuiLink component={Link} to="/forgotpassword" color="secondary" variant="body1" className={classes.links}>Forgot password?</MuiLink>
           </Grid>
         </form>
       </Paper>
