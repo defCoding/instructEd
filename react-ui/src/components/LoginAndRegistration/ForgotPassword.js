@@ -46,19 +46,19 @@ export default function ForgotPassword() {
       <Paper className={classes.paperContent}>
         <form className={classes.root}>
           <Grid container justify="center">
-            <Typography variant="h2" color="primary" className={classes.extraItemsForm}>Forgot Password</Typography>
+            <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Forgot Password</Typography>
           </Grid>
           <Grid container justify="center">
             <TextField variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
           </Grid>
           <Grid container justify="center">
-            <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
+            <Button variant="contained" size="large" color="secondary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
           </Grid>
           <Grid container justify="center">
-            <MuiLink component={Link} to="/login" variant="body1" color="primary" className={classes.extraItemsForm}>Already have an account?</MuiLink>
+            <MuiLink component={Link} to="/login" variant="body1" color="secondary" className={classes.extraItemsForm}>Already have an account?</MuiLink>
           </Grid>
           <Grid container justify="center">
-            <MuiLink component={Link} to="/registration" variant="body1" color="primary" className={classes.extraItemsForm}>Sign up for an account</MuiLink>
+            <MuiLink component={Link} to="/registration" variant="body1" color="secondary" className={classes.extraItemsForm}>Sign up for an account</MuiLink>
           </Grid>
         </form>
       </Paper>

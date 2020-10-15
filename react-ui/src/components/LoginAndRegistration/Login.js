@@ -75,23 +75,23 @@ export default function Login(props) {
       <Paper className={classes.paperContent}>
         <form className={classes.root}>
           <Grid container justify="center">
-            <Typography variant="h2" color="primary" className={classes.extraItemsForm}>Login</Typography>
+            <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Login</Typography>
           </Grid>
           <Grid container justify="center">
             <TextField variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
             <TextField variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
           </Grid>
           <Grid container justify="center">
-            <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
+            <Button variant="contained" size="large" color="secondary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
           </Grid>
           <Grid container justify="center">
             <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email,picture" callback={responseFacebook} className={classes.extraItemsForm} />
           </Grid>
           <Grid container justify="center">
-            <MuiLink component={Link} to="/registration" variant="body1" color="primary" className={classes.links}>Sign up for an account</MuiLink>
+            <MuiLink component={Link} to="/registration" variant="body1" color="secondary" className={classes.links}>Sign up for an account</MuiLink>
           </Grid>
           <Grid container justify="center">
-            <MuiLink component={Link} to="/forgotpassword" variant="body1" color="primary" className={classes.links}>Forgot password?</MuiLink>
+            <MuiLink component={Link} to="/forgotpassword" variant="body1" color="secondary" className={classes.links}>Forgot password?</MuiLink>
           </Grid>
         </form>
       </Paper>

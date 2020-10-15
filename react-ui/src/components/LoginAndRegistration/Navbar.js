@@ -32,7 +32,7 @@ export default function Navbar() {
       <AppBar 
         position="static"
         className={classes.navbar}
-        color="primary">
+        color="secondary">
         <Toolbar>
         <IconButton 
           edge="start"
