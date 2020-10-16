@@ -1,15 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-<<<<<<< HEAD
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
-=======
 import { List, ListItemText, Paper, IconButton, Drawer, Divider, ListItem, Typography, Dialog, AppBar, Toolbar } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
->>>>>>> frontend
 
 const drawerWidth = 250;
 
@@ -85,7 +77,7 @@ function ClassDialog({selectedClass, open, setOpen}) {
   );
 }
 
-export default function CurrentDrawer() {
+export default function CurrentDrawer(props) {
   const [selectedClass, setSelectedClass] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
