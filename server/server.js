@@ -61,9 +61,12 @@ app.get('/dashboard', withDuoAuth);
  * Course, Assignments, and Announcements
  */
 app.get('/roles', withDuoAuth, db.getRole)
-app.get('/courses', withDuoAuth, db.getInstructorCourses) // select all
-app.get('/courses/instructor', withDuoAuth, db.getInstructorCourses) // instructing 
+app.get('/courses', withDuoAuth, db.getAllCourses) // select all
+app.get('/courses/instructor', withDuoAuth, db.getInstructorCourses) // instructing
 app.get('/courses/student', withDuoAuth, db.getStudentCourses) // enrollments
+app.get('/announcements', withDuoAuth, db.getAllAnnouncements)
+app.get('/announcements/instructor', withDuoAuth, db.getInstructorAnnouncements)
+app.get('/announcements/student', withDuoAuth, db.getStudentAnnouncements)
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));

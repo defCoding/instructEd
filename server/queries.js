@@ -35,7 +35,7 @@ client.connect(() => {
 
 const createUser = ((req, res) => {
   const info = req.body;
- 
+
   const sql = "INSERT INTO Users VALUES(default, default, $1, $2, $3, crypt($4, gen_salt('bf')), false);";
   const values = [info.email, info.firstName, info.lastName, info.password];
 
@@ -283,6 +283,20 @@ const getRole = (req, res) => {
 /**
  * Courses, Assignments, and Announcements
  */
+
+
+const getAllCourses = (req, res) => {
+  const sql = 'SELECT * FROM Courses;';
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send('Something went wrong.');
+    } else {
+      res.status(200).send(result.rows);
+    }
+  });
+}
+
 const getStudentCourses = (req, res) => {
   const id = req.userID;
 
@@ -314,6 +328,52 @@ const getInstructorCourses = (req, res) => {
   });
 }
 
+const getAllAnnouncements = (req, res) =>
+{
+  const sql = 'SELECT * FROM Announcements;';
+  client.query(sql, (err, result) => {
+    if(err) {
+      console.log(err);
+      res.status(400).send('Something went wrong.');
+    } else {
+      res.status(200).send(result.rows);
+    }
+  })
+}
+
+const getStudentAnnouncements = (req, res) =>
+{
+  const id = req.userID;
+
+  const sql = 'SELECT * FROM Announcements INNER JOIN Enrollments ON Courses.course_id=Enrollments.course_id WHERE Enrollments.user+id=$1;';
+  const values = [id];
+
+  client.query(sql, values, (err, result) => {
+    if(err) {
+      console.log(err);
+      res.status(400).send('Something went wrong.');
+    } else {
+      res.status(200).send(result.rows); // this should be the announcements for the courses that a given student is in
+    }
+  });
+}
+
+const getInstructorAnnouncements = (req, res) =>
+{
+  const id = req.userID;
+
+  const sql = 'SELECT * FROM Announcements INNER JOIN Instructing ON Courses.course_id=Instructing.course_id WHERE Instructing.user+id=$1;';
+  const values = [id];
+
+  client.query(sql, values, (err, result) => {
+    if(err) {
+      console.log(err);
+      res.status(400).send('Something went wrong.');
+    } else {
+      res.status(200).send(result.rows); // this should be the announcements for the courses that a given instructor teaches
+    }
+  });
+}
 
 module.exports = {
   createUser,
@@ -323,6 +383,10 @@ module.exports = {
   resetPassword,
   updatePassword,
   getRole,
+  getAllCourses,
   getStudentCourses,
-  getInstructorCourses
+  getInstructorCourses,
+  getAllAnnouncements,
+  getStudentAnnouncements,
+  getInstructorAnnouncements
 };
