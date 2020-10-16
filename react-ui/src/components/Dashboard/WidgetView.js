@@ -1,8 +1,9 @@
 import React from 'react';
 import WidgetCase from './WidgetCase';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, Box } from '@material-ui/core';
-import { sizing } from '@material-ui/system';
+import { Grid } from '@material-ui/core';
+
+
 
 const useStyles = makeStyles((theme) => ({
   // necessary for content to be below app bar
@@ -32,10 +33,19 @@ export default function WidgetView() {
         <Grid item xs={6}>
           <WidgetCase />
         </Grid>
+        <Grid item xs={6}>
+          <WidgetCase />
+        </Grid>
+        <Grid item xs={6}>
+          <WidgetCase />
+        </Grid>
+        <Grid item xs={6}>
+          <WidgetCase />
+        </Grid>
+        <Grid item xs={6}>
+          <WidgetCase />
+        </Grid>
       </Grid>
     </main>
   );
 }
-
-
-{/*  */}
