@@ -1,11 +1,10 @@
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
-import { FormGroup, FormControlLabel, Typography, Switch } from '@material-ui/core';
+import { FormGroup, FormControlLabel, Typography, Switch, Menu, MenuItem, Badge, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { createMuiTheme } from '@material-ui/core/styles';
 
 const drawerWidth = 250;
 
@@ -18,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(3),
+    marginRight: theme.spacing(1),
   },
 }));
 
@@ -27,7 +26,14 @@ export default function Navbar() {
   const [auth, setAuth] = React.useState(true);
   const [darkMode, setDarkMode] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
 
   const handleChange = (event) => {
@@ -36,25 +42,38 @@ export default function Navbar() {
 
   };
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   return (
-    <AppBar position="fixed" className={classes.appBar}>
+    <AppBar position="fixed" className={classes.appBar} color="primary">
       <Toolbar>
-        <Typography align="left" variant="h6" className={classes.title}>
+        <Typography color="secondary" align="left" variant="h6" className={classes.title}>
           instructED
         </Typography>
         <FormGroup>
           <FormControlLabel control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />} />
         </FormGroup>
-        <NotificationsIcon className={classes.menuButton} />
-        <AccountCircleIcon className={classes.menuButton} />
+        <IconButton
+          color="secondary"
+          className={classes.menuButton}>
+            <Badge badgeContent={17} color="secondary">
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
+        <IconButton
+          color="secondary"
+          onClick={handleClick}
+          className={classes.menuButton}>
+            <AccountCircleIcon />
+        </IconButton>
+        <Menu
+          id="profile"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={handleClose}>My account</MenuItem>
+          <MenuItem onClick={handleClose}>Logout</MenuItem>
+        </Menu>
       </Toolbar>
     </AppBar>
   );
