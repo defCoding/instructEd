@@ -29,10 +29,14 @@ client.connect(() => {
   console.log("Connected to database.");
 });
 
+/**
+ * Login and Registration Queries
+ */
+
 const createUser = ((req, res) => {
   const info = req.body;
  
-  const sql = "INSERT INTO Users VALUES(default, $1, $2, $3, crypt($4, gen_salt('bf')), false);";
+  const sql = "INSERT INTO Users VALUES(default, default, $1, $2, $3, crypt($4, gen_salt('bf')), false);";
   const values = [info.email, info.firstName, info.lastName, info.password];
 
   client.query(sql, values, (err, result) => {
@@ -89,7 +93,7 @@ const loginFacebook = (req, res) => {
     if (err) {
       res.status(400).send('Something went wrong.');
     } else if (!result.rows.length) {
-      sql = "INSERT INTO Users VALUES(default, $1, $2, '', '', true) RETURNING id;";
+      sql = "INSERT INTO Users VALUES(default, default, $1, $2, '', '', true) RETURNING id;";
       values = [info.email, info.name];
       client.query(sql, values, (err, result) => {
         if (err) {
@@ -258,11 +262,37 @@ const updatePassword = async (req, res) => {
 };
 
 
+const getRole = (req, res) => {
+  const id = req.userID;
+
+  let sql = 'SELECT main_role FROM Users WHERE id=$1;';
+  let values = [id];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send('Something went wrong.');
+    } else {
+      if (!result.rows.length) {
+        res.status(400).send('Something went wrong.');
+      } else {
+        console.log(result);
+        res.status(200).send();
+      }
+    }
+  });
+}
+/**
+ * Courses, Assignments, and Announcements
+ */
+
+
+
 module.exports = {
   createUser,
   loginUser,
   loginFacebook,
   forgotPassword,
   resetPassword,
-  updatePassword
+  updatePassword,
+  getRole
 };

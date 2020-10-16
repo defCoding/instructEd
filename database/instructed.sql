@@ -1,14 +1,25 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+CREATE TABLE Roles (
+  role VARCHAR(20),
+  PRIMARY KEY (role)
+);
+
+INSERT INTO Roles values('admin');
+INSERT INTO Roles values('instructor');
+INSERT INTO Roles values('student');
+
 CREATE TABLE Users (
   id uuid DEFAULT uuid_generate_v4(),
+  main_role VARCHAR(20) NOT NULL DEFAULT 'student',
   email text UNIQUE, 
   first_name VARCHAR(50),
   last_name VARCHAR(50),
   password VARCHAR(64),
   oauth bool,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  FOREIGN KEY (main_role) REFERENCES Roles (role)
 );
 
 CREATE TABLE PasswordTokens (
@@ -30,17 +41,17 @@ CREATE TABLE FacebookUsers (
 );
 
 CREATE TABLE Courses (
-  course_id VARCHAR(20),
+  course_id SERIAL,
   course_name VARCHAR(25) NOT NULL,
   --instructor_id uuid NOT NULL,
-  term_id VARCHAR(20) NOT NULL,
-  PRIMARY KEY (course_id),
+  term VARCHAR(20) NOT NULL,
+  PRIMARY KEY (course_id)
   -- (Depends on future table structure) FOREIGN KEY (instructor_id) REFERENCES Users (id)
 );
 
 CREATE TABLE Enrollments (
   student_id uuid,
-  course_id VARCHAR(20),
+  course_id INTEGER NOT NULL,
   PRIMARY KEY (student_id, course_id),
   FOREIGN KEY (student_id) REFERENCES Users (id),
   FOREIGN KEY (course_id) REFERENCES Courses (course_id)
@@ -48,30 +59,32 @@ CREATE TABLE Enrollments (
 
 CREATE TABLE Instructing (
   instructor_id uuid,
-  course_id VARCHAR(20),
+  course_id INTEGER NOT NULL,
   PRIMARY KEY (instructor_id, course_id),
   FOREIGN KEY (instructor_id) REFERENCES Users (id),
   FOREIGN KEY (course_id) REFERENCES Courses (course_id)
 );
 
-CREATE TABLE Submissions (
-  submission_id VARCHAR(40), --May need to be changed to a randomly generated id
-  assignment_id VARCHAR(40) NOT NULL, --^^
-  submission_types VARCHAR(10) ARRAY NOT NULL,
-  --content VARCHAR(30) "" ARRAY, "" should be either bytea or large objects, will need a table to store these.
-  grade VARCHAR(5),
-  time_submitted TIMESTAMP,
-  PRIMARY KEY (submission_id),
-  FOREIGN KEY (assignment_id) REFERENCES Assignments (assignment_id)
-);
-
 CREATE TABLE Assignments (
-  assignment_id VARCHAR(40),
+  assignment_id SERIAL,
   assignment_name VARCHAR(50) NOT NULL,
-  assignment_decription VARCHAR(500),
-  course_id VARCHAR(20) NOT NULL,
+  assignment_decription TEXT,
+  course_id INTEGER NOT NULL,
   deadline TIMESTAMP NOT NULL,
   submission_types VARCHAR(10) ARRAY NOT NULL,
   PRIMARY KEY (assignment_id),
   FOREIGN KEY (course_id) REFERENCES Courses (course_id)
+);
+
+CREATE TABLE Submissions (
+  submission_id uuid DEFAULT uuid_generate_v4(),
+  assignment_id INTEGER NOT NULL, --^^
+  user_id uuid NOT NULL,
+  submission_types VARCHAR(10) ARRAY NOT NULL,
+  --content VARCHAR(30) "" ARRAY, "" should be either bytea or large objects, will need a table to store these.
+  grade FLOAT,
+  time_submitted TIMESTAMP,
+  PRIMARY KEY (submission_id),
+  FOREIGN KEY (user_id) REFERENCES Users (id),
+  FOREIGN KEY (assignment_id) REFERENCES Assignments (assignment_id)
 );

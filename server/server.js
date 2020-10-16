@@ -21,13 +21,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+/**
+ * Login and Registration Endpoints
+ */
 app.post('/users', db.createUser);
 app.post('/authenticate', db.loginUser);
 app.post('/authenticate/facebook', db.loginFacebook);
 app.post('/forgotPassword', db.forgotPassword);
 app.post('/updatePassword', db.updatePassword);
 app.get('/resetPassword/:token', db.resetPassword, serveIndex);
-app.get('/dashboard', withDuoAuth);
 
 app.get('/duo_frame', withAuth, (req, res) => {
   const sigRequest = Duo.sign_request(process.env.DUO_IKEY, process.env.DUO_SKEY, process.env.DUO_AKEY, req.userID);
@@ -49,6 +51,19 @@ app.post('/duo_login', withAuth, (req, res) => {
     res.status(403).send('Duo login failed.');
   }
 });
+
+/**
+ * Dashboard Endpoints
+ */
+app.get('/dashboard', withDuoAuth);
+
+/**
+ * Course, Assignments, and Announcements
+ */
+app.get('/roles', withDuoAuth, db.getRole)
+app.get('/courses', withDuoAuth) // select all
+app.get('/courses/student', withDuoAuth) // enrollments
+app.get('/courses/instructor', withDuoAuth) // instructing 
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));
