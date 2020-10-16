@@ -41,7 +41,7 @@ CREATE TABLE Courses (
 CREATE TABLE Enrollments (
   student_id uuid,
   course_id VARCHAR(20),
-  PRIMARY KEY (student_id, course_id);
+  PRIMARY KEY (student_id, course_id),
   FOREIGN KEY (student_id) REFERENCES Users (id),
   FOREIGN KEY (course_id) REFERENCES Courses (course_id)
 );
