@@ -18,6 +18,11 @@ export default function UpcomingAssignments() {
                 </>
             )}
         </List>
-    );    
+    );
+    
+    function setAssignments(){
+        //get student assignments
+        //assignments = axios.get();
+    }
     
 }
