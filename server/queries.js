@@ -10,18 +10,19 @@ require('dotenv').config();
 const resetExpirationAmount = 15;
 const resetExpirationUnit = 'minutes';
 
+/*
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
-/*
+*/
+
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo'
 });
-*/
 
 
 client.connect(() => {
@@ -284,8 +285,24 @@ const getRole = (req, res) => {
  */
 
 
-const getAllCourses = (req, res) => {
-  const sql = 'SELECT * FROM Courses;';
+const getCourses = (role) => (req, res) => {
+  let filter;
+  switch (role) {
+    case 'student':
+      filter = ' INNER JOIN Enrollments on Courses.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
+      break;
+    case 'instructor':
+      filter = ' INNER JOIN Instructing on Courses.course_id=Instructing.course_id WHERE Instructing.user_id=$1;';
+      break;
+    case 'admin':
+      filter = '';
+      break;
+    default: 
+      throw new Error('Invalid role.')
+  }
+
+  const sql = `SELECT * FROM Courses${filter};`;
+  const values = [req.userID];
 
   client.query(sql, values, (err, result) => {
     if (err) {
@@ -296,41 +313,27 @@ const getAllCourses = (req, res) => {
   });
 }
 
-const getStudentCourses = (req, res) => {
-  const id = req.userID;
 
-  const sql = 'SELECT * FROM Courses INNER JOIN Enrollments ON Courses.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
-  const values = [id];
+const getAnnouncements = (role) => (req, res) => {
+  let filter;
+  switch (role) {
+    case 'student':
+      filter = ' INNER JOIN Enrollments on Announcements.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
+      break;
+    case 'instructor':
+      filter = ' INNER JOIN Instructing on Announcements.course_id=Instructing.course_id WHERE Instructing.user_id=$1;';
+      break;
+    case 'admin':
+      filter = '';
+      break;
+    default: 
+      throw new Error('Invalid role.')
+  }
+  
+  const sql = `SELECT * FROM Announcements${filter};`
+  const values = [req.userID];
 
   client.query(sql, values, (err, result) => {
-    if (err) {
-      res.status(400).send('Something went wrong.');
-    } else {
-      res.status(200).send(result.rows);
-    }
-  });
-}
-
-const getInstructorCourses = (req, res) => {
-  const id = req.userID;
-
-  const sql = 'SELECT * FROM Courses INNER JOIN Instructing ON Courses.course_id=Instructing.course_id WHERE Instructing.user_id=$1;';
-  const values = [id];
-
-  client.query(sql, values, (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(400).send('Something went wrong.');
-    } else {
-      res.status(200).send(result.rows);
-    }
-  });
-}
-
-const getAllAnnouncements = (req, res) =>
-{
-  const sql = 'SELECT * FROM Announcements;';
-  client.query(sql, (err, result) => {
     if(err) {
       console.log(err);
       res.status(400).send('Something went wrong.');
@@ -338,40 +341,6 @@ const getAllAnnouncements = (req, res) =>
       res.status(200).send(result.rows);
     }
   })
-}
-
-const getStudentAnnouncements = (req, res) =>
-{
-  const id = req.userID;
-
-  const sql = 'SELECT * FROM Announcements INNER JOIN Enrollments ON Announcements.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
-  const values = [id];
-
-  client.query(sql, values, (err, result) => {
-    if(err) {
-      console.log(err);
-      res.status(400).send('Something went wrong.');
-    } else {
-      res.status(200).send(result.rows); // this should be the announcements for the courses that a given student is in
-    }
-  });
-}
-
-const getInstructorAnnouncements = (req, res) =>
-{
-  const id = req.userID;
-
-  const sql = 'SELECT * FROM Announcements INNER JOIN Instructing ON Announcements.course_id=Instructing.course_id WHERE Instructing.user_id=$1;';
-  const values = [id];
-
-  client.query(sql, values, (err, result) => {
-    if(err) {
-      console.log(err);
-      res.status(400).send('Something went wrong.');
-    } else {
-      res.status(200).send(result.rows); // this should be the announcements for the courses that a given instructor teaches
-    }
-  });
 }
 
 module.exports = {
@@ -382,10 +351,6 @@ module.exports = {
   resetPassword,
   updatePassword,
   getRole,
-  getAllCourses,
-  getStudentCourses,
-  getInstructorCourses,
-  getAllAnnouncements,
-  getStudentAnnouncements,
-  getInstructorAnnouncements
+  getCourses,
+  getAnnouncements
 };
