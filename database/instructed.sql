@@ -52,16 +52,16 @@ CREATE TABLE Courses (
 CREATE TABLE Enrollments (
   user_id uuid,
   course_id INTEGER NOT NULL,
-  PRIMARY KEY (student_id, course_id),
-  FOREIGN KEY (student_id) REFERENCES Users (id),
+  PRIMARY KEY (user_id, course_id),
+  FOREIGN KEY (user_id) REFERENCES Users (id),
   FOREIGN KEY (course_id) REFERENCES Courses (course_id)
 );
 
 CREATE TABLE Instructing (
   user_id uuid,
   course_id INTEGER NOT NULL,
-  PRIMARY KEY (instructor_id, course_id),
-  FOREIGN KEY (instructor_id) REFERENCES Users (id),
+  PRIMARY KEY (user_id, course_id),
+  FOREIGN KEY (user_id) REFERENCES Users (id),
   FOREIGN KEY (course_id) REFERENCES Courses (course_id)
 );
 
@@ -74,6 +74,18 @@ CREATE TABLE Assignments (
   submission_types VARCHAR(10) ARRAY NOT NULL,
   PRIMARY KEY (assignment_id),
   FOREIGN KEY (course_id) REFERENCES Courses (course_id)
+);
+
+CREATE TABLE Announcements (
+  announcement_id SERIAL,
+  announcement_name VARCHAR(50) NOT NULL,
+  announcement_description TEXT,
+  course_id INTEGER NOT NULL,
+  date_created TIMESTAMP NOT NULL,
+  author_id uuid NOT NULL,
+  PRIMARY KEY (announcement_id),
+  FOREIGN KEY (course_id) REFERENCES Courses (course_id),
+  FOREIGN KEY (author_id) REFERENCES Users (id)
 );
 
 CREATE TABLE Submissions (

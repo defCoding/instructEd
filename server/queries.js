@@ -345,7 +345,7 @@ const getStudentAnnouncements = (req, res) =>
 {
   const id = req.userID;
 
-  const sql = 'SELECT * FROM Announcements INNER JOIN Enrollments ON Courses.course_id=Enrollments.course_id WHERE Enrollments.user+id=$1;';
+  const sql = 'SELECT * FROM Announcements INNER JOIN Enrollments ON Annoucements.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
   const values = [id];
 
   client.query(sql, values, (err, result) => {
@@ -362,7 +362,7 @@ const getInstructorAnnouncements = (req, res) =>
 {
   const id = req.userID;
 
-  const sql = 'SELECT * FROM Announcements INNER JOIN Instructing ON Courses.course_id=Instructing.course_id WHERE Instructing.user+id=$1;';
+  const sql = 'SELECT * FROM Announcements INNER JOIN Instructing ON Announcements.course_id=Instructing.course_id WHERE Instructing.user_id=$1;';
   const values = [id];
 
   client.query(sql, values, (err, result) => {

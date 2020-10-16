@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import UserDrawer from './Drawer';
 import Navbar from './Navbar';
@@ -34,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Dashboard() {
   const classes = useStyles();
 
-  let [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState([]);
+  const coursesRef = useRef([]);
 
   useEffect(() => {
     axios.get('/roles')
@@ -58,7 +59,8 @@ export default function Dashboard() {
   }, []);
 
   function getCoursesFromResponse(res) {
-    setCourses(courses.concat(res.data));
+    coursesRef.current = coursesRef.current.concat(res.data);
+    setCourses(coursesRef.current);
   }
 
   return (
