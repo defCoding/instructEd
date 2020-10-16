@@ -6,8 +6,6 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import Typography from '@material-ui/core/Typography';
 
-const getRegisteredClasses = ['firstClass', 'secondClass', 'thirdClass'];
-
 const drawerWidth = 250;
 
 const useStyles = makeStyles(theme => ({
@@ -26,8 +24,9 @@ const useStyles = makeStyles(theme => ({
   toolbar: theme.mixins.toolbar,
 }));
 
-export default function CurrentDrawer() {
+export default function CurrentDrawer(props) {
   const classes = useStyles();
+  const courses = props.courses;
 
   return (
     <div className={classes.root}>
@@ -42,9 +41,9 @@ export default function CurrentDrawer() {
         <div className={classes.toolbar} />
         <Divider />
         <List>
-          {getRegisteredClasses.map((text) => (
-            <ListItem button key={text}>
-              <Typography color='primary'>{text}</Typography>
+          {courses.map((course) => (
+            <ListItem button key={course.course_name}>
+              <Typography color='primary'>{course.course_name}</Typography>
             </ListItem>
           ))}
         </List>

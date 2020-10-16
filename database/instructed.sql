@@ -50,7 +50,7 @@ CREATE TABLE Courses (
 );
 
 CREATE TABLE Enrollments (
-  student_id uuid,
+  user_id uuid,
   course_id INTEGER NOT NULL,
   PRIMARY KEY (student_id, course_id),
   FOREIGN KEY (student_id) REFERENCES Users (id),
@@ -58,7 +58,7 @@ CREATE TABLE Enrollments (
 );
 
 CREATE TABLE Instructing (
-  instructor_id uuid,
+  user_id uuid,
   course_id INTEGER NOT NULL,
   PRIMARY KEY (instructor_id, course_id),
   FOREIGN KEY (instructor_id) REFERENCES Users (id),

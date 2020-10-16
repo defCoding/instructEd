@@ -10,19 +10,19 @@ require('dotenv').config();
 const resetExpirationAmount = 15;
 const resetExpirationUnit = 'minutes';
 
-/*
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
-*/
 
+/*
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo'
 });
+*/
 
 
 client.connect(() => {
@@ -265,8 +265,8 @@ const updatePassword = async (req, res) => {
 const getRole = (req, res) => {
   const id = req.userID;
 
-  let sql = 'SELECT main_role FROM Users WHERE id=$1;';
-  let values = [id];
+  const sql = 'SELECT main_role FROM Users WHERE id=$1;';
+  const values = [id];
 
   client.query(sql, values, (err, result) => {
     if (err) {
@@ -275,8 +275,7 @@ const getRole = (req, res) => {
       if (!result.rows.length) {
         res.status(400).send('Something went wrong.');
       } else {
-        console.log(result);
-        res.status(200).send();
+        res.status(200).send(result.rows[0]['main_role']);
       }
     }
   });
@@ -284,7 +283,36 @@ const getRole = (req, res) => {
 /**
  * Courses, Assignments, and Announcements
  */
+const getStudentCourses = (req, res) => {
+  const id = req.userID;
 
+  const sql = 'SELECT * FROM Courses INNER JOIN Enrollments ON Courses.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
+  const values = [id];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send('Something went wrong.');
+    } else {
+      res.status(200).send(result.rows);
+    }
+  });
+}
+
+const getInstructorCourses = (req, res) => {
+  const id = req.userID;
+
+  const sql = 'SELECT * FROM Courses INNER JOIN Instructing ON Courses.course_id=Instructing.course_id WHERE Instructing.user_id=$1;';
+  const values = [id];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send('Something went wrong.');
+    } else {
+      res.status(200).send(result.rows);
+    }
+  });
+}
 
 
 module.exports = {
@@ -294,5 +322,7 @@ module.exports = {
   forgotPassword,
   resetPassword,
   updatePassword,
-  getRole
+  getRole,
+  getStudentCourses,
+  getInstructorCourses
 };
