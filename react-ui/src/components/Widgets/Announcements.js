@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import { List, ListItemText, ListItem, Divider } from '@material-ui/core';
 
 //const announcements = [{"header":"P465", "body":"This is announcement 1"}, {"header":"P465", "body":"This is announcement 2"}];
@@ -29,8 +30,8 @@ export default function Announcements(props) {
     }, []);
 
     function getAnnouncementsFromResponse(res) {
-        announcementsRef.current = coursesRef.current.concat(res.data);
-        setAnnouncements(coursesRef.current);
+        announcementsRef.current = announcementsRef.current.concat(res.data);
+        setAnnouncements(announcementsRef.current);
     }
 
     return (
@@ -38,7 +39,7 @@ export default function Announcements(props) {
             {announcements.map((announcement) => (
                 <>
                     <ListItem>
-                        <ListItemText primary={announcement.announcement_title} secondary={announcement.course_id} />
+                        <ListItemText primary={announcement.announcement_name} secondary={announcement.course_id} />
                     </ListItem>
                     <Divider />
                 </>

@@ -10,19 +10,18 @@ require('dotenv').config();
 const resetExpirationAmount = 15;
 const resetExpirationUnit = 'minutes';
 
-/*
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
-*/
-
+/*
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo'
 });
+*/
 
 
 client.connect(() => {
@@ -345,7 +344,7 @@ const getStudentAnnouncements = (req, res) =>
 {
   const id = req.userID;
 
-  const sql = 'SELECT * FROM Announcements INNER JOIN Enrollments ON Annoucements.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
+  const sql = 'SELECT * FROM Announcements INNER JOIN Enrollments ON Announcements.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
   const values = [id];
 
   client.query(sql, values, (err, result) => {
