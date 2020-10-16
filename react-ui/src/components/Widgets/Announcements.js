@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { List, ListItemText, ListItem, Divider } from '@material-ui/core';
 
-class Announcements extends Component {
-    constructor(props){
-        super(props);
-    }
+const data = [{"header":"P465", "body":"This is announcement 1"}, {"header":"P465", "body":"This is announcement 2"}];
 
-    //Should return all announcements for courses the student is enrolled in, then in the <div> section display them in a list.
-
-    render() {
-        const data = [{"Announcement 1":"This is announcement 1"}, {"Announcement 2":"This is announcement 2"}];
-        const listitems = data.map((a) => <li key={a.name}>{a.name}</li>);
-        return (
-            <div>
-                {listitems}
-            </div>
-        );    
-    }
+export default function Announcements() {
+    return (
+        <List>
+            {data.map((announcement) => (
+                <>
+                    <ListItem>
+                        <ListItemText primary={announcement.header} secondary={announcement.body} />
+                    </ListItem>
+                    <Divider />
+                </>
+            ))}
+        </List>
+    );
 }
