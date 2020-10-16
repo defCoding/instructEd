@@ -38,7 +38,8 @@ export default function Navbar() {
           edge="start"
           aria-label="menu"
           onClick={handleClick}>
-            <MenuIcon style={{ color:'#ffffff' }} />
+            <MenuIcon
+            color="secondary" />
         </IconButton>
         <Menu
           anchorEl={anchorEl}
@@ -56,7 +57,7 @@ export default function Navbar() {
           
         <Typography 
           variant="h6"
-          style={{ color:'#ffffff' }}
+          color="secondary"
           className={classes.title}>
           instructED
         </Typography>

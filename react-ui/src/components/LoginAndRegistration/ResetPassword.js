@@ -56,14 +56,14 @@ export default function ResetPassword(props) {
         <Paper className={classes.paperContent}>
           <form className={classes.root}>
             <Grid container justify="center">
-              <Typography variant="h2" color="primary" className={classes.extraItemsForm}>Create New Password</Typography>
+              <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Create New Password</Typography>
             </Grid>
             <Grid container justify="center">
-              <TextField variant="outlined" label="New Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
-              <TextField variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
+              <TextField color="secondary" variant="outlined" label="New Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
+              <TextField color="secondary" variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
             </Grid>
             <Grid container justify="center">
-              <Button variant="contained" size="large" color="primary" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
+              <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
             </Grid>
           </form>
         </Paper>
