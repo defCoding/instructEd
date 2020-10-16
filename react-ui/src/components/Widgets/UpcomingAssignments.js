@@ -1,14 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { List, ListItemText, ListItem, Divider } from '@material-ui/core'
 
-export default function Announcements() {
-    const data = [{"Announcement 1":"This is announcement 1"}, {"Announcement 2":"This is announcement 2"}];
-    const listitems = data.map((a) => <li key={a.name}>{a.name}</li>);
-    //Should return all assignments for courses the student is enrolled in, then in the <div> section display them in a list.
+export default function UpcomingAssignments() {
+    //const data = [{"Announcement 1":"This is announcement 1"}, {"Announcement 2":"This is announcement 2"}];
+    const [assignments, setAssignments] = useState([]);
+    setAssignments();
 
     return (
-        <div>
-            {listitems}
-        </div>
+        <List>
+            {assignments.map((assignment) =>
+                <>
+                    <ListItem>
+                        <ListItemText primary={assignment.assignment_name} secondary={assignment.course_id}
+                        secondary={assignment.deadline} />
+                    </ListItem>
+                    <Divider />
+                </>
+            )}
+        </List>
     );    
     
 }
