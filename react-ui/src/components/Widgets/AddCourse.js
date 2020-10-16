@@ -15,7 +15,7 @@ const useStyle = makeStyles(theme => ({
   },
 }))
 
-export default function Announcements() {
+export default function AddCourse() {
   const classes = useStyle();
 
     return (
