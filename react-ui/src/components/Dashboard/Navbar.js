@@ -1,12 +1,36 @@
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
-import { FormGroup, FormControlLabel, Typography, Switch, Menu, MenuItem, Badge, IconButton } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { FormGroup, FormControlLabel, Typography, Switch, Menu, MenuItem, Badge, ListItemIcon, IconButton, ListItemText } from '@material-ui/core';
+import { makeStyles, withStyles} from '@material-ui/core/styles';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { ThumbDown, ThumbUp } from '@material-ui/icons';
+
+const notifications = [{"type": "File Upload", "body": "Upload approval"}, {"type": "Message", "body": "Message notification"}];
 
 const drawerWidth = 250;
+
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+    width: 500,
+  },
+})((props) => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -19,6 +43,9 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(1),
   },
+  notificationButton: {
+    margin: theme.spacing(2),
+  }
 }));
 
 export default function Navbar() {
@@ -26,21 +53,42 @@ export default function Navbar() {
   const [auth, setAuth] = React.useState(true);
   const [darkMode, setDarkMode] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [toggleNotifications, setToggleNotifications] = React.useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
+  const displayNotifications = (event) => {
+    setToggleNotifications(event.currentTarget);
+  }
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  const notificationClose = () => {
+    setToggleNotifications(null);
+  }
 
   const handleChange = (event) => {
     setAuth(event.target.checked);
     setDarkMode(!darkMode);
-
   };
+
+  function needsThumbs(type) {
+    if (type === "File Upload") {
+      return (
+      <ListItemIcon>
+        <ThumbUp className={classes.notificationButton} />
+        <ThumbDown className={classes.notificationButton} />
+      </ListItemIcon>
+      );
+    }
+    else {
+      return null;
+    }
+  }
 
   return (
     <AppBar position="fixed" className={classes.appBar} color="primary">
@@ -53,11 +101,28 @@ export default function Navbar() {
         </FormGroup>
         <IconButton
           color="secondary"
+          onClick={displayNotifications}
           className={classes.menuButton}>
-            <Badge badgeContent={17} color="secondary">
+            <Badge badgeContent={notifications.length} color="secondary">
               <NotificationsIcon />
             </Badge>
-          </IconButton>
+        </IconButton>
+        <StyledMenu
+          id="customized-menu"
+          anchorEl={toggleNotifications}
+          keepMounted
+          open={Boolean(toggleNotifications)}
+          onClose={notificationClose}
+        >
+          {notifications.map((notification) => (
+            <MenuItem>
+              <ListItemText className={classes.notificationButton}  
+                primary={notification.type} 
+                secondary={notification.body} />
+              {needsThumbs(notification.type)}
+            </MenuItem>
+          ))}
+        </StyledMenu>
         <IconButton
           color="secondary"
           onClick={handleClick}
