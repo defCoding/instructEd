@@ -1,13 +1,16 @@
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
-import { FormGroup, FormControlLabel, Typography, Switch, Menu, MenuItem, Badge, ListItemIcon, IconButton, ListItemText } from '@material-ui/core';
+import { FormGroup, FormControlLabel, Typography, Switch, Menu, ListItem, MenuItem, Badge, ListItemIcon, IconButton, ListItemText } from '@material-ui/core';
 import { makeStyles, withStyles} from '@material-ui/core/styles';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import { ThumbDown, ThumbUp } from '@material-ui/icons';
+import { ThumbDown, ThumbUp, Delete } from '@material-ui/icons';
 
-const notifications = [{"type": "File Upload", "body": "Upload approval"}, {"type": "Message", "body": "Message notification"}];
+var notifications = [{"type": "File Upload", "body": "Upload approval"}, 
+                        {"type": "Message", "body": "Message notification"},
+                        {"type": "File Upload", "body": "Upload approval"}, 
+                        {"type": "Message", "body": "Message notification"}];
 
 const drawerWidth = 250;
 
@@ -80,13 +83,44 @@ export default function Navbar() {
     if (type === "File Upload") {
       return (
       <ListItemIcon>
-        <ThumbUp className={classes.notificationButton} />
-        <ThumbDown className={classes.notificationButton} />
+        <IconButton
+          className={classes.notificationButton}> 
+          <ThumbUp /> 
+        </IconButton>
+        <IconButton
+          className={classes.notificationButton}> 
+          <ThumbDown /> 
+        </IconButton>
       </ListItemIcon>
       );
     }
     else {
       return null;
+    }
+  }
+
+  function renderNotifications(notification) {
+    if (notifications.length === 0) {
+      return (
+        <ListItemText
+          className={classes.notificationButton}
+          primary="No Notifications to Display!" />
+      );
+    }
+    else {
+      return (
+        <>
+          <ListItemText 
+            className={classes.notificationButton}  
+            primary={notification.type} 
+            secondary={notification.body} />
+          {needsThumbs(notification.type)}
+          <IconButton
+            className={classes.notificationButton}>
+            <Delete /> 
+          </IconButton>
+        </>
+      );
     }
   }
 
@@ -115,12 +149,9 @@ export default function Navbar() {
           onClose={notificationClose}
         >
           {notifications.map((notification) => (
-            <MenuItem>
-              <ListItemText className={classes.notificationButton}  
-                primary={notification.type} 
-                secondary={notification.body} />
-              {needsThumbs(notification.type)}
-            </MenuItem>
+            <ListItem>
+              {renderNotifications(notification)}
+            </ListItem>
           ))}
         </StyledMenu>
         <IconButton
