@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dashboard() {
+export default function Dashboard(props) {
   const classes = useStyles();
 
   const [courses, setCourses] = useState([]);
@@ -55,7 +55,13 @@ export default function Dashboard() {
             throw new Error('Invalid role.');
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => {
+        if (err.response.status === 401) { 
+          props.history.push('/login');
+        } else {
+          console.log(err);
+        }
+      });
   }, []);
 
   function getCoursesFromResponse(res) {

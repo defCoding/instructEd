@@ -78,6 +78,7 @@ const loginUser = ((req, res) => {
     } else {
       // Issue authorization token.
       const token = createLoginToken(result.rows[0].id);
+      res.cookie('LOGIN_TOKEN', {expires: Date.now()});
       res.cookie('LOGIN_TOKEN', token, { httpOnly: true }).status(200).send('Token sent!');
     }
   });
@@ -100,11 +101,13 @@ const loginFacebook = (req, res) => {
           res.status(400).send('Something went wrong.');
         } else {
           const token = createLoginToken(result.rows[0].id);
+          res.cookie('LOGIN_TOKEN', {expires: Date.now()});
           res.cookie('LOGIN_TOKEN', token, { httpOnly: true }).status(201).send('Facebook account added.');
         }
       });
     } else {
       const token = createLoginToken(result.rows[0].id);
+      res.cookie('LOGIN_TOKEN', {expires: Date.now()});
       res.cookie('LOGIN_TOKEN', token, { httpOnly: true }).status(200).send('Facebook login accepted.');
     }
   })

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'; 
 import { Link as MuiLink, Button, Typography, Grid, TextField, Paper } from '@material-ui/core';
 import useForm from './useForm';
@@ -19,6 +19,16 @@ export default function Login(props) {
   } = useForm(initialValues);
 
   const classes = useStyle();
+
+  // If user is already logged in, redirect them to the dashboard.
+  useEffect(() => {
+    axios.get('/authorize')
+      .then(res => {
+        if (res.status === 200) {
+          props.history.push('/dashboard');
+        }
+      });
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();

@@ -52,10 +52,9 @@ app.post('/duo_login', withAuth, (req, res) => {
   }
 });
 
-/**
- * Dashboard Endpoints
- */
-app.get('/dashboard', withDuoAuth);
+app.get('/authorize', withDuoAuth, (req, res) => {
+  res.status(200).send();
+});
 
 /**
  * Course, Assignments, and Announcements
