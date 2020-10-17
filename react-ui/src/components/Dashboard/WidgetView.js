@@ -2,8 +2,7 @@ import React from 'react';
 import WidgetCase from './WidgetCase';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
-
-
+import { sizing } from '@material-ui/system';
 
 const useStyles = makeStyles((theme) => ({
   // necessary for content to be below app bar

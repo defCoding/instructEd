@@ -4,7 +4,6 @@ import { List, ListItemText, ListItem, Divider } from '@material-ui/core'
 
 export default function CourseAndInstrList(){
     const [courses, setCourses] = useState([]);
-
     useEffect(() => {
         axios.get('/courses').then(getCoursesFromResponse);
     });
