@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { List, ListItemText, ListItem, Divider } from '@material-ui/core';
-
+import moment from 'moment';
 //const announcements = [{"header":"P465", "body":"This is announcement 1"}, {"header":"P465", "body":"This is announcement 2"}];
 
 export default function Announcements(props) {
@@ -36,14 +36,20 @@ export default function Announcements(props) {
 
     return (
         <List>
-            {announcements.map((announcement) => (
+            {announcements.map((announcement) => {
+                const title = announcement.course_name + ": " + announcement.announcement_name;
+                let date = moment(announcement.date_created).local();
+                date = date.format('MM-DD-YY h:mm A');
+
+                return (
                 <>
                     <ListItem>
-                        <ListItemText primary={announcement.announcement_name} secondary={announcement.course_id} />
+                        <ListItemText primary={title} secondary={date} />
                     </ListItem>
                     <Divider />
                 </>
-            ))}
+                );
+            })}
         </List>
     );
 }

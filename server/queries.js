@@ -280,12 +280,12 @@ const getRole = (req, res) => {
     }
   });
 }
+
 /**
  * Courses, Assignments, and Announcements
  */
 
-
-const getCourses = (role) => (req, res) => {
+const getAllCourses = (role) => (req, res) => {
   let filter;
   switch (role) {
     case 'student':
@@ -313,15 +313,14 @@ const getCourses = (role) => (req, res) => {
   });
 }
 
-
-const getAnnouncements = (role) => (req, res) => {
+const getAllAnnouncements = (role) => (req, res) => {
   let filter;
   switch (role) {
     case 'student':
-      filter = ' INNER JOIN Enrollments on Announcements.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
+      filter = ' INNER JOIN Enrollments on AC.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
       break;
     case 'instructor':
-      filter = ' INNER JOIN Instructing on Announcements.course_id=Instructing.course_id WHERE Instructing.user_id=$1;';
+      filter = ' INNER JOIN Instructing on AC.course_id=Instructing.course_id WHERE Instructing.user_id=$1;';
       break;
     case 'admin':
       filter = '';
@@ -330,17 +329,141 @@ const getAnnouncements = (role) => (req, res) => {
       throw new Error('Invalid role.')
   }
   
-  const sql = `SELECT * FROM Announcements${filter};`
+  const sql = `SELECT * FROM
+    (SELECT Announcements.*, Courses.course_name FROM
+      Announcements INNER JOIN Courses
+      ON Announcements.course_id=Courses.course_id)
+    AS AC${filter};`
   const values = [req.userID];
 
   client.query(sql, values, (err, result) => {
     if(err) {
-      console.log(err);
       res.status(400).send('Something went wrong.');
     } else {
       res.status(200).send(result.rows);
     }
   })
+}
+
+const getAllAssignments = (role) => (req, res) => {
+  let filter;
+  switch (role) {
+    case 'student':
+      filter = ' INNER JOIN Enrollments on AC.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
+      break;
+    case 'instructor':
+      filter = ' INNER JOIN Instructing on AC.course_id=Instructing.course_id WHERE Instructing.user_id=$1;';
+      break;
+    case 'admin':
+      filter = '';
+      break;
+    default:
+      throw new Error('Invalid role.')
+  }
+
+  const sql = `SELECT * FROM
+  (SELECT Assignments.*, Courses.course_name FROM
+    Assignments INNER JOIN Courses
+    ON Assignments.course_id=Courses.course_id)
+   AS AC${filter};`;
+  const values = [req.userID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send('Something went wrong.');
+    } else {
+      res.status(200).send(result.rows);
+    }
+  });
+}
+
+const getAssignment = (req, res) => {
+  let assignmentID = req.params.ID;
+  const userID = req.userID;
+
+  if (!isNaN(assignmentID)) {
+    assignmentID = parseInt(assignmentID);
+    if (userCanAccessAssignment(userID, assignmentID)) {
+      const sql = `SELECT * FROM Assignments WHERE assignment_id=$1`;
+      const values = [assignmentID];
+      client.query(sql, values, (err, result) => {
+        if (err) {
+          res.status(400).send('Something went wrong.');
+        } else if (!result.rows.length) {
+          res.status(404).send('Assignment not found.');
+        } else {
+          res.status(200).send(results.rows[0]);
+        }
+      })
+    } else {
+      res.status(403).send('Access denied.')
+    }
+  } else {
+    res.status(404).send('Assignment not found.');
+  }
+}
+
+/**
+ * Checks that a user with a given userID can view the provided assignment ID.
+ * @param {uuid} userID 
+ * @param {integer} assignmentID 
+ * @return {boolean} True if the user can access the assignment, false otherwise.
+ */
+const userCanAccessAssignment = (userID, assignmentID) => {
+  // First check if user is an admin.
+  const role = queryForRole(userID);
+  if (role == 'admin') {
+    return true;
+  } else {
+    // Check instructors table first to see if the user is associated with the course.
+    let tables = ['Instructing', 'Enrollments'];
+    const values = [userID, assignmentID];
+
+    for (let i = 0; i < tables.length; i++) {
+      const sql = `SELECT * FROM
+      (SELECT assignment_id, course_id FROM
+        Assignments WHERE
+        assignment_id=$2) AS A
+      INNER JOIN ${tables[i]}
+      ON A.course_id=${tables[i]}.course_ID
+      WHERE
+      ${tables[i]}.user_id=$1;`;
+
+      let found = client.query(sql, values, (err, result) => {
+        if (err || !result.rows.length) {
+          return false;
+        } else {
+          return true;
+        }
+      });
+
+      if (found) {
+        return true;
+      }
+    }
+  }
+}
+
+/**
+ * Gets the role of the user with the given userID.
+ * @param {uuid} userID 
+ * @return {String} The role of the user.
+ */
+const queryForRole = (userID) => {
+  const sql = 'SELECT main_role FROM Users WHERE id=$1;';
+  const values = [userID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      return '';
+    } else {
+      if (!result.rows.length) {
+        return '';
+      } else {
+        return result.rows[0]['main_role'];
+      }
+    }
+  });
 }
 
 module.exports = {
@@ -351,6 +474,8 @@ module.exports = {
   resetPassword,
   updatePassword,
   getRole,
-  getCourses,
-  getAnnouncements
+  getAllCourses,
+  getAllAnnouncements,
+  getAllAssignments,
+  getAssignment
 };
