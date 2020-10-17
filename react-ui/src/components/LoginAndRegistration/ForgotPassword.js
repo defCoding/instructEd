@@ -9,7 +9,7 @@ const initialValues = {
   email: ''
 }
 
-export default function ForgotPassword() {
+export default function ForgotPassword(props) {
 
   const {
     values,
@@ -38,6 +38,7 @@ export default function ForgotPassword() {
       }).catch(err => {
         alert(err.response.data);
       });
+    props.history.push('/login');
   };
 
   return(

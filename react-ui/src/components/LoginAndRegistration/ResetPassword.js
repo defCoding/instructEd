@@ -27,7 +27,14 @@ export default function ResetPassword(props) {
       axios.post('/updatePassword', { 
         token: props.match.params.token,
         password: values.password
+      }).then(res => {
+        if (res.status === 201) {
+          alert("Password has been updated.");
+        }
+      }).catch(err => {
+        alert('Something went wrong. Please try again later.');
       });
+      props.history.push('/login');
     } else {
       alert("Passwords are not the same!");
     }
