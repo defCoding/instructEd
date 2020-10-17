@@ -1,25 +1,80 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import UserDrawer from './Drawer';
+import Navbar from './Navbar';
+import WidgetView from './WidgetView';
 import axios from 'axios';
-import { Link as MuiLink, Button, Typography, Grid, Textfield, Paper } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 
-export default function Dashboard() {
+const drawerWidth = 250;
 
-  const [message, setMessage] = useState('Page not found.');
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+  },
+  appBar: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+  },
+  // necessary for content to be below app bar
+  toolbar: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.default,
+    padding: theme.spacing(3),
+  },
+}));
+
+export default function Dashboard(props) {
+  const classes = useStyles();
+
+  const [courses, setCourses] = useState([]);
+  const coursesRef = useRef([]);
 
   useEffect(() => {
-    axios.get('/dashboard')
-      .then(res => res.data )
-      .then(data => { setMessage('Access granted!'); });
-  }, [message]);
+    axios.get('/roles')
+      .then(res => {
+        switch (res.data) {
+          case 'admin':
+            axios.get('/courses').then(getCoursesFromResponse);
+            break;
+          case 'instructor':
+            axios.get('/courses/instructor').then(getCoursesFromResponse);
+            break;
+          case 'student':
+            axios.get('/courses/instructor').then(getCoursesFromResponse);
+            axios.get('/courses/student').then(getCoursesFromResponse);
+            break;
+          default:
+            throw new Error('Invalid role.');
+        }
+      })
+      .catch(err => {
+        if (err.response.status === 401) { 
+          props.history.push('/login');
+        } else {
+          console.log(err);
+        }
+      });
+  }, []);
+
+  function getCoursesFromResponse(res) {
+    coursesRef.current = coursesRef.current.concat(res.data);
+    setCourses(coursesRef.current);
+  }
 
   return (
-    <>
-      <Paper>
-        <div>
-          <h1>{message}</h1>
-        </div>
-      </Paper>
-    </>
+    <div className={classes.root}>
+      <Navbar />
+      <div className={classes.toolbar} />
+      <UserDrawer courses={courses}/>
+      <WidgetView />
+    </div>
   );
 }

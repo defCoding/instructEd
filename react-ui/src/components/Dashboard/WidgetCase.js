@@ -1,0 +1,166 @@
+import React from 'react';
+import { Paper, IconButton, Menu, MenuItem, AppBar, Toolbar, Typography, Dialog } from '@material-ui/core';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { makeStyles } from '@material-ui/core/styles';
+import Announcements from '../Widgets/Announcements';
+import Calendar from '../Widgets/TaskCalendar';
+import AddCourse from '../Widgets/AddCourse';
+import Search from '../Widgets/AdminSearch';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import CloseIcon from '@material-ui/icons/Close';
+
+const ITEM_HEIGHT = 50;
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    height: "100%",
+  },
+  menuButton: {
+    marginRight: theme.spacing(3),
+  },
+  dialog: {
+    padding: theme.spacing(3),
+    height: "100vh",
+  },
+  appBar: {
+    position: 'relative',
+  },
+  // necessary for content to be below app bar
+  toolbar: theme.mixins.toolbar,
+}));
+
+function WidgetSelect({currentWidget}) {
+  if (currentWidget === 'Announcements') {
+    return(<Announcements />);
+  }
+  else if (currentWidget === 'Calendar') {
+    return(<Calendar />)
+  }
+  else if (currentWidget === 'Add Course') {
+    return(<AddCourse />)
+  }
+  else if (currentWidget === 'Search') {
+    return(<Search />)
+  }
+  else {
+    return null;
+  }
+}
+
+function WidgetDialog ({currentWidget, openDialog, setOpenDialog}) {
+  const classes = useStyles();
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
+
+  return (
+    <Dialog fullScreen openDialog={openDialog} onClose={handleClose}>
+      <AppBar className={classes.appBar}>
+        <Toolbar className={classes.toolbar}>
+          <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+            <CloseIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.title}>
+            {currentWidget}
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Paper className={classes.dialog}>
+        <WidgetSelect currentWidget={currentWidget} />
+      </Paper>
+    </Dialog>
+  );
+}
+
+export default function WidgetCase() {
+  const [currentWidget, setCurrentWidget] = React.useState('None');
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const open = Boolean(anchorEl);
+  const classes = useStyles();
+
+  const options = [
+    'None',
+    'Announcements',
+    'Calendar',
+    'Add Course',
+    'Search',
+  ];
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  function handleClose(name) {
+    setAnchorEl(null);
+    setCurrentWidget(name);
+  }
+
+  return (
+    <Paper className={classes.root}>
+      <div>
+        <AppBar position="static">
+          <Toolbar variant="dense">
+            <IconButton 
+              color="secondary"
+              edge="end"
+              onClick={() => setOpenDialog(false)}>
+              <FullscreenIcon />
+            </IconButton>
+            <IconButton
+              aria-label="more"
+              aria-controls="long-menu"
+              aria-haspopup="true"
+              onClick={handleClick}
+              color="secondary"
+            >
+              <ArrowDropDownIcon />
+            </IconButton>
+            <Menu
+              id="long-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={open}
+              onClose={() => handleClose('None')}
+              PaperProps={{
+                style: {
+                  maxHeight: ITEM_HEIGHT * 4.5,
+                  width: '20ch',
+                },
+              }}
+            >
+              {options.map((option) => (
+                <MenuItem 
+                  key={option} 
+                  selected={option === currentWidget} 
+                  onClick={() => handleClose(option)}>
+                  {option}
+                </MenuItem>
+              ))}
+            </Menu>
+            <Typography align="right" variant="h6" color="inherit">
+              {currentWidget}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      </div>
+      <WidgetSelect currentWidget={currentWidget} />
+      <Dialog fullScreen open={openDialog} onClose={() => setOpenDialog(false)}>
+        <AppBar className={classes.appBar}>
+          <Toolbar className={classes.toolbar}>
+            <IconButton edge="start" color="inherit" onClick={() => setOpenDialog(false)} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              {currentWidget}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Paper style={{ height: "100vh" }}>
+          <WidgetSelect currentWidget={currentWidget} />
+        </Paper>
+      </Dialog>
+    </Paper>
+  );
+}

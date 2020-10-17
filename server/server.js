@@ -21,13 +21,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+/**
+ * Login and Registration Endpoints
+ */
 app.post('/users', db.createUser);
 app.post('/authenticate', db.loginUser);
 app.post('/authenticate/facebook', db.loginFacebook);
 app.post('/forgotPassword', db.forgotPassword);
 app.post('/updatePassword', db.updatePassword);
 app.get('/resetPassword/:token', db.resetPassword, serveIndex);
-app.get('/dashboard', withDuoAuth);
 
 app.get('/duo_frame', withAuth, (req, res) => {
   const sigRequest = Duo.sign_request(process.env.DUO_IKEY, process.env.DUO_SKEY, process.env.DUO_AKEY, req.userID);
@@ -49,6 +51,25 @@ app.post('/duo_login', withAuth, (req, res) => {
     res.status(403).send('Duo login failed.');
   }
 });
+
+app.get('/authorize', withDuoAuth, (req, res) => {
+  res.status(200).send();
+});
+
+/**
+ * Course, Assignments, and Announcements
+ */
+app.get('/roles', withDuoAuth, db.getRole);
+app.get('/courses', withDuoAuth, db.getAllCourses('admin')); // select all
+app.get('/courses/instructor', withDuoAuth, db.getAllCourses('instructor')); // instructing
+app.get('/courses/student', withDuoAuth, db.getAllCourses('student')); // enrollments
+app.get('/announcements', withDuoAuth, db.getAllAnnouncements('admin'));
+app.get('/announcements/instructor', withDuoAuth, db.getAllAnnouncements('instructor'));
+app.get('/announcements/student', withDuoAuth, db.getAllAnnouncements('student'));
+app.get('/assignments', withDuoAuth, db.getAllAssignments('admin'));
+app.get('/assignments/student/', withDuoAuth, db.getAllAssignments('instructor'));
+app.get('/assignments/instructor', withDuoAuth, db.getAllAssignments('student'));
+app.get('/assignments/:ID', withDuoAuth, db.getAssignment)
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));

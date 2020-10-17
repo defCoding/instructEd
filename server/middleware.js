@@ -10,6 +10,7 @@ const withAuth = (req, res, next) => {
   } else {
     jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
       if (err) {
+        res.cookies('LOGIN_TOKEN', {expires: Date.now()});
         res.status(401).send('Unauthorized: Invalid token.');
       } else {
         req.userID = decoded.userID;
@@ -28,6 +29,9 @@ const withDuoAuth = (req, res, next) => {
   } else {
     jwt.verify(token, process.env.DUO_JWT_KEY, (err, decoded) => {
       if (err) {
+        // Bad token.
+        res.cookies('LOGIN_TOKEN', {expires: Date.now()});
+        res.cookies('DUO_TOKEN', {expires: Date.now()});
         res.status(401).send('Unauthorized: Invalid token.');
       } else {
         req.userID = decoded.userID;
