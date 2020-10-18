@@ -68,7 +68,7 @@ CREATE TABLE Instructing (
 CREATE TABLE Assignments (
   assignment_id SERIAL,
   assignment_name VARCHAR(50) NOT NULL,
-  assignment_description TEXT,
+  assignment_decription TEXT,
   course_id INTEGER NOT NULL,
   deadline TIMESTAMP NOT NULL,
   submission_types VARCHAR(10) ARRAY NOT NULL,

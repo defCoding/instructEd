@@ -69,9 +69,7 @@ app.get('/announcements/student', withDuoAuth, db.getAllAnnouncements('student')
 app.get('/assignments', withDuoAuth, db.getAllAssignments('admin'));
 app.get('/assignments/student/', withDuoAuth, db.getAllAssignments('instructor'));
 app.get('/assignments/instructor', withDuoAuth, db.getAllAssignments('student'));
-app.get('/assignments/:ID', withDuoAuth, db.getAssignment);
-app.get('/courses/:ID/assignments', withDuoAuth, db.getCourseAssignments);
-app.get('/courses/:ID/announcements', withDuoAuth, db.getCourseAnnouncements);
+app.get('/assignments/:ID', withDuoAuth, db.getAssignment)
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));

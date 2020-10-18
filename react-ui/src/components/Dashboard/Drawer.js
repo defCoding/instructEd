@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItemText, Paper, IconButton, Drawer, Divider, ListItem, Typography, Dialog, AppBar, Toolbar } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import axios from 'axios';
-import moment from 'moment';
 
 const drawerWidth = 250;
 
@@ -32,25 +30,6 @@ const useStyles = makeStyles(theme => ({
 
 function ClassDialog({selectedClass, open, setOpen}) {
   const classes = useStyles();
-  const [announcements, setAnnouncements] = useState([]);
-  const [assignments, setAssignments] = useState([]);
-
-  useEffect(() => {
-    if (selectedClass.id != null) {
-      axios.get(`/courses/${selectedClass.id}/announcements`)
-        .then(res => {
-          console.log(res.data);
-          setAnnouncements(res.data);
-        })
-        .catch(console.log);
-      
-      axios.get(`/courses/${selectedClass.id}/assignments`)
-        .then(res => {
-          setAssignments(res.data);
-        })
-        .catch(console.log);
-    }
-  }, [selectedClass.id]);
 
   const handleClose = () => {
     setOpen(false);
@@ -64,7 +43,7 @@ function ClassDialog({selectedClass, open, setOpen}) {
           <CloseIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
-          {selectedClass.name}
+          {selectedClass}
         </Typography>
       </Toolbar>
     </AppBar>
@@ -73,35 +52,25 @@ function ClassDialog({selectedClass, open, setOpen}) {
         Announcements
       </Typography>
       <List>
-        {
-          announcements.map(announcement => {
-            let date = moment(announcement.date_created).local();
-            date = date.format('MM-DD-YY [at] h:mm A');
-
-            return (
-              <ListItem>
-                <ListItemText primary={announcement.announcement_name} secondary={
-                  `${announcement.first_name} ${announcement.last_name} on ${date}`
-                } />
-              </ListItem>
-            );
-          })
-        }
+        <ListItem>
+          <ListItemText primary="Announcement 1 Title" secondary="Announcement 1 Body" />
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <ListItemText primary="Announcement 2 Title" secondary="Announcement 2 Body" />
+        </ListItem>
       </List>
       <Typography variant="h6">
         Assignments
       </Typography>
       <List>
-          {assignments.map(assignment => {
-            let date = moment(assignment.deadline).local();
-            date = date.format('[Due on] MM-DD-YY [at] h:mm A');
-
-            return (
-              <ListItem>
-                <ListItemText primary={assignment.assignment_name} secondary={date} />
-              </ListItem>
-            );
-          })}
+        <ListItem>
+          <ListItemText primary="Assignment 1 Title" secondary="Assignment 1 Body" />
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <ListItemText primary="Assignment 2 Title" secondary="Assignment 2 Body" />
+        </ListItem>
       </List>
     </Paper>
   </Dialog>
@@ -109,7 +78,7 @@ function ClassDialog({selectedClass, open, setOpen}) {
 }
 
 export default function CurrentDrawer(props) {
-  const [selectedClass, setSelectedClass] = React.useState({name: undefined, id: undefined});
+  const [selectedClass, setSelectedClass] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
   const courses = props.courses;
@@ -130,7 +99,7 @@ export default function CurrentDrawer(props) {
           {courses.map((course) => (
             <ListItem button key={course.course_name} onClick={() => {
               setOpen(true);
-              setSelectedClass({name: course.course_name, id: course.course_id});
+              setSelectedClass(course.course_name);
             }}>
               <Typography color='primary'>{course.course_name}</Typography>
             </ListItem>

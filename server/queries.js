@@ -447,37 +447,6 @@ const userCanAccessAssignment = (userID, assignmentID) => {
   }
 }
 
-const getCourseAnnouncements = (req, res) => {
-  const sql = `SELECT Announcements.*, U.first_name, U.last_name FROM
-  Announcements
-  INNER JOIN
-  (SELECT id, first_name, last_name FROM Users) as U
-  ON Announcements.author_id=U.id
-  WHERE Announcements.course_id=$1;`
-  const values = [req.params.ID];
-
-  client.query(sql, values, (err, result) => {
-    if (err) {
-      res.status(400).send('Something went wrong.');
-    } else {
-      res.status(200).send(result.rows);
-    }
-  });
-}
-
-const getCourseAssignments = (req, res) => {
-  const sql = 'SELECT * FROM Assignments WHERE Assignments.course_id=$1;'
-  const values = [req.params.ID];
-
-  client.query(sql, values, (err, result) => {
-    if (err) {
-      res.status(400).send('Something went wrong.');
-    } else {
-      res.status(200).send(result.rows);
-    }
-  });
-}
-
 /**
  * Gets the role of the user with the given userID.
  * @param {uuid} userID 
@@ -511,7 +480,5 @@ module.exports = {
   getAllCourses,
   getAllAnnouncements,
   getAllAssignments,
-  getCourseAssignments,
-  getCourseAnnouncements,
   getAssignment
 };
