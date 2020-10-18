@@ -1,5 +1,5 @@
 import { Link as MuiLink, Paper, Button, Grid, TextField, Typography } from '@material-ui/core';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import useForm from './useForm';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -23,6 +23,16 @@ export default function Registration(props) {
   } = useForm(initialValues);
 
   const classes = useStyle();
+
+  // If user is already logged in, redirect them to the dashboard.
+  useEffect(() => {
+    axios.get('/authorize')
+      .then(res => {
+        if (res.status === 200) {
+          props.history.push('/dashboard');
+        }
+      });
+  }, []);
 
   const onSubmit = (e) => {
     e.preventDefault();
