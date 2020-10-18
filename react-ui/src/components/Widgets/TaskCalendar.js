@@ -8,10 +8,16 @@ export default function TaskCalendar() {
     setDate(date);
   };
 
+  const onClickDay = date => {
+    //Calls the pop up menu and passes the date to it.
+    <AssignmentsPerDay date={date}/>
+  }
+
   return (
     <div>
       <Calendar
         onChange={onChange}
+        onClickDay={onClickDay}
         value={date}
       />
     </div>
