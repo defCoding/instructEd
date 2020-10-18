@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,7 +8,10 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import axios from 'axios';
+import { assign } from 'nodemailer/lib/shared';
 
+/*
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -21,7 +24,7 @@ const styles = (theme) => ({
     color: theme.palette.grey[500],
   },
 });
-
+*/
 const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
@@ -49,8 +52,14 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-export default function CustomizedDialogs() {
+export default function CustomizedDialogs(props) {
   const [open, setOpen] = React.useState(false);
+  const [assignments, setAssignments] = useState([]);
+  const assignmentsRef = useRef([]);
+  const date = props.date;
+
+  //Should retrieve assignmnents due on the date given in the const date above
+  useEffect(() => {})
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -59,6 +68,11 @@ export default function CustomizedDialogs() {
     setOpen(false);
   };
 
+  function getAssignmentsFromResponse(res) {
+        assignmentsRef.current = assignmentsRef.current.concat(res.data);
+        setAssignments(assignmentsRef.current);
+  }
+
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={handleClickOpen}>
@@ -66,26 +80,22 @@ export default function CustomizedDialogs() {
       </Button>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-          Modal title
+          Assignments for ${date}
         </DialogTitle>
         <DialogContent dividers>
-          <Typography gutterBottom>
-            Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-            in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-          </Typography>
-          <Typography gutterBottom>
-            Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-            lacus vel augue laoreet rutrum faucibus dolor auctor.
-          </Typography>
-          <Typography gutterBottom>
-            Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-            scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-            auctor fringilla.
-          </Typography>
+          <List>
+            {assignments.map((assignment) =>
+              <>
+                  <ListItem>
+                    <ListItemText primary={assignment.assignment_name} secondary={assignment.course_id} />
+                  </ListItem>
+              </>
+            )}
+          </List>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="primary">
-            Save changes
+            Exit
           </Button>
         </DialogActions>
       </Dialog>
