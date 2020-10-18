@@ -2,12 +2,9 @@ import React from 'react';
 import { Paper, TextField, Grid, Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-const announcementFields = {
-  announcementName: '',
-  description: '',
-  classNumber: ''
-}
-//Announcement author will be inferred using user ID and the time posted will be inferred as well
+const onSubmit = (e) => {
+  e.preventDefault();
+};
 
 const useStyle = makeStyles(theme => ({
   items: {
@@ -32,7 +29,7 @@ export default function CreateAnnouncement() {
               <TextField color="secondary" multiline="true" variant="outlined" label="Description" name="description" announcementName={classes.items} />
             </Grid>
             <Grid item xs="12">
-              <Button variant="contained" color="secondary" announcementName={classes.items} >Post Announcement </Button>
+              <Button variant="contained" color="secondary" announcementName={classes.items} onSubmit={onSubmit}>Post Announcement </Button>
             </Grid>
           </Grid>
         </form>

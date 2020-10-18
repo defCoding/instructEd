@@ -3,6 +3,10 @@ import { Paper, TextField, Grid, Button, MenuItem, FormControl, InputLabel, Sele
 import { makeStyles } from '@material-ui/core/styles';
 import SearchIcon from '@material-ui/icons/Search';
 
+const onSubmit = (e) => {
+  e.preventDefault();
+};
+
 const useStyle = makeStyles(theme => ({
   items: {
     margin:theme.spacing(1)
@@ -59,7 +63,7 @@ export default function Announcements() {
               </FormControl>
             </Grid>
             <Grid item xs="12">
-              <Button variant="contained" color="secondary" className={classes.items} >Search</Button>
+              <Button variant="contained" color="secondary" className={classes.items} onSubmit={onSubmit}>Search</Button>
             </Grid>
           </Grid>
         </form>
