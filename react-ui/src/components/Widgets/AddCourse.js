@@ -39,6 +39,21 @@ export default function AddCourse() {
             <Grid item xs="12">
               <TextField color="secondary" variant="outlined" label="Instructor Email" name="instructorEmail" className={classes.items} />
             </Grid>
+            <FormControl color="secondary" variant="outlined" className={classes.formControl}>
+                <InputLabel id="demo-simple-select-outlined-label">Filter</InputLabel>
+                <Select
+                  color="secondary"
+                  value={filter}
+                  onChange={handleChange}
+                  label="Term"
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={10}>Spring 2021</MenuItem>
+                  <MenuItem value={20}>Fall 2021</MenuItem>
+                </Select>
+              </FormControl>
             <Grid item xs="12">
               <Button variant="contained" color="secondary" className={classes.items} onSubmit={onSubmit}>Add Course </Button>
             </Grid>

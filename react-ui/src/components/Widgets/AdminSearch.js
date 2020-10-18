@@ -18,7 +18,6 @@ const useStyle = makeStyles(theme => ({
 
 export default function Announcements() {
   const classes = useStyle();
-
   const [filter, setFilter] = React.useState('');
 
   const handleChange = (event) => {
