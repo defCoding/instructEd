@@ -33,18 +33,12 @@ const useStyles = makeStyles(theme => ({
 
 function AssignmentDialog({dateSelected, open, setOpen}) {
   const classes = useStyles();
+  const dateSelectedString = dateSelected.toDateString();
   const [assignments, setAssignments] = useState([]);
 
   //Select class given given date
   useEffect(() => {
     if (dateSelected != null) {
-      axios.get(`/courses/${selectedClass.id}/announcements`)
-        .then(res => {
-          console.log(res.data);
-          setAnnouncements(res.data);
-        })
-        .catch(console.log);
-      
       axios.get(`/courses/${dateSelected}/assignments`)
         .then(res => {
           setAssignments(res.data);
@@ -65,18 +59,18 @@ function AssignmentDialog({dateSelected, open, setOpen}) {
           <CloseIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
-          {dateSelected}
+          {dateSelectedString}
         </Typography>
       </Toolbar>
     </AppBar>
     <Paper className={classes.dialog}>
       <Typography variant="h6">
-        Assignments
+        Assignments:
       </Typography>
       <List>
           {assignments.map(assignment => {
             let assignmentdate = moment(assignment.deadline).local();
-            assignmentdate = date.format('[Due on] MM-DD-YY [at] h:mm A');
+            assignmentdate = assignmentdate.format('[Due on] MM-DD-YY [at] h:mm A');
 
             return (
               <ListItem>
@@ -112,7 +106,7 @@ export default function TaskCalendar() {
         onClickDay={onClickDay}
         value={date}
       />
-      <AssignmentDialog date={date} open={open} setOpen={setOpen} />
+      <AssignmentDialog dateSelected={date} open={open} setOpen={setOpen} />
     </div>
   );
 }
