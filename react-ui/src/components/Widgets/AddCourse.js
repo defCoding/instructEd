@@ -6,7 +6,7 @@ const classFields = {
   className: '',
   department: '',
   classNumber: '',
-  instructor: '',
+  instructorEmail: '',
 }
 
 const useStyle = makeStyles(theme => ({
@@ -14,6 +14,11 @@ const useStyle = makeStyles(theme => ({
     margin:theme.spacing(1)
   },
 }))
+
+const onSubmit = (e) => {
+  e.preventDefault();
+
+};
 
 export default function AddCourse() {
   const classes = useStyle();
@@ -32,10 +37,10 @@ export default function AddCourse() {
               <TextField color="secondary" variant="outlined" label="Department" name="department" className={classes.items} />
             </Grid>
             <Grid item xs="12">
-              <TextField color="secondary" variant="outlined" label="Instructor" name="instructor" className={classes.items} />
+              <TextField color="secondary" variant="outlined" label="Instructor Email" name="instructorEmail" className={classes.items} />
             </Grid>
             <Grid item xs="12">
-              <Button variant="contained" color="secondary" className={classes.items} >Add Course </Button>
+              <Button variant="contained" color="secondary" className={classes.items} onSubmit={onSubmit}>Add Course </Button>
             </Grid>
           </Grid>
         </form>
