@@ -4,7 +4,32 @@ import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItemText, Paper, IconButton, Drawer, Divider, ListItem, Typography, Dialog, AppBar, Toolbar } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import axios from 'axios';
-import moment from 'moment'
+import moment from 'moment';
+
+const drawerWidth = 250;
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+  },
+  drawer: {
+    width: drawerWidth,
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    width: drawerWidth,
+    background: theme.palette.secondary.main,
+  },
+  appBar: {
+    position: 'relative',
+  },
+  // necessary for content to be below app bar
+  toolbar: theme.mixins.toolbar,
+  dialog: {
+    padding: theme.spacing(3),
+    height: "100vh",
+  }
+}));
 
 function AssignmentDialog({dateSelected, open, setOpen}) {
   const classes = useStyles();
