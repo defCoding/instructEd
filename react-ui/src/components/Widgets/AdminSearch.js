@@ -18,6 +18,7 @@ const useStyle = makeStyles(theme => ({
 
 export default function Announcements() {
   const classes = useStyle();
+
   const [filter, setFilter] = React.useState('');
 
   const handleChange = (event) => {
@@ -52,9 +53,6 @@ export default function Announcements() {
                   onChange={handleChange}
                   label="Filter"
                 >
-                  <MenuItem value="">
-                    <em>None</em>
-                  </MenuItem>
                   <MenuItem value={10}>Users</MenuItem>
                   <MenuItem value={20}>Classes</MenuItem>
                 </Select>
