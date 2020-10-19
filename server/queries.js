@@ -469,6 +469,25 @@ const queryForRole = (userID) => {
   });
 }
 
+const addAnnouncement = (req, res) => {
+  const info = req.body;
+  const userID = req.userID;
+  const creationDate = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+  const sql = `INSERT INTO Announcements VALUES
+    (default, $1, $2, $3, $4, $5);`;
+  const values = [info.announcementName, info.description, info.courseID, creationDate, userID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send('Something went wrong.');
+    } else {
+      console.log(result);
+      res.status(201).send('Announcement successfully created.');
+    }
+  });
+}
+
 module.exports = {
   createUser,
   loginUser,
@@ -480,5 +499,6 @@ module.exports = {
   getAllCourses,
   getAllAnnouncements,
   getAllAssignments,
-  getAssignment
+  getAssignment,
+  addAnnouncement
 };

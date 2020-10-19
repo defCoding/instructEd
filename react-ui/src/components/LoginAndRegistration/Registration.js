@@ -50,42 +50,6 @@ export default function Registration(props) {
         });
     }
   };
-
-  /* 
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '350577486197278',
-      xfbml      : true,
-      version    : 'v8.0'
-    });
-    FB.AppEvents.logPageView();
-  };
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "https://connect.facebook.net/en_US/sdk.js";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-   */
-/*
-  const [login, setLogin] = useState(false);
-  const [data, setData] = useState({});
-  const [email, setEmail] = useState({});
-  const responseFacebook = (response) => {
-    console.log(response);
-    setData(response);
-    setEmail(response);
-    if (response.accessToken) {
-      setLogin(true);
-      console.log(login);
-      console.log(data);
-      console.log(email);
-    } else {
-      setLogin(false);
-    }
-  }
-*/
   const responseFacebook = (response) => {
     const data = {
       email: response.email,

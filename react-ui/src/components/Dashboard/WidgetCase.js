@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Announcements from '../Widgets/Announcements';
 import Calendar from '../Widgets/TaskCalendar';
 import AddCourse from '../Widgets/AddCourse';
+import CreateAnnouncement from '../Widgets/CreateAnnouncement';
 import Search from '../Widgets/AdminSearch';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import CloseIcon from '@material-ui/icons/Close';
@@ -30,20 +31,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function WidgetSelect({currentWidget}) {
-  if (currentWidget === 'Announcements') {
-    return(<Announcements />);
-  }
-  else if (currentWidget === 'Calendar') {
-    return(<Calendar />)
-  }
-  else if (currentWidget === 'Add Course') {
-    return(<AddCourse />)
-  }
-  else if (currentWidget === 'Search') {
-    return(<Search />)
-  }
-  else {
-    return null;
+  switch (currentWidget) {
+    case 'Announcements':
+      return (<Announcements />);
+    case 'Calendar':
+      return (<Calendar />);
+    case 'Add Course':
+      return (<AddCourse />);
+    case 'Search':
+      return (<Search />);
+    case 'Create Announcement':
+      return (<CreateAnnouncement />);
+    default:
+      return null;
   }
 }
 
@@ -85,6 +85,7 @@ export default function WidgetCase() {
     'Announcements',
     'Calendar',
     'Add Course',
+    'Create Announcement',
     'Search',
   ];
 
