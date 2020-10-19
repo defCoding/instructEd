@@ -12,14 +12,14 @@ export default function UpcomingAssignments() {
             //Maybe not needed?
             //For all cases queries are needed
             case 'admin':
-                axios.get('').then(getAssignmentsFromResponse);
+                axios.get('/assignments').then(getAssignmentsFromResponse);
                 break;
             case 'instructor':
-                axios.get('').then(getAssignmentsFromResponse);
+                axios.get('/assignments/instructor').then(getAssignmentsFromResponse);
                 break;
             case 'student':
-                axios.get('').then(getAssignmentsFromResponse);
-                axios.get('').then(getAssignmentsFromResponse);
+                axios.get('assignments/instructor').then(getAssignmentsFromResponse);
+                axios.get('assignments/student').then(getAssignmentsFromResponse);
                 break;
             default:
                 throw new Error('Invalid role.');

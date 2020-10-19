@@ -57,70 +57,110 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function GeneralPanel() {
+function GeneralPanel(props) {
   const classes = useStyles();
+  const assignments = props.assignments;
+  const announcements = props.announcements;
 
   return (
     <Paper className={classes.dialog}>
-    <Typography variant="h6">
-      Announcements
+      <Typography variant="h6">
+        Announcements
     </Typography>
-    <List>
-      <ListItem>
-        <ListItemText primary="Announcement 1 Title" secondary="Announcement 1 Body" />
-      </ListItem>
-      <Divider />
-      <ListItem>
-        <ListItemText primary="Announcement 2 Title" secondary="Announcement 2 Body" />
-      </ListItem>
-    </List>
-    <Typography variant="h6">
-      Assignments
+      <List>
+        {
+          announcements.map(announcement => {
+            let date = moment(announcement.date_created).local();
+            date = date.format('MM-DD-YY [at] h:mm A');
+
+            return (
+              <ListItem>
+                <ListItemText primary={announcement.announcement_name} secondary={
+                  `${announcement.first_name} ${announcement.last_name} on ${date}`
+                } />
+              </ListItem>
+            );
+          })
+        }
+      </List>
+      <Typography variant="h6">
+        Assignments
     </Typography>
-    <List>
-      <ListItem>
-        <ListItemText primary="Assignment 1 Title" secondary="Assignment 1 Body" />
-      </ListItem>
-      <Divider />
-      <ListItem>
-        <ListItemText primary="Assignment 2 Title" secondary="Assignment 2 Body" />
-      </ListItem>
-    </List>
-  </Paper>
+      <List>
+        {
+        assignments.map(assignment => {
+          let date = moment(assignment.deadline).local();
+          date = date.format('[Due on] MM-DD-YY [at] h:mm A');
+
+          return (
+            <ListItem>
+              <ListItemText primary={assignment.assignment_name} secondary={date} />
+            </ListItem>
+          );
+        })
+        }
+      </List>
+    </Paper>
   );
 }
 
-function AssignmentsPanel() {
+function AssignmentsPanel(props) {
   const classes = useStyles();
+  const assignments = props.assignments;
 
   return (
     <Paper className={classes.dialog}>
-    <Typography variant="h6">
-      Assignments
+      <Typography variant="h6">
+        Assignments
     </Typography>
-    <List>
-     {/* list of assignments */}
-    </List>
-  </Paper>
+      <List>
+        {
+        assignments.map(assignment => {
+          let date = moment(assignment.deadline).local();
+          date = date.format('[Due on] MM-DD-YY [at] h:mm A');
+
+          return (
+            <ListItem>
+              <ListItemText primary={assignment.assignment_name} secondary={date} />
+            </ListItem>
+          );
+        })
+        }
+      </List>
+    </Paper>
   );
 }
 
-function AnnouncementsPanel() {
+function AnnouncementsPanel(props) {
   const classes = useStyles();
+  const announcements = props.announcements;
 
   return (
     <Paper className={classes.dialog}>
-    <Typography variant="h6">
-      Announcements
+      <Typography variant="h6">
+        Announcements
     </Typography>
-    <List>
-      {/* list of announcements */}
-    </List>
-  </Paper>
+      <List>
+        {
+          announcements.map(announcement => {
+            let date = moment(announcement.date_created).local();
+            date = date.format('MM-DD-YY [at] h:mm A');
+
+            return (
+              <ListItem>
+                <ListItemText primary={announcement.announcement_name} secondary={
+                  `${announcement.first_name} ${announcement.last_name} on ${date}`
+                } />
+              </ListItem>
+            );
+          })
+        }
+      </List>
+    </Paper>
   );
 }
 
-function ClassDialog({selectedClass, open, setOpen}) {
+function ClassDialog({ selectedClass, open, setOpen }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [announcements, setAnnouncements] = useState([]);
@@ -130,11 +170,10 @@ function ClassDialog({selectedClass, open, setOpen}) {
     if (selectedClass.id != null) {
       axios.get(`/courses/${selectedClass.id}/announcements`)
         .then(res => {
-          console.log(res.data);
           setAnnouncements(res.data);
         })
         .catch(console.log);
-      
+
       axios.get(`/courses/${selectedClass.id}/assignments`)
         .then(res => {
           setAssignments(res.data);
@@ -153,38 +192,38 @@ function ClassDialog({selectedClass, open, setOpen}) {
 
   return (
     <Dialog fullScreen open={open} onClose={handleClose}>
-    <AppBar className={classes.appBar}>
-      <Toolbar className={classes.toolbar}>
-        <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-          <CloseIcon />
-        </IconButton>
-        <Typography variant="h6" className={classes.title}>
-          {selectedClass.name}
-        </Typography>
-      </Toolbar>
-    </AppBar>
-    <AppBar position="static">
-      <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-        <Tab label="Class Information" {...a11yProps(0)} />
-        <Tab label="Assignments" {...a11yProps(1)} />
-        <Tab label="Announcements" {...a11yProps(2)} />
-      </Tabs>
-    </AppBar>
-    <TabPanel value={value} index={0}>
-      <GeneralPanel />
-    </TabPanel>
-    <TabPanel value={value} index={1}>
-      <AssignmentsPanel />
-    </TabPanel>
-    <TabPanel value={value} index={2}>
-      <AnnouncementsPanel />
-    </TabPanel>
-  </Dialog>
+      <AppBar className={classes.appBar}>
+        <Toolbar className={classes.toolbar}>
+          <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+            <CloseIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.title}>
+            {selectedClass.name}
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <AppBar position="static">
+        <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+          <Tab label="Class Information" {...a11yProps(0)} />
+          <Tab label="Assignments" {...a11yProps(1)} />
+          <Tab label="Announcements" {...a11yProps(2)} />
+        </Tabs>
+      </AppBar>
+      <TabPanel value={value} index={0}>
+        <GeneralPanel assignments={assignments} announcements={announcements} />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        <AssignmentsPanel assignments={assignments} />
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        <AnnouncementsPanel announcements={announcements} />
+      </TabPanel>
+    </Dialog>
   );
 }
 
 export default function CurrentDrawer(props) {
-  const [selectedClass, setSelectedClass] = React.useState({name: undefined, id: undefined});
+  const [selectedClass, setSelectedClass] = React.useState({ name: undefined, id: undefined });
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
   const courses = props.courses;
@@ -205,7 +244,7 @@ export default function CurrentDrawer(props) {
           {courses.map((course) => (
             <ListItem button key={course.course_name} onClick={() => {
               setOpen(true);
-              setSelectedClass({name: course.course_name, id: course.course_id});
+              setSelectedClass({ name: course.course_name, id: course.course_id });
             }}>
               <Typography color='primary'>{course.course_name}</Typography>
             </ListItem>
