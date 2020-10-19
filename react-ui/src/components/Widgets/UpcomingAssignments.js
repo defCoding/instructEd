@@ -21,15 +21,17 @@ export default function UpcomingAssignments() {
     return (
         <List>
             {
-            assignments.map((assignment) =>
-                <>
-                    <ListItem>
-                        <ListItemText primary={assignment.assignment_name} secondary={assignment.course_id}
-                        secondary={assignment.deadline} />
-                    </ListItem>
-                    <Divider />
-                </>
-            )
+                assignments.map((assignment) => {
+                    let assignmentdate = moment(assignment.deadline).local();
+                    assignmentdate = assignmentdate.format('[Due on] MM-DD-YY [at] h:mm A');
+
+                    return (<>
+                        <ListItem>
+                            <ListItemText primary={assignment.assignment_name} secondary={assignmentdate} />
+                        </ListItem>
+                        <Divider />
+                    </>);
+                })
             }
         </List>
     );

@@ -40,7 +40,6 @@ export default function AddCourse() {
             .then(res => {
               if (res.status === 201) {
                 alert('Course created!');
-                setValues(blankCourse);
               }
             })
             .catch(console.log);
