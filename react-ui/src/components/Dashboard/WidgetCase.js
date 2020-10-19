@@ -103,7 +103,7 @@ export default function WidgetCase(props) {
             <IconButton 
               color="secondary"
               edge="end"
-              onClick={() => setOpenDialog(false)}>
+              onClick={() => setOpenDialog(true)}>
               <FullscreenIcon />
             </IconButton>
             <IconButton
