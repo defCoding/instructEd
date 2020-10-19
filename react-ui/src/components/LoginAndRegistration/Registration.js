@@ -34,7 +34,7 @@ export default function Registration(props) {
       axios.post('/users', values)
         .then(res => {
           //If User creation was successful
-          if(res.status === 201){
+          if(res.status === 201) {
             alert("Account created successfully");
             //Redirects to the login page
             props.history.push('/login');

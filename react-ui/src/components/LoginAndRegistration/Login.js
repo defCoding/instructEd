@@ -72,6 +72,7 @@ export default function Login(props) {
         //If no Facebook account for given credentials was in the database.
         else if(res.status === 201){
           alert("Facebook account added");
+          props.history.push('/duologin');
         }
       })
       .catch(err => {
