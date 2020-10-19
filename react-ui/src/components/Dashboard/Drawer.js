@@ -1,11 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItemText, Paper, IconButton, Drawer, Divider, ListItem, Typography, Dialog, AppBar, Toolbar } from '@material-ui/core';
+import { Box, Tabs, Tab, List, ListItemText, Paper, IconButton, Drawer, Divider, ListItem, Typography, Dialog, AppBar, Toolbar } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import axios from 'axios';
 import moment from 'moment';
 
 const drawerWidth = 250;
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,8 +57,72 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function GeneralPanel() {
+  const classes = useStyles();
+
+  return (
+    <Paper className={classes.dialog}>
+    <Typography variant="h6">
+      Announcements
+    </Typography>
+    <List>
+      <ListItem>
+        <ListItemText primary="Announcement 1 Title" secondary="Announcement 1 Body" />
+      </ListItem>
+      <Divider />
+      <ListItem>
+        <ListItemText primary="Announcement 2 Title" secondary="Announcement 2 Body" />
+      </ListItem>
+    </List>
+    <Typography variant="h6">
+      Assignments
+    </Typography>
+    <List>
+      <ListItem>
+        <ListItemText primary="Assignment 1 Title" secondary="Assignment 1 Body" />
+      </ListItem>
+      <Divider />
+      <ListItem>
+        <ListItemText primary="Assignment 2 Title" secondary="Assignment 2 Body" />
+      </ListItem>
+    </List>
+  </Paper>
+  );
+}
+
+function AssignmentsPanel() {
+  const classes = useStyles();
+
+  return (
+    <Paper className={classes.dialog}>
+    <Typography variant="h6">
+      Assignments
+    </Typography>
+    <List>
+     {/* list of assignments */}
+    </List>
+  </Paper>
+  );
+}
+
+function AnnouncementsPanel() {
+  const classes = useStyles();
+
+  return (
+    <Paper className={classes.dialog}>
+    <Typography variant="h6">
+      Announcements
+    </Typography>
+    <List>
+      {/* list of announcements */}
+    </List>
+  </Paper>
+  );
+}
+
 function ClassDialog({selectedClass, open, setOpen}) {
   const classes = useStyles();
+  const [value, setValue] = React.useState(0);
   const [announcements, setAnnouncements] = useState([]);
   const [assignments, setAssignments] = useState([]);
 
@@ -52,6 +143,10 @@ function ClassDialog({selectedClass, open, setOpen}) {
     }
   }, [selectedClass.id]);
 
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -68,42 +163,22 @@ function ClassDialog({selectedClass, open, setOpen}) {
         </Typography>
       </Toolbar>
     </AppBar>
-    <Paper className={classes.dialog}>
-      <Typography variant="h6">
-        Announcements
-      </Typography>
-      <List>
-        {
-          announcements.map(announcement => {
-            let date = moment(announcement.date_created).local();
-            date = date.format('MM-DD-YY [at] h:mm A');
-
-            return (
-              <ListItem>
-                <ListItemText primary={announcement.announcement_name} secondary={
-                  `${announcement.first_name} ${announcement.last_name} on ${date}`
-                } />
-              </ListItem>
-            );
-          })
-        }
-      </List>
-      <Typography variant="h6">
-        Assignments
-      </Typography>
-      <List>
-          {assignments.map(assignment => {
-            let date = moment(assignment.deadline).local();
-            date = date.format('[Due on] MM-DD-YY [at] h:mm A');
-
-            return (
-              <ListItem>
-                <ListItemText primary={assignment.assignment_name} secondary={date} />
-              </ListItem>
-            );
-          })}
-      </List>
-    </Paper>
+    <AppBar position="static">
+      <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
+        <Tab label="Class Information" {...a11yProps(0)} />
+        <Tab label="Assignments" {...a11yProps(1)} />
+        <Tab label="Announcements" {...a11yProps(2)} />
+      </Tabs>
+    </AppBar>
+    <TabPanel value={value} index={0}>
+      <GeneralPanel />
+    </TabPanel>
+    <TabPanel value={value} index={1}>
+      <AssignmentsPanel />
+    </TabPanel>
+    <TabPanel value={value} index={2}>
+      <AnnouncementsPanel />
+    </TabPanel>
   </Dialog>
   );
 }
