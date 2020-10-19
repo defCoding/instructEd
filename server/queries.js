@@ -606,6 +606,7 @@ const addCourse = (req, res) => {
 
   client.query(sql, values, (err, result) => {
     if (err) {
+      console.log(err);
       res.status(400).send('Something went wrong with adding the course.');
     } else {
       const course_id = result.rows[0].course_id;
