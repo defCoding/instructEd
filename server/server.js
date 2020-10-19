@@ -71,6 +71,7 @@ app.get('/assignments/student/', withDuoAuth, db.getAllAssignments('instructor')
 app.get('/assignments/instructor', withDuoAuth, db.getAllAssignments('student'));
 app.get('/assignments/:ID', withDuoAuth, db.getAssignment);
 app.get('/assignments/date/:date', withDuoAuth, db.getAssignmentsByDate);
+app.get('/assignments/upcoming/:date', withDuoAuth, db.getUpcomingAssignments);
 app.get('/courses/:ID', withDuoAuth, db.getCourse);
 app.get('/courses/:ID/assignments', withDuoAuth, db.getCourseAssignments);
 app.get('/courses/:ID/announcements', withDuoAuth, db.getCourseAnnouncements);

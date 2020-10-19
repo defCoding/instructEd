@@ -548,6 +548,30 @@ const getAssignmentsByDate = (req, res) => {
   });
 }
 
+const getUpcomingAssignments = (req, res) => {
+  const date = moment(req.params.date).format('YYYY-MM-DD HH:mm:ss');
+  const userID = req.userID;
+  const sql = `SELECT * FROM
+    Assignments WHERE
+    course_id IN
+    ((SELECT course_id FROM Instructing
+        WHERE user_id=$1)
+        UNION
+      (SELECT course_id from Enrollments
+        WHERE user_id=$1))
+    AND
+    deadline >= $2;`;
+  const values = [userID, date];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send('Something went wrong.');
+    } else {
+      res.status(200).send(result.rows);
+    }
+  });
+}
+
 const getCourse = (req, res) => {
   const courseID = req.params.ID;
   const sql = `WITH Course AS (
@@ -614,6 +638,7 @@ module.exports = {
   getCourseAssignments,
   getCourseAnnouncements,
   getAssignmentsByDate,
+  getUpcomingAssignments,
   getAssignment,
   getCourse,
   addCourse,

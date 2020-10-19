@@ -7,9 +7,9 @@ import axios from 'axios';
 
 const drawerWidth = 250;
 
-const adminWidgets = ['Add Course', 'Course and Instructor List'];
-const instructorWidgets = ['Create Announcement', 'Task Calendar'];
-const studentWidgets = ['Announcements', 'Assignments Per Day', 'Task Calendar', 'Upcoming Assignments'];
+const adminWidgets = ['Add Course', 'Add User to Class', 'Set Role'];
+const studentWidgets = ['Announcements', 'Assignments', 'Calendar'];
+const instructorWidgets = studentWidgets.concat(['Create Announcement']);
 let currentRoleWidgets = [];
 
 const useStyles = makeStyles((theme) => ({
@@ -56,6 +56,9 @@ export default function Dashboard(props) {
           case 'student':
             currentRoleWidgets = studentWidgets;
             axios.get('/courses/instructor').then(getCoursesFromResponse);
+            if (!coursesRef.current.empty) {
+              currentRoleWidgets = instructorWidgets;
+            }
             axios.get('/courses/student').then(getCoursesFromResponse);
             break;
           default:
@@ -82,7 +85,7 @@ export default function Dashboard(props) {
       <Navbar />
       <div className={classes.toolbar} />
       <UserDrawer courses={courses}/>
-      <WidgetView displayWidgets = {currentRoleWidgets}/>
+      <WidgetView displayWidgets={currentRoleWidgets}/>
     </div>
   );
 }

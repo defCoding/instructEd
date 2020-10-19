@@ -2,13 +2,16 @@ import React from 'react';
 import { Paper, IconButton, Menu, MenuItem, AppBar, Toolbar, Typography, Dialog } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { makeStyles } from '@material-ui/core/styles';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import CloseIcon from '@material-ui/icons/Close';
+
 import Announcements from '../Widgets/Announcements';
 import Calendar from '../Widgets/TaskCalendar';
 import AddCourse from '../Widgets/AddCourse';
 import CreateAnnouncement from '../Widgets/CreateAnnouncement';
-import Search from '../Widgets/AdminSearch';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
-import CloseIcon from '@material-ui/icons/Close';
+import AddToClass from '../Widgets/AddToClass';
+import SetRole from '../Widgets/SetRole';
+import UpcomingAssignments from '../Widgets/UpcomingAssignments';
 
 const ITEM_HEIGHT = 50;
 
@@ -32,16 +35,20 @@ const useStyles = makeStyles((theme) => ({
 
 function WidgetSelect({currentWidget}) {
   switch (currentWidget) {
-    case 'Announcements':
-      return (<Announcements />);
-    case 'Calendar':
-      return (<Calendar />);
     case 'Add Course':
       return (<AddCourse />);
-    case 'Search':
-      return (<Search />);
+    case 'Set Role':
+      return (<SetRole />);
+    case 'Add User to Class':
+      return (<AddToClass />);
+    case 'Announcements':
+      return (<Announcements />);
     case 'Create Announcement':
       return (<CreateAnnouncement />);
+    case 'Calendar':
+      return (<Calendar />);
+    case 'Assignments':
+      return (<UpcomingAssignments />);
     default:
       return null;
   }
@@ -73,21 +80,14 @@ function WidgetDialog ({currentWidget, openDialog, setOpenDialog}) {
   );
 }
 
-export default function WidgetCase() {
+export default function WidgetCase(props) {
   const [currentWidget, setCurrentWidget] = React.useState('None');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const open = Boolean(anchorEl);
   const classes = useStyles();
 
-  const options = [
-    'None',
-    'Announcements',
-    'Calendar',
-    'Add Course',
-    'Create Announcement',
-    'Search',
-  ];
+  const options = props.displayWidgets;
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -106,7 +106,7 @@ export default function WidgetCase() {
             <IconButton 
               color="secondary"
               edge="end"
-              onClick={() => setOpenDialog(false)}>
+              onClick={() => setOpenDialog(true)}>
               <FullscreenIcon />
             </IconButton>
             <IconButton
@@ -127,7 +127,6 @@ export default function WidgetCase() {
               PaperProps={{
                 style: {
                   maxHeight: ITEM_HEIGHT * 4.5,
-                  width: '20ch',
                 },
               }}
             >

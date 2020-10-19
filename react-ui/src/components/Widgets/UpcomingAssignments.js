@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { List, ListItemText, ListItem, Divider } from '@material-ui/core'
+import moment from 'moment';
 
 export default function UpcomingAssignments() {
     const [assignments, setAssignments] = useState([]);
@@ -8,34 +9,19 @@ export default function UpcomingAssignments() {
     useEffect(() => {
         axios.get('/roles')
         .then(res => {
-            switch (res.data) {
-            //Maybe not needed?
-            //For all cases queries are needed
-            case 'admin':
-                axios.get('/assignments').then(getAssignmentsFromResponse);
-                break;
-            case 'instructor':
-                axios.get('/assignments/instructor').then(getAssignmentsFromResponse);
-                break;
-            case 'student':
-                axios.get('assignments/instructor').then(getAssignmentsFromResponse);
-                axios.get('assignments/student').then(getAssignmentsFromResponse);
-                break;
-            default:
-                throw new Error('Invalid role.');
+            if (res.data !== 'admin') {
+                axios.get(`/assignments/upcoming/${moment(Date.now()).utc().format()}`)
+                    .then(res => setAssignments(res.data))
+                    .catch(console.log);
             }
         })
         .catch(err => console.log(err));
     }, []);
 
-    function getAssignmentsFromResponse(res) {
-        assignmentsRef.current = assignmentsRef.current.concat(res.data);
-        setAssignments(assignmentsRef.current);
-    }
-
     return (
         <List>
-            {assignments.map((assignment) =>
+            {
+            assignments.map((assignment) =>
                 <>
                     <ListItem>
                         <ListItemText primary={assignment.assignment_name} secondary={assignment.course_id}
@@ -43,7 +29,8 @@ export default function UpcomingAssignments() {
                     </ListItem>
                     <Divider />
                 </>
-            )}
+            )
+            }
         </List>
     );
     
