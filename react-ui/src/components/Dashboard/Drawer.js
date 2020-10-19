@@ -59,47 +59,29 @@ const useStyles = makeStyles(theme => ({
 
 function GeneralPanel(props) {
   const classes = useStyles();
-  const assignments = props.assignments;
-  const announcements = props.announcements;
-
+  const courseData = props.courseData;
   return (
     <Paper className={classes.dialog}>
+      <Typography variant="h5">
+        Course Information
+      </Typography>
       <Typography variant="h6">
-        Announcements
-    </Typography>
-      <List>
-        {
-          announcements.map(announcement => {
-            let date = moment(announcement.date_created).local();
-            date = date.format('MM-DD-YY [at] h:mm A');
-
-            return (
-              <ListItem>
-                <ListItemText primary={announcement.announcement_name} secondary={
-                  `${announcement.first_name} ${announcement.last_name} on ${date}`
-                } />
-              </ListItem>
-            );
-          })
-        }
-      </List>
+        Term: {courseData.term}
+      </Typography>
       <Typography variant="h6">
-        Assignments
-    </Typography>
-      <List>
-        {
-        assignments.map(assignment => {
-          let date = moment(assignment.deadline).local();
-          date = date.format('[Due on] MM-DD-YY [at] h:mm A');
-
-          return (
-            <ListItem>
-              <ListItemText primary={assignment.assignment_name} secondary={date} />
-            </ListItem>
-          );
-        })
-        }
-      </List>
+        Instructors
+        <List>
+          {
+            courseData.instructors.map(instructor => {              
+              return (
+                <ListItem>
+                  <ListItemText primary={instructor} />
+                </ListItem>
+              )
+            })
+          }
+        </List>
+      </Typography>
     </Paper>
   );
 }
@@ -163,11 +145,19 @@ function AnnouncementsPanel(props) {
 function ClassDialog({ selectedClass, open, setOpen }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [courseData, setCourseData] = React.useState({instructors: []});
   const [announcements, setAnnouncements] = useState([]);
   const [assignments, setAssignments] = useState([]);
 
   useEffect(() => {
     if (selectedClass.id != null) {
+      axios.get(`/courses/${selectedClass.id}`)
+        .then(res => {
+          console.log(res.data);
+          setCourseData(res.data);
+        })
+        .catch(console.log);
+
       axios.get(`/courses/${selectedClass.id}/announcements`)
         .then(res => {
           setAnnouncements(res.data);
@@ -210,7 +200,7 @@ function ClassDialog({ selectedClass, open, setOpen }) {
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <GeneralPanel assignments={assignments} announcements={announcements} />
+        <GeneralPanel courseData={courseData} />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <AssignmentsPanel assignments={assignments} />

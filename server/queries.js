@@ -10,19 +10,19 @@ require('dotenv').config();
 const resetExpirationAmount = 15;
 const resetExpirationUnit = 'minutes';
 
+/*
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
+*/
 
-/*
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo'
 });
-*/
 
 
 client.connect(() => {
@@ -545,6 +545,31 @@ const getAssignmentsByDate = (req, res) => {
   });
 }
 
+const getCourse = (req, res) => {
+  const courseID = req.params.ID;
+  const sql = `WITH Course AS (
+    SELECT Courses.*, CONCAT(I.first_name, ' ', I.last_name) as Instructor FROM
+    (SELECT Instructing.course_id, Users.first_name, Users.last_name
+      FROM Instructing INNER JOIN Users
+      ON Instructing.user_id=Users.id
+      AND Instructing.course_id=$1) AS I
+    INNER JOIN
+    Courses
+    ON I.course_id=Courses.course_id)
+    SELECT course_id, course_name, term, ARRAY_AGG(Instructor) Instructors
+    FROM Course
+    GROUP BY course_id, course_name, term;`;
+  const values = [courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send('Something went wrong.');
+    } else {
+      res.status(200).send(result.rows[0]);
+    }
+  });
+}
+
 module.exports = {
   createUser,
   loginUser,
@@ -560,5 +585,6 @@ module.exports = {
   getCourseAnnouncements,
   getAssignmentsByDate,
   getAssignment,
+  getCourse,
   addAnnouncement
 };
