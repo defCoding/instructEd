@@ -22,11 +22,16 @@ const onSubmit = (e) => {
 export default function AddToClass() {
   const classes = useStyle();
   const [term, setTerm] = React.useState('');
+  const [role, setRole] = React.useState('');
 
 
-  const handleChange = (event) => {
+  const handleTermChange = (event) => {
     setTerm(event.target.value);
   };
+
+  const handleRoleChange = (event) => {
+    setRole(event.target.value);
+  }
 
     return (
       <Paper className="root">
@@ -44,7 +49,7 @@ export default function AddToClass() {
                   color="secondary"
                   style={{ width: 150 }}
                   value={term}
-                  onChange={handleChange}
+                  onChange={handleTermChange}
                   label="Term"
                 >
                   <MenuItem value={10}>Spring 2021</MenuItem>
@@ -56,13 +61,12 @@ export default function AddToClass() {
                 <Select
                   color="secondary"
                   style={{ width: 150 }}
-                  value={term}
-                  onChange={handleChange}
+                  value={role}
+                  onChange={handleRoleChange}
                   label="Role in Class"
                 >
-                  <MenuItem value={10}>Admin</MenuItem>
-                  <MenuItem value={20}>Instructor</MenuItem>
-                  <MenuItem value={30}>Student</MenuItem>
+                  <MenuItem value={10}>Instructor</MenuItem>
+                  <MenuItem value={20}>Student</MenuItem>
                 </Select>
               </FormControl>
             <Grid item xs="12">
