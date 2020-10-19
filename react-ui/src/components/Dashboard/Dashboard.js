@@ -7,6 +7,11 @@ import axios from 'axios';
 
 const drawerWidth = 250;
 
+const adminWidgets = ['Add Course', 'Course and Instructor List'];
+const instructorWidgets = ['Create Announcement', 'Task Calendar'];
+const studentWidgets = ['Announcements', 'Assignments Per Day', 'Task Calendar', 'Upcoming Assignments'];
+const currentRoleWidgets = [];
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -33,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard(props) {
   const classes = useStyles();
-
   const [courses, setCourses] = useState([]);
   const coursesRef = useRef([]);
 
@@ -42,12 +46,15 @@ export default function Dashboard(props) {
       .then(res => {
         switch (res.data) {
           case 'admin':
+            currentRoleWidgets = adminWidgets;
             axios.get('/courses').then(getCoursesFromResponse);
             break;
           case 'instructor':
+            currentRoleWidgets = instructorWidgets;
             axios.get('/courses/instructor').then(getCoursesFromResponse);
             break;
           case 'student':
+            currentRoleWidgets = studentWidgets;
             axios.get('/courses/instructor').then(getCoursesFromResponse);
             axios.get('/courses/student').then(getCoursesFromResponse);
             break;
@@ -74,7 +81,7 @@ export default function Dashboard(props) {
       <Navbar />
       <div className={classes.toolbar} />
       <UserDrawer courses={courses}/>
-      <WidgetView />
+      <WidgetView displayWidgets = {currentRoleWidgets}/>
     </div>
   );
 }
