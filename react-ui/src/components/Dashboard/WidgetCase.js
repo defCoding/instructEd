@@ -2,13 +2,15 @@ import React from 'react';
 import { Paper, IconButton, Menu, MenuItem, AppBar, Toolbar, Typography, Dialog } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { makeStyles } from '@material-ui/core/styles';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import CloseIcon from '@material-ui/icons/Close';
+
 import Announcements from '../Widgets/Announcements';
 import Calendar from '../Widgets/TaskCalendar';
 import AddCourse from '../Widgets/AddCourse';
 import CreateAnnouncement from '../Widgets/CreateAnnouncement';
-import Search from '../Widgets/AdminSearch';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
-import CloseIcon from '@material-ui/icons/Close';
+import AddStudent from '../Widgets/AddStudent';
+import UpcomingAssignments from '../Widgets/UpcomingAssignments';
 
 const ITEM_HEIGHT = 50;
 
@@ -32,16 +34,18 @@ const useStyles = makeStyles((theme) => ({
 
 function WidgetSelect({currentWidget}) {
   switch (currentWidget) {
-    case 'Announcements':
-      return (<Announcements />);
-    case 'Calendar':
-      return (<Calendar />);
     case 'Add Course':
       return (<AddCourse />);
-    case 'Search':
-      return (<Search />);
+    case 'Add Student':
+      return (<AddStudent />);
+    case 'Announcements':
+      return (<Announcements />);
     case 'Create Announcement':
       return (<CreateAnnouncement />);
+    case 'Calendar':
+      return (<Calendar />);
+    case 'Upcoming Assignments':
+      return (<UpcomingAssignments />);
     default:
       return null;
   }

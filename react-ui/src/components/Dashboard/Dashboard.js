@@ -7,9 +7,9 @@ import axios from 'axios';
 
 const drawerWidth = 250;
 
-const adminWidgets = ['Add Course', 'Course and Instructor List'];
+const adminWidgets = ['Add Course', 'Add Student to Course'];
 const instructorWidgets = ['Create Announcement', 'Task Calendar'];
-const studentWidgets = ['Announcements', 'Assignments Per Day', 'Task Calendar', 'Upcoming Assignments'];
+const studentWidgets = ['Announcements', 'Assignments', 'Task Calendar', 'Assignments'];
 const currentRoleWidgets = [];
 
 const useStyles = makeStyles((theme) => ({
