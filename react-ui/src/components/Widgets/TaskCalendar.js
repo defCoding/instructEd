@@ -39,7 +39,7 @@ function AssignmentDialog({dateSelected, open, setOpen}) {
   //Select class given given date
   useEffect(() => {
     if (dateSelected != null) {
-      axios.get(`/courses/${dateSelected}/assignments`)
+      axios.get(`/assignments/date/${moment(dateSelected).utc().format()}`)
         .then(res => {
           setAssignments(res.data);
         })
@@ -85,7 +85,7 @@ function AssignmentDialog({dateSelected, open, setOpen}) {
 }
 
 export default function TaskCalendar() {
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date(Date.now()));
   const [open, setOpen] = React.useState(false);
 
 

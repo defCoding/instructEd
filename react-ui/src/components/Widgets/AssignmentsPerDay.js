@@ -65,12 +65,13 @@ export default function CustomizedDialogs(props) {
     setOpen(true);
   };
   const handleClose = () => {
+    console.log(date);
     setOpen(false);
   };
 
   function getAssignmentsFromResponse(res) {
-        assignmentsRef.current = assignmentsRef.current.concat(res.data);
-        setAssignments(assignmentsRef.current);
+    assignmentsRef.current = assignmentsRef.current.concat(res.data);
+    setAssignments(assignmentsRef.current);
   }
 
   return (
