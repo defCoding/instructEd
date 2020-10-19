@@ -19,9 +19,10 @@ const onSubmit = (e) => {
   e.preventDefault();
 };
 
-export default function AddCourse() {
+export default function AddStudent() {
   const classes = useStyle();
   const [term, setTerm] = React.useState('');
+
 
   const handleChange = (event) => {
     setTerm(event.target.value);
@@ -32,16 +33,10 @@ export default function AddCourse() {
         <form>
           <Grid height="100%" spacing={1}>
             <Grid item xs="12">
-              <TextField required color="secondary" variant="outlined" label="Class Name" name="className" className={classes.items} />
-            </Grid>
-            <Grid item xs="12">
               <TextField required color="secondary" variant="outlined" label="Class Number" name="classNumber" className={classes.items} />
             </Grid>
             <Grid item xs="12">
-              <TextField required color="secondary" variant="outlined" label="Department" name="department" className={classes.items} />
-            </Grid>
-            <Grid item xs="12">
-              <TextField required color="secondary" variant="outlined" label="Instructor" name="instructor" className={classes.items} />
+              <TextField required color="secondary" variant="outlined" label="Student" name="student" className={classes.items} />
             </Grid>
             <FormControl color="secondary" variant="outlined" className={classes.items}>
                 <InputLabel id="demo-simple-select-outlined-label">Term</InputLabel>
