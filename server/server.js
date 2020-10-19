@@ -32,7 +32,7 @@ app.post('/updatePassword', db.updatePassword);
 app.get('/resetPassword/:token', db.resetPassword, serveIndex);
 
 app.get('/duo_frame', withAuth, (req, res) => {
-  const sigRequest = Duo.sign_request(process.env.DUO_IKEY, process.env.DUO_SKEY, process.env.DUO_AKEY, req.userID);
+  const sigRequest = Duo.sign_request(process.env.DUO_IKEY, process.env.DUO_SKEY, process.env.DUO_AKEY, req.userID.toString());
   res.json({sigRequest, host: process.env.DUO_HOST});
 });
 
@@ -44,7 +44,7 @@ app.post('/duo_login', withAuth, (req, res) => {
     signedResponse);
 
   if (authenticatedUsername) {
-    const userID = req.userID;
+    const userID = req.userID.toString();
     const token = jwt.sign({ userID }, process.env.DUO_JWT_KEY);
     res.cookie('DUO_TOKEN', token, { httpOnly: true }).status(200).send();
   } else {
@@ -75,6 +75,7 @@ app.get('/courses/:ID', withDuoAuth, db.getCourse);
 app.get('/courses/:ID/assignments', withDuoAuth, db.getCourseAssignments);
 app.get('/courses/:ID/announcements', withDuoAuth, db.getCourseAnnouncements);
 app.post('/announcements', withDuoAuth, db.addAnnouncement);
+app.post('/courses', withDuoAuth, db.addCourse);
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));

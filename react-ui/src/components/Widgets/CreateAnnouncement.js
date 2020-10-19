@@ -26,7 +26,7 @@ export default function CreateAnnouncement() {
     const {name, value} = e.target;
     setValues({
       ...values,
-      [name]: value
+      [name] : value
     });
   }
 

@@ -10,20 +10,19 @@ require('dotenv').config();
 const resetExpirationAmount = 15;
 const resetExpirationUnit = 'minutes';
 
+/*
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
+*/
 
-/*
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo'
 });
-*/
-
 
 client.connect(() => {
   console.log("Connected to database.");
@@ -290,22 +289,25 @@ const getRole = (req, res) => {
 
 const getAllCourses = (role) => (req, res) => {
   let filter;
+  let values;
   switch (role) {
     case 'student':
       filter = ' INNER JOIN Enrollments on Courses.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
+      values = [req.userID];
       break;
     case 'instructor':
       filter = ' INNER JOIN Instructing on Courses.course_id=Instructing.course_id WHERE Instructing.user_id=$1;';
+      values = [req.userID];
       break;
     case 'admin':
       filter = '';
+      values = [];
       break;
     default: 
       throw new Error('Invalid role.')
   }
 
   const sql = `SELECT * FROM Courses${filter};`;
-  const values = [req.userID];
 
   client.query(sql, values, (err, result) => {
     if (err) {
@@ -318,15 +320,19 @@ const getAllCourses = (role) => (req, res) => {
 
 const getAllAnnouncements = (role) => (req, res) => {
   let filter;
+  let values;
   switch (role) {
     case 'student':
       filter = ' INNER JOIN Enrollments on AC.course_id=Enrollments.course_id WHERE Enrollments.user_id=$1;';
+      values = [req.userID];
       break;
     case 'instructor':
       filter = ' INNER JOIN Instructing on AC.course_id=Instructing.course_id WHERE Instructing.user_id=$1;';
+      values = [req.userID];
       break;
     case 'admin':
       filter = '';
+      values = [];
       break;
     default: 
       throw new Error('Invalid role.')
@@ -337,7 +343,6 @@ const getAllAnnouncements = (role) => (req, res) => {
       Announcements INNER JOIN Courses
       ON Announcements.course_id=Courses.course_id)
     AS AC${filter};`
-  const values = [req.userID];
 
   client.query(sql, values, (err, result) => {
     if(err) {
@@ -365,7 +370,7 @@ const getAllAssignments = (role) => (req, res) => {
   }
 
   const sql = `SELECT * FROM
-  (SELECT Assignments.*, Courses.course_name FROM
+  (SELECT Assignments.*, CONCAT(Courses.course_dept, ' ', Courses.course_number) as course_name FROM
     Assignments INNER JOIN Courses
     ON Assignments.course_id=Courses.course_id)
    AS AC${filter};`;
@@ -449,7 +454,7 @@ const userCanAccessAssignment = (userID, assignmentID) => {
 
 /**
  * Gets the role of the user with the given userID.
- * @param {uuid} userID 
+ * @param {Integer} userID 
  * @return {String} The role of the user.
  */
 const queryForRole = (userID) => {
@@ -510,10 +515,8 @@ const addAnnouncement = (req, res) => {
 
   client.query(sql, values, (err, result) => {
     if (err) {
-      console.log(err);
       res.status(400).send('Something went wrong.');
     } else {
-      console.log(result);
       res.status(201).send('Announcement successfully created.');
     }
   });
@@ -571,6 +574,32 @@ const getCourse = (req, res) => {
   });
 }
 
+const addCourse = (req, res) => {
+  const info = req.body;
+  let sql = `INSERT INTO Courses VALUES
+    (default, $1, $2, $3, $4) RETURNING course_id;`;
+  let values = [info.courseDept, info.courseNumber, info.courseName, info.courseTerm];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send('Something went wrong with adding the course.');
+    } else {
+      const course_id = result.rows[0].course_id;
+      sql = `INSERT INTO Instructing VALUES
+        ($1, $2);`;
+      values = [info.instructorID, course_id]; 
+      
+      client.query(sql, values, (err, result) => {
+        if (err) {
+          res.status(400).send('Something went wrong with adding the instructor to the course.');
+        } else {
+          res.status(201).send('Course and instructor added.');
+        }
+      });
+    }
+  });
+}
+
 module.exports = {
   createUser,
   loginUser,
@@ -587,5 +616,6 @@ module.exports = {
   getAssignmentsByDate,
   getAssignment,
   getCourse,
+  addCourse,
   addAnnouncement
 };

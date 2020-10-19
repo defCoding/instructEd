@@ -13,7 +13,7 @@ const withAuth = (req, res, next) => {
         res.cookies('LOGIN_TOKEN', {expires: Date.now()});
         res.status(401).send('Unauthorized: Invalid token.');
       } else {
-        req.userID = decoded.userID;
+        req.userID = parseInt(decoded.userID);
         next();
       }
     });
@@ -34,7 +34,7 @@ const withDuoAuth = (req, res, next) => {
         res.cookies('DUO_TOKEN', {expires: Date.now()});
         res.status(401).send('Unauthorized: Invalid token.');
       } else {
-        req.userID = decoded.userID;
+        req.userID = parseInt(decoded.userID);
         next();
       }
     });

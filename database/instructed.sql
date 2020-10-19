@@ -11,7 +11,7 @@ INSERT INTO Roles values('instructor');
 INSERT INTO Roles values('student');
 
 CREATE TABLE Users (
-  id uuid DEFAULT uuid_generate_v4(),
+  id SERIAL,
   main_role VARCHAR(20) NOT NULL DEFAULT 'student',
   email text UNIQUE, 
   first_name VARCHAR(50),
@@ -23,7 +23,7 @@ CREATE TABLE Users (
 );
 
 CREATE TABLE PasswordTokens (
-  id uuid NOT NULL UNIQUE,
+  id INTEGER NOT NULL UNIQUE,
   token VARCHAR(40),
   expiration TIMESTAMP,
   PRIMARY KEY (token),
@@ -32,7 +32,7 @@ CREATE TABLE PasswordTokens (
 
 
 CREATE TABLE FacebookUsers (
-  id uuid,
+  id INTEGER,
   fb_id text NOT NULL UNIQUE,
   access_token text NOT NULL,
   signed_request text NOT NULL,
@@ -42,15 +42,16 @@ CREATE TABLE FacebookUsers (
 
 CREATE TABLE Courses (
   course_id SERIAL,
+  course_dept VARCHAR(5) NOT NULL,
+  course_number INTEGER NOT NULL,
   course_name VARCHAR(25) NOT NULL,
-  --instructor_id uuid NOT NULL,
   term VARCHAR(20) NOT NULL,
-  PRIMARY KEY (course_id)
-  -- (Depends on future table structure) FOREIGN KEY (instructor_id) REFERENCES Users (id)
+  PRIMARY KEY (course_id),
+  UNIQUE (course_dept, course_number)
 );
 
 CREATE TABLE Enrollments (
-  user_id uuid,
+  user_id INTEGER,
   course_id INTEGER NOT NULL,
   PRIMARY KEY (user_id, course_id),
   FOREIGN KEY (user_id) REFERENCES Users (id),
@@ -58,7 +59,7 @@ CREATE TABLE Enrollments (
 );
 
 CREATE TABLE Instructing (
-  user_id uuid,
+  user_id INTEGER,
   course_id INTEGER NOT NULL,
   PRIMARY KEY (user_id, course_id),
   FOREIGN KEY (user_id) REFERENCES Users (id),
@@ -82,18 +83,17 @@ CREATE TABLE Announcements (
   announcement_description TEXT,
   course_id INTEGER NOT NULL,
   date_created TIMESTAMP NOT NULL,
-  author_id uuid NOT NULL,
+  author_id INTEGER NOT NULL,
   PRIMARY KEY (announcement_id),
   FOREIGN KEY (course_id) REFERENCES Courses (course_id),
   FOREIGN KEY (author_id) REFERENCES Users (id)
 );
 
 CREATE TABLE Submissions (
-  submission_id uuid DEFAULT uuid_generate_v4(),
-  assignment_id INTEGER NOT NULL, --^^
-  user_id uuid NOT NULL,
+  submission_id SERIAL,
+  assignment_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
   submission_types VARCHAR(10) ARRAY NOT NULL,
-  --content VARCHAR(30) "" ARRAY, "" should be either bytea or large objects, will need a table to store these.
   grade FLOAT,
   time_submitted TIMESTAMP,
   PRIMARY KEY (submission_id),

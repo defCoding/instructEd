@@ -10,7 +10,7 @@ const drawerWidth = 250;
 const adminWidgets = ['Add Course', 'Course and Instructor List'];
 const instructorWidgets = ['Create Announcement', 'Task Calendar'];
 const studentWidgets = ['Announcements', 'Assignments Per Day', 'Task Calendar', 'Upcoming Assignments'];
-const currentRoleWidgets = [];
+let currentRoleWidgets = [];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,6 +63,7 @@ export default function Dashboard(props) {
         }
       })
       .catch(err => {
+        console.log(err);
         if (err.response.status === 401) { 
           props.history.push('/login');
         } else {
