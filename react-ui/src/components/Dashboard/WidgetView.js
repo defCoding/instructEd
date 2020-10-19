@@ -13,35 +13,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function WidgetView() {
+export default function WidgetView(props) {
   const classes = useStyles();
+  const displayWidgets = props.displayWidgets;
+  
   return(
     <main className={classes.content}>
       <div className={classes.toolbar} />
       <Grid container height="100%" spacing={1}>
         <Grid item xs={6} maxHeight={300}>
-          <WidgetCase />
+          <WidgetCase displayWidgets={displayWidgets} />
         </Grid>
         <Grid item xs={6} maxHeight={300}>
-          <WidgetCase />
+          <WidgetCase displayWidgets={displayWidgets} />
         </Grid>
         <Grid item xs={6} maxHeight={300}>
-          <WidgetCase />
+          <WidgetCase displayWidgets={displayWidgets} />
         </Grid>
         <Grid item xs={6} maxHeight={300}>
-          <WidgetCase />
+          <WidgetCase displayWidgets={displayWidgets} />
         </Grid>
         <Grid item xs={6} maxHeight={300}>
-          <WidgetCase />
+          <WidgetCase displayWidgets={displayWidgets} />
         </Grid>
         <Grid item xs={6} maxHeight={300}>
-          <WidgetCase />
-        </Grid>
-        <Grid item xs={6} maxHeight={300}>
-          <WidgetCase />
-        </Grid>
-        <Grid item xs={6} maxHeight={300}>
-          <WidgetCase />
+          <WidgetCase displayWidgets={displayWidgets} />
         </Grid>
       </Grid>
     </main>

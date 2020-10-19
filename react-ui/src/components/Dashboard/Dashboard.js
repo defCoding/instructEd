@@ -8,9 +8,9 @@ import axios from 'axios';
 const drawerWidth = 250;
 
 const adminWidgets = ['Add Course', 'Add Student to Course'];
-const instructorWidgets = ['Create Announcement', 'Task Calendar'];
-const studentWidgets = ['Announcements', 'Assignments', 'Task Calendar', 'Assignments'];
-const currentRoleWidgets = [];
+const instructorWidgets = ['Create Announcement', 'Calendar'];
+const studentWidgets = ['Announcements', 'Assignments', 'Calendar'];
+let currentRoleWidgets = [];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,7 +81,7 @@ export default function Dashboard(props) {
       <Navbar />
       <div className={classes.toolbar} />
       <UserDrawer courses={courses}/>
-      <WidgetView displayWidgets = {currentRoleWidgets}/>
+      <WidgetView displayWidgets={currentRoleWidgets}/>
     </div>
   );
 }

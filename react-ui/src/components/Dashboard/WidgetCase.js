@@ -36,7 +36,7 @@ function WidgetSelect({currentWidget}) {
   switch (currentWidget) {
     case 'Add Course':
       return (<AddCourse />);
-    case 'Add Student':
+    case 'Add Student to Course':
       return (<AddStudent />);
     case 'Announcements':
       return (<Announcements />);
@@ -44,7 +44,7 @@ function WidgetSelect({currentWidget}) {
       return (<CreateAnnouncement />);
     case 'Calendar':
       return (<Calendar />);
-    case 'Upcoming Assignments':
+    case 'Assignments':
       return (<UpcomingAssignments />);
     default:
       return null;
@@ -77,21 +77,14 @@ function WidgetDialog ({currentWidget, openDialog, setOpenDialog}) {
   );
 }
 
-export default function WidgetCase() {
+export default function WidgetCase(props) {
   const [currentWidget, setCurrentWidget] = React.useState('None');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const open = Boolean(anchorEl);
   const classes = useStyles();
 
-  const options = [
-    'None',
-    'Announcements',
-    'Calendar',
-    'Add Course',
-    'Create Announcement',
-    'Search',
-  ];
+  const options = props.displayWidgets;
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
