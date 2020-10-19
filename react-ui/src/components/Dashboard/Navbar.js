@@ -1,11 +1,10 @@
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
-import { Paper, Dialog, FormGroup, FormControlLabel, Typography, Switch, Menu, ListItem, MenuItem, Badge, ListItemIcon, IconButton, ListItemText } from '@material-ui/core';
+import { FormGroup, FormControlLabel, Typography, Switch, Menu, ListItem, MenuItem, Badge, ListItemIcon, IconButton, ListItemText } from '@material-ui/core';
 import { makeStyles, withStyles} from '@material-ui/core/styles';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import CloseIcon from '@material-ui/icons/Close';
 import { ThumbDown, ThumbUp, Delete } from '@material-ui/icons';
 
 var notifications = [{"type": "File Upload", "body": "Upload approval"}, 
@@ -37,6 +36,10 @@ const StyledMenu = withStyles({
 ));
 
 const useStyles = makeStyles((theme) => ({
+  appBar: {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: drawerWidth,
+  },
   title: {
     flexGrow: 1,
   },
@@ -45,41 +48,8 @@ const useStyles = makeStyles((theme) => ({
   },
   notificationButton: {
     margin: theme.spacing(2),
-  },
-  toolbar: theme.mixins.toolbar,
-  dialog: {
-    padding: theme.spacing(3),
-    height: "100vh",
-  },
+  }
 }));
-
-function ProfileDialog ({ open, setOpen }) {
-  const classes = useStyles();
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <Dialog fullScreen open={open} onClose={handleClose}>
-      <AppBar>
-        <Toolbar className={classes.toolbar}>
-          <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-            <CloseIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>Profile</Typography>
-        </Toolbar>
-      </AppBar>
-      <Paper className={classes.dialog}>
-      </Paper>
-    </Dialog>
-  );
-}
 
 export default function Navbar() {
   const classes = useStyles();
@@ -87,8 +57,6 @@ export default function Navbar() {
   const [darkMode, setDarkMode] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [toggleNotifications, setToggleNotifications] = React.useState(null);
-  const [openProfile, setOpenProfile] = React.useState(false);
-
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -157,55 +125,52 @@ export default function Navbar() {
   }
 
   return (
-    <>
-      <AppBar position="fixed" className={classes.appBar} color="primary">
-        <Toolbar>
-          <Typography color="secondary" align="left" variant="h6" className={classes.title}>
-            instructED
-          </Typography>
-          <FormGroup>
-            <FormControlLabel control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />} />
-          </FormGroup>
-          <IconButton
-            color="secondary"
-            onClick={displayNotifications}
-            className={classes.menuButton}>
-              <Badge badgeContent={notifications.length} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-          </IconButton>
-          <StyledMenu
-            id="customized-menu"
-            anchorEl={toggleNotifications}
-            keepMounted
-            open={Boolean(toggleNotifications)}
-            onClose={notificationClose}
-          >
-            {notifications.map((notification) => (
-              <ListItem>
-                {renderNotifications(notification)}
-              </ListItem>
-            ))}
-          </StyledMenu>
-          <IconButton
-            color="secondary"
-            onClick={handleClick}
-            className={classes.menuButton}>
-              <AccountCircleIcon />
-          </IconButton>
-          <Menu
-            id="profile"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={setOpenProfile}>My account</MenuItem>
-            <MenuItem onClick={handleClose}>Logout</MenuItem>
-          </Menu>
-        </Toolbar>
-      </AppBar>
-      <ProfileDialog open={openProfile} setOpen={setOpenProfile} />
-    </>
+    <AppBar position="fixed" className={classes.appBar} color="primary">
+      <Toolbar>
+        <Typography color="secondary" align="left" variant="h6" className={classes.title}>
+          instructED
+        </Typography>
+        <FormGroup>
+          <FormControlLabel control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />} />
+        </FormGroup>
+        <IconButton
+          color="secondary"
+          onClick={displayNotifications}
+          className={classes.menuButton}>
+            <Badge badgeContent={notifications.length} color="secondary">
+              <NotificationsIcon />
+            </Badge>
+        </IconButton>
+        <StyledMenu
+          id="customized-menu"
+          anchorEl={toggleNotifications}
+          keepMounted
+          open={Boolean(toggleNotifications)}
+          onClose={notificationClose}
+        >
+          {notifications.map((notification) => (
+            <ListItem>
+              {renderNotifications(notification)}
+            </ListItem>
+          ))}
+        </StyledMenu>
+        <IconButton
+          color="secondary"
+          onClick={handleClick}
+          className={classes.menuButton}>
+            <AccountCircleIcon />
+        </IconButton>
+        <Menu
+          id="profile"
+          anchorEl={anchorEl}
+          keepMounted
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={handleClose}>My account</MenuItem>
+          <MenuItem onClick={handleClose}>Logout</MenuItem>
+        </Menu>
+      </Toolbar>
+    </AppBar>
   );
 }

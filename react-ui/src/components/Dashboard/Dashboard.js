@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const drawerWidth = 250;
 
-const adminWidgets = ['Add Course', 'Add Student to Course'];
+const adminWidgets = ['Add Course', 'Add User to Class', 'Set Role'];
 const instructorWidgets = ['Create Announcement', 'Calendar'];
 const studentWidgets = ['Announcements', 'Assignments', 'Calendar'];
 let currentRoleWidgets = [];

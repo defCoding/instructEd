@@ -9,7 +9,7 @@ import Announcements from '../Widgets/Announcements';
 import Calendar from '../Widgets/TaskCalendar';
 import AddCourse from '../Widgets/AddCourse';
 import CreateAnnouncement from '../Widgets/CreateAnnouncement';
-import AddStudent from '../Widgets/AddStudent';
+import AddToClass from '../Widgets/AddToClass';
 import UpcomingAssignments from '../Widgets/UpcomingAssignments';
 
 const ITEM_HEIGHT = 50;
@@ -36,8 +36,10 @@ function WidgetSelect({currentWidget}) {
   switch (currentWidget) {
     case 'Add Course':
       return (<AddCourse />);
-    case 'Add Student to Course':
-      return (<AddStudent />);
+    case 'Set Role':
+      return (<SetRole />);
+    case 'Add User to Class':
+      return (<AddToClass />);
     case 'Announcements':
       return (<Announcements />);
     case 'Create Announcement':

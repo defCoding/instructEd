@@ -19,13 +19,12 @@ const onSubmit = (e) => {
   e.preventDefault();
 };
 
-export default function AddStudent() {
+export default function SetRole() {
   const classes = useStyle();
-  const [term, setTerm] = React.useState('');
-
+  const [role, setRole] = React.useState('');
 
   const handleChange = (event) => {
-    setTerm(event.target.value);
+    setRole(event.target.value);
   };
 
     return (
@@ -33,22 +32,20 @@ export default function AddStudent() {
         <form>
           <Grid height="100%" spacing={1}>
             <Grid item xs="12">
-              <TextField required color="secondary" variant="outlined" label="Class Number" name="classNumber" className={classes.items} />
-            </Grid>
-            <Grid item xs="12">
-              <TextField required color="secondary" variant="outlined" label="Student" name="student" className={classes.items} />
+              <TextField required color="secondary" variant="outlined" label="User" name="user" className={classes.items} />
             </Grid>
             <FormControl color="secondary" variant="outlined" className={classes.items}>
-                <InputLabel id="demo-simple-select-outlined-label">Term</InputLabel>
+                <InputLabel id="demo-simple-select-outlined-label">Role</InputLabel>
                 <Select
                   color="secondary"
                   style={{ width: 150 }}
-                  value={term}
+                  value={role}
                   onChange={handleChange}
-                  label="Term"
+                  label="Role"
                 >
-                  <MenuItem value={10}>Spring 2021</MenuItem>
-                  <MenuItem value={20}>Fall 2021</MenuItem>
+                  <MenuItem value={10}>Admin</MenuItem>
+                  <MenuItem value={20}>Instructor</MenuItem>
+                  <MenuItem value={30}>Student</MenuItem>
                 </Select>
               </FormControl>
             <Grid item xs="12">
