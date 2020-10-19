@@ -44,7 +44,7 @@ export default function AddCourse() {
               <TextField required color="secondary" variant="outlined" label="Instructor Email" name="instructorEmail" className={classes.items} />
             </Grid>
             <FormControl color="secondary" variant="outlined" className={classes.items}>
-                <InputLabel id="demo-simple-select-outlined-label">Filter</InputLabel>
+                <InputLabel id="demo-simple-select-outlined-label">Term</InputLabel>
                 <Select
                   color="secondary"
                   style={{ width: 150 }}
