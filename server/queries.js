@@ -552,10 +552,11 @@ const getCourse = (req, res) => {
     (SELECT Instructing.course_id, Users.first_name, Users.last_name
       FROM Instructing INNER JOIN Users
       ON Instructing.user_id=Users.id
-      AND Instructing.course_id=$1) AS I
-    INNER JOIN
+    ) AS I
+    RIGHT OUTER JOIN
     Courses
-    ON I.course_id=Courses.course_id)
+    ON I.course_id=Courses.course_id
+    WHERE Courses.course_id=$1)
     SELECT course_id, course_name, term, ARRAY_AGG(Instructor) Instructors
     FROM Course
     GROUP BY course_id, course_name, term;`;
