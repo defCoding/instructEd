@@ -6,6 +6,13 @@ const useStyle = makeStyles(theme => ({
   items: {
     margin:theme.spacing(1)
   },
+  root: {
+    '& .MuiFormControl-root': {
+      width:'75%',
+      margin:theme.spacing(1),
+      display:'flex'
+    }
+  },
 }))
 
 const onSubmit = (e) => {
@@ -21,7 +28,7 @@ export default function AddCourse() {
   };
 
     return (
-      <Paper>
+      <Paper className="root">
         <form>
           <Grid height="100%" spacing={1}>
             <Grid item xs="12">
@@ -36,7 +43,7 @@ export default function AddCourse() {
             <Grid item xs="12">
               <TextField required color="secondary" variant="outlined" label="Instructor Email" name="instructorEmail" className={classes.items} />
             </Grid>
-            <FormControl color="secondary" variant="outlined" className={classes.formControl}>
+            <FormControl color="secondary" variant="outlined" className={classes.items}>
                 <InputLabel id="demo-simple-select-outlined-label">Filter</InputLabel>
                 <Select
                   color="secondary"
