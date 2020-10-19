@@ -42,11 +42,18 @@ export default function CreateAnnouncement() {
 
   const onClick = (e) => {
     e.preventDefault();
-    if (currentCourse.course_id) {
+    if (currentCourse.course_id && values.announcementName !== '' && values.description !== '') {
       axios.post('/announcements', {
         ...values,
         courseID: currentCourse.course_id
+      }).then(res => {
+        if (res.status === 201) {
+          alert('Announcement created!');
+          setValues({announcementName: '', description: ''});
+        }
       });
+    } else {
+      alert('All fields must be filled.');
     }
   };
 
@@ -116,10 +123,10 @@ export default function CreateAnnouncement() {
             </Toolbar>
           </Grid>
           <Grid item xs="12">
-            <TextField color="secondary" variant="outlined" label="Announcement Title" name="announcementName" onChange={handleInputChange} />
+            <TextField color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
-            <TextField color="secondary" multiline="true" variant="outlined" label="Description" name="description" onChange={handleInputChange} />
+            <TextField color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
             <Button variant="contained" color="secondary" onClick={onClick}>Post Announcement</Button>
