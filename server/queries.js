@@ -616,6 +616,7 @@ const addCourse = (req, res) => {
       
       client.query(sql, values, (err, result) => {
         if (err) {
+          console.log(err);
           res.status(400).send('Something went wrong with adding the instructor to the course.');
         } else {
           res.status(201).send('Course and instructor added.');
