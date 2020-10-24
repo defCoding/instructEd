@@ -30,7 +30,7 @@ export default function AddCourse() {
     });
   }
 
-  const onSubmit = (e) => {
+  const onClick = (e) => {
     e.preventDefault();
     axios.get('/roles')
       .then(res => {
@@ -78,7 +78,7 @@ export default function AddCourse() {
             </Select>
           </FormControl>
           <Grid item xs="12">
-            <Button variant="contained" color="secondary" className={classes.items} onClick={onSubmit}>Add Course </Button>
+            <Button variant="contained" color="secondary" className={classes.items} onClick={onClick}>Add Course</Button>
           </Grid>
         </Grid>
       </form>

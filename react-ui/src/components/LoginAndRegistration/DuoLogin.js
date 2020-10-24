@@ -13,12 +13,20 @@ export default function DuoLogin(props) {
   const [duoAuthState, setAuthState] = useState(STATE_AUTH_PENDING);
 
   useEffect(() => {
-    // get the host and signed request from the server
-    // so we can initialize the Duo Prompt
-    axios.get('/duo_frame')
-      .then(res => res.data)
-      .then(initDuoFrame);
-  }, []);
+    // Check and see if user has already logged in.
+    axios.get('/authorize')
+      .then(res => {
+        if (res.status === 200) {
+          props.history.push('/dashboard');
+        }
+      }).catch(err => {
+        // get the host and signed request from the server
+        // so we can initialize the Duo Prompt
+        axios.get('/duo_frame')
+          .then(res => res.data)
+          .then(initDuoFrame);
+      });
+    }, []);
 
   const initDuoFrame = (json) => {
     // initialize the frame with the parameters

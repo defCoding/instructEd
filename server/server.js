@@ -60,6 +60,7 @@ app.get('/authorize', withDuoAuth, (req, res) => {
  * Course, Assignments, and Announcements
  */
 app.get('/roles', withDuoAuth, db.getRole);
+app.put('/roles', withDuoAuth, db.setRole);
 app.get('/courses', withDuoAuth, db.getAllCourses('admin')); // select all
 app.get('/courses/instructor', withDuoAuth, db.getAllCourses('instructor')); // instructing
 app.get('/courses/student', withDuoAuth, db.getAllCourses('student')); // enrollments
@@ -67,8 +68,8 @@ app.get('/announcements', withDuoAuth, db.getAllAnnouncements('admin'));
 app.get('/announcements/instructor', withDuoAuth, db.getAllAnnouncements('instructor'));
 app.get('/announcements/student', withDuoAuth, db.getAllAnnouncements('student'));
 app.get('/assignments', withDuoAuth, db.getAllAssignments('admin'));
-app.get('/assignments/student/', withDuoAuth, db.getAllAssignments('instructor'));
-app.get('/assignments/instructor', withDuoAuth, db.getAllAssignments('student'));
+app.get('/assignments/instructor', withDuoAuth, db.getAllAssignments('instructor'));
+app.get('/assignments/students', withDuoAuth, db.getAllAssignments('student'));
 app.get('/assignments/:ID', withDuoAuth, db.getAssignment);
 app.get('/assignments/date/:date', withDuoAuth, db.getAssignmentsByDate);
 app.get('/assignments/upcoming/:date', withDuoAuth, db.getUpcomingAssignments);
@@ -77,6 +78,8 @@ app.get('/courses/:ID/assignments', withDuoAuth, db.getCourseAssignments);
 app.get('/courses/:ID/announcements', withDuoAuth, db.getCourseAnnouncements);
 app.post('/announcements', withDuoAuth, db.addAnnouncement);
 app.post('/courses', withDuoAuth, db.addCourse);
+app.post('/instructing', withDuoAuth, db.addInstructorToCourse)
+app.post('/enrollments', withDuoAuth, db.addStudentToCourse)
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));

@@ -283,6 +283,19 @@ const getRole = (req, res) => {
   });
 }
 
+const setRole = (req, res) => {
+  const info = req.body;
+  const sql = 'UPDATE Users SET main_role=$1 WHERE id=$2;'
+  const values = [info.role, info.userID];
+
+  client.query(sql, values, (err) => {
+    if (err) {
+      res.status(400).send('User ID does not exist.');
+    } else {
+      res.status(200).send('Role set successfully.');
+    }
+  });
+}
 /**
  * Courses, Assignments, and Announcements
  */
@@ -616,12 +629,51 @@ const addCourse = (req, res) => {
       
       client.query(sql, values, (err, result) => {
         if (err) {
-          console.log(err);
           res.status(400).send('Something went wrong with adding the instructor to the course.');
         } else {
           res.status(201).send('Course and instructor added.');
         }
       });
+    }
+  });
+}
+
+const addInstructorToCourse = (req, res) => {
+  const info = req.body;
+  const sql = 'INSERT INTO Instructing VALUES ($1, $2);';
+  const values = [info.userID, info.courseID];
+
+  client.query(sql, values, (err) => {
+    if (err) {
+      if (err.constraint.includes('course')) {
+        res.status(400).send('Course ID does not exist.');
+      } else if (err.constraint.includes('user')) {
+        res.status(400).send('User ID does not exist.');
+      } else {
+        res.status(400).send('Something went wrong.');
+      }
+    } else {
+      res.status(201).send('Instructor added to the course.');
+    }
+  });
+}
+
+const addStudentToCourse = (req, res) => {
+  const info = req.body;
+  const sql = 'INSERT INTO Enrollments VALUES ($1, $2);';
+  const values = [info.userID, info.courseID];
+
+  client.query(sql, values, (err) => {
+    if (err) {
+      if (err.constraint.includes('course')) {
+        res.status(400).send('Course ID does not exist.');
+      } else if (err.constraint.includes('user')) {
+        res.status(400).send('User ID does not exist.');
+      } else {
+        res.status(400).send('Something went wrong.');
+      }
+    } else {
+      res.status(201).send('Student added to the course.');
     }
   });
 }
@@ -634,6 +686,7 @@ module.exports = {
   resetPassword,
   updatePassword,
   getRole,
+  setRole,
   getAllCourses,
   getAllAnnouncements,
   getAllAssignments,
@@ -644,5 +697,7 @@ module.exports = {
   getAssignment,
   getCourse,
   addCourse,
+  addInstructorToCourse,
+  addStudentToCourse,
   addAnnouncement
 };

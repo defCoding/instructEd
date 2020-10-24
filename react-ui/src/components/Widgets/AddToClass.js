@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Paper, TextField, Grid, Button, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import axios from 'axios';
 
 const useStyle = makeStyles(theme => ({
   items: {
@@ -15,65 +16,79 @@ const useStyle = makeStyles(theme => ({
   },
 }))
 
-const onSubmit = (e) => {
-  e.preventDefault();
-};
-
 export default function AddToClass() {
   const classes = useStyle();
-  const [term, setTerm] = React.useState('');
-  const [role, setRole] = React.useState('');
+  const blankAdd = {courseID: '', userID: '', role: ''};
+  const [values, setValues] = useState(blankAdd);
 
-
-  const handleTermChange = (event) => {
-    setTerm(event.target.value);
-  };
-
-  const handleRoleChange = (event) => {
-    setRole(event.target.value);
+  const handleInputChange = e => {
+    const {name, value} = e.target;
+    setValues({
+      ...values,
+      [name]: value
+    });
   }
 
-    return (
-      <Paper className="root">
-        <form>
-          <Grid height="100%" spacing={1}>
-            <Grid item xs="12">
-              <TextField required color="secondary" variant="outlined" label="Class Number" name="classNumber" className={classes.items} />
-            </Grid>
-            <Grid item xs="12">
-              <TextField required color="secondary" variant="outlined" label="Student" name="student" className={classes.items} />
-            </Grid>
-            <FormControl color="secondary" variant="outlined" className={classes.items}>
-                <InputLabel id="demo-simple-select-outlined-label">Term</InputLabel>
-                <Select
-                  color="secondary"
-                  style={{ width: 150 }}
-                  value={term}
-                  onChange={handleTermChange}
-                  label="Term"
-                >
-                  <MenuItem value={10}>Spring 2021</MenuItem>
-                  <MenuItem value={20}>Fall 2021</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl color="secondary" variant="outlined" className={classes.items}>
-                <InputLabel id="demo-simple-select-outlined-label">Role in Class</InputLabel>
-                <Select
-                  color="secondary"
-                  style={{ width: 150 }}
-                  value={role}
-                  onChange={handleRoleChange}
-                  label="Role in Class"
-                >
-                  <MenuItem value={10}>Instructor</MenuItem>
-                  <MenuItem value={20}>Student</MenuItem>
-                </Select>
-              </FormControl>
-            <Grid item xs="12">
-              <Button variant="contained" color="secondary" className={classes.items} onSubmit={onSubmit}>Add Course </Button>
-            </Grid>
+  const onClick = e => {
+    e.preventDefault();
+    console.log(values);
+    switch (values.role) {
+      case 'Instructor':
+        axios.post('/instructing', values)
+          .then(res => {
+            if (res.status === 201) {
+              alert(res.data);
+            }
+          })
+          .catch(err => {
+            console.log(err);
+          });
+        break;
+      case 'Student':
+        axios.post('/enrollments', values)
+          .then(res => {
+            if (res.status === 201) {
+              alert(res.data);
+            }
+          })
+          .catch(err => {
+            alert(err.response.data);
+          });
+        break;
+      default:
+        alert('Role not provided.')
+        break;
+    }
+  }
+
+  return (
+    <Paper className="root">
+      <form>
+        <Grid height="100%" spacing={1}>
+          <Grid item xs="12">
+            <TextField required color="secondary" variant="outlined" label="Course ID" name="courseID" className={classes.items} onChange={handleInputChange}/>
           </Grid>
-        </form>
-      </Paper>
-    );
+          <Grid item xs="12">
+            <TextField required color="secondary" variant="outlined" label="User ID" name="userID" className={classes.items} onChange={handleInputChange}/>
+          </Grid>
+          <FormControl color="secondary" variant="outlined" className={classes.items}>
+            <InputLabel id="demo-simple-select-outlined-label">Role in Class</InputLabel>
+            <Select
+              color="secondary"
+              style={{ width: 150 }}
+              onChange={handleInputChange}
+              label="Role in Class"
+              name="role"
+            >
+              <MenuItem value={'Instructor'}>Instructor</MenuItem>
+              <MenuItem value={'Student'}>Student</MenuItem>
+            </Select>
+          </FormControl>
+          <Grid item xs="12">
+            <Button variant="contained" color="secondary" className={classes.items} onClick={onClick}>Add Course</Button>
+          </Grid>
+        </Grid>
+      </form>
+    </Paper>
+  );
 }

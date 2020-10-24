@@ -46,8 +46,7 @@ CREATE TABLE Courses (
   course_number INTEGER NOT NULL,
   course_name VARCHAR(25) NOT NULL,
   term VARCHAR(20) NOT NULL,
-  PRIMARY KEY (course_id),
-  UNIQUE (course_dept, course_number)
+  PRIMARY KEY (course_id)
 );
 
 CREATE TABLE Enrollments (
