@@ -188,7 +188,7 @@ function ClassDialog({ selectedClass, open, setOpen }) {
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {selectedClass.name}
+            [{selectedClass.id}] : {selectedClass.name}
           </Typography>
         </Toolbar>
       </AppBar>
