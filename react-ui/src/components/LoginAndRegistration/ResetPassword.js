@@ -70,7 +70,7 @@ export default function ResetPassword(props) {
               <TextField color="secondary" variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
             </Grid>
             <Grid container justify="center">
-              <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
+              <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Reset Password</Button>
             </Grid>
           </form>
         </Paper>

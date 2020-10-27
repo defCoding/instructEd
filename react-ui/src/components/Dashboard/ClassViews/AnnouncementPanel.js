@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function AnnouncementPanel(props) {
+export default function AnnouncementPanel(props) {
   const classes = useStyles();
   const announcements = props.announcements;
 

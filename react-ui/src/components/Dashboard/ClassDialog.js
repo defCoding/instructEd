@@ -55,7 +55,7 @@ function TabPanel(props) {
   );
 }
 
-function ClassDialog({ selectedClass, open, setOpen }) {
+export default function ClassDialog({ selectedClass, open, setOpen }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const [courseData, setCourseData] = React.useState({instructors: []});

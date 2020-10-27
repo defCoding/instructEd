@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function AssignmentPanel(props) {
+export default function AssignmentPanel(props) {
   const classes = useStyles();
   const assignments = props.assignments;
 

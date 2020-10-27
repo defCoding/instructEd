@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function GeneralPanel(props) {
+export default function GeneralPanel(props) {
   const classes = useStyles();
   const courseData = props.courseData;
   return (
