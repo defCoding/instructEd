@@ -7,11 +7,9 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
   },
   drawer: {
-    width: drawerWidth,
     flexShrink: 0,
   },
   drawerPaper: {
-    width: drawerWidth,
     background: theme.palette.secondary.main,
   },
   appBar: {

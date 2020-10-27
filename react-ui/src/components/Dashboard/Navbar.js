@@ -130,9 +130,11 @@ export default function Navbar() {
         <Typography color="secondary" align="left" variant="h6" className={classes.title}>
           instructED
         </Typography>
+      {/*
         <FormGroup>
           <FormControlLabel control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />} />
         </FormGroup>
+      */}
         <IconButton
           color="secondary"
           onClick={displayNotifications}
@@ -167,7 +169,6 @@ export default function Navbar() {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>My account</MenuItem>
           <MenuItem onClick={handleClose}>Logout</MenuItem>
         </Menu>
       </Toolbar>
