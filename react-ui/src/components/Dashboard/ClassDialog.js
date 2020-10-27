@@ -4,6 +4,8 @@ import { Box, Tabs, Tab, List, ListItemText, Paper, IconButton, Drawer, Divider,
 import HomePanel from './ClassViews/HomePanel';
 import AnnouncementPanel from './ClassViews/AnnouncementPanel';
 import AssignmentPanel from './ClassViews/AssignmentPanel';
+import CloseIcon from '@material-ui/icons/Close';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
   root: {
