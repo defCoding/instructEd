@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
-import { List, ListItemText, ListItem, Divider } from '@material-ui/core'
+import { List, ListItemText, ListItemSecondaryAction, ListItem, Divider } from '@material-ui/core'
 
 export default function UnapprovedFiles(){
     const [files, setFiles] = useState([])
@@ -13,11 +13,21 @@ export default function UnapprovedFiles(){
         setFiles(filesRef.current);
     }
 
+    function viewBtnClicked(){}
+
+    function fileListItemClicked(){}
+
     return (
         <List>
             {files.map((file) =>
                 <>
-                    <ListItem button={true}>
+                    <ListItem onClick={fileListItemClicked} button={true}>
+                        <ListItemText />
+                        <ListItemSecondaryAction>
+                            <Button onClick={viewBtnClicked} variant="contained" color="primary">
+                                View
+                            </Button>
+                        </ListItemSecondaryAction>
 
                     </ListItem>
                     <Divider />
