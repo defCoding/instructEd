@@ -53,7 +53,7 @@ export default function ForgotPassword(props) {
             <TextField color="secondary" variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
           </Grid>
           <Grid container justify="center">
-            <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Submit</Button>
+            <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Get Link</Button>
           </Grid>
           <Grid container justify="center">
             <MuiLink component={Link} to="/login" color="secondary" variant="body1" className={classes.extraItemsForm}>Already have an account?</MuiLink>
