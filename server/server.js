@@ -78,8 +78,9 @@ app.get('/courses/:ID/assignments', withDuoAuth, db.getCourseAssignments);
 app.get('/courses/:ID/announcements', withDuoAuth, db.getCourseAnnouncements);
 app.post('/announcements', withDuoAuth, db.addAnnouncement);
 app.post('/courses', withDuoAuth, db.addCourse);
-app.post('/instructing', withDuoAuth, db.addInstructorToCourse)
-app.post('/enrollments', withDuoAuth, db.addStudentToCourse)
+app.post('/instructing', withDuoAuth, db.addInstructorToCourse);
+app.post('/enrollments', withDuoAuth, db.addStudentToCourse);
+app.post('/submissions', withDuoAuth, db.addSubmission);
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));

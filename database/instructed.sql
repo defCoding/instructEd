@@ -92,10 +92,17 @@ CREATE TABLE Submissions (
   submission_id SERIAL,
   assignment_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
-  submission_types VARCHAR(10) ARRAY NOT NULL,
-  grade FLOAT,
   time_submitted TIMESTAMP,
   PRIMARY KEY (submission_id),
+  FOREIGN KEY (user_id) REFERENCES Users (id),
+  FOREIGN KEY (assignment_id) REFERENCES Assignments (assignment_id)
+);
+
+CREATE TABLE Grades (
+  assignment_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  grade FLOAT,
+  PRIMARY KEY (assignment_id, user_id),
   FOREIGN KEY (user_id) REFERENCES Users (id),
   FOREIGN KEY (assignment_id) REFERENCES Assignments (assignment_id)
 );

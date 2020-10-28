@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto-random-string');
 const moment = require('moment');
+const aws = require('aws-sdk');
+const multiparty = require('multiparty');
+const fileType = require('fs');
 
 require('dotenv').config();
 
@@ -23,6 +26,25 @@ const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo'
 });
+
+aws.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY,
+  secretAccessKey: process.env.S3_SECRET_KEY 
+});
+
+const s3 = new aws.S3();
+
+const uploadFile = (buffer, name, type) => {
+  const params = {
+    ACL: 'public-read',
+    Body: buffer,
+    Bucket: process.env.S3_BUCKET,
+    ContentType = type.mime,
+    Key: `${name}.${type.ext}`
+  };
+
+  return s3.upload(params).promise();
+};
 
 client.connect(() => {
   console.log("Connected to database.");
@@ -677,6 +699,16 @@ const addStudentToCourse = (req, res) => {
     }
   });
 }
+
+const addSubmission = (req, res) => {
+  // First, we insert into the database a new submission
+  // We can get the assignment_id from req.body. User_ID is stored
+  // in req.userID. We want the insert request to return the new
+  // submission ID (see RETURNING sql)
+  // Once we have the submission ID (that's our folder to store the uploaded files),
+  // We make an upload request to the AWS services to the specified directory
+}
+
 
 module.exports = {
   createUser,
