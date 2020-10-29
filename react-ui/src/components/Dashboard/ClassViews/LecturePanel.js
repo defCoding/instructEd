@@ -23,24 +23,24 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const fileList = ['syllabus.pdf', 'lecture1.mp3'];
+const lectureList = ['Watch Lecture 1', 'Watch Lecture 2'];
 
-export default function FilePanel() {
+export default function LecturePanel() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [selectedFile, setSelectedFile] = React.useState(null);
+  const [selectedLecture, setSelectedLecture] = React.useState(null);
 
   return (
     <>
     <Paper className={classes.dialog}>
       <Typography variant="h6">
-        Files
+        Lectures
       </Typography>
       <List>
-      {fileList.map((text) => (
+      {lectureList.map((text) => (
         <ListItem button key={text} onClick={() => {
           setOpen(true);
-          setSelectedFile(text);
+          setSelectedLecture(text);
         }}>
           <Typography color='secondary'>{text}</Typography>
         </ListItem>

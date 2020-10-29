@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Tabs, Tab, List, ListItemText, Paper, IconButton, Drawer, Divider, ListItem, Typography, Dialog, AppBar, Toolbar } from '@material-ui/core';
-import axios from 'axios';
+import { List, ListItemText, Paper, ListItem, Typography } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {

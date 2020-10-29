@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Tabs, Tab, List, ListItemText, Paper, IconButton, Drawer, Divider, ListItem, Typography, Dialog, AppBar, Toolbar } from '@material-ui/core';
+import { Box, Tabs, Tab, IconButton, Typography, Dialog, AppBar, Toolbar } from '@material-ui/core';
 import HomePanel from './ClassViews/HomePanel';
 import AnnouncementPanel from './ClassViews/AnnouncementPanel';
 import AssignmentPanel from './ClassViews/AssignmentPanel';
+import FilePanel from './ClassViews/FilePanel';
+import LecturePanel from './ClassViews/LecturePanel';
 import CloseIcon from '@material-ui/icons/Close';
 import axios from 'axios';
 
@@ -110,6 +112,8 @@ export default function ClassDialog({ selectedClass, open, setOpen }) {
           <Tab label="Class Information" {...a11yProps(0)} />
           <Tab label="Assignments" {...a11yProps(1)} />
           <Tab label="Announcements" {...a11yProps(2)} />
+          <Tab label="Files" {...a11yProps(3)} />
+          <Tab label="Lectures" {...a11yProps(4)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
@@ -120,6 +124,12 @@ export default function ClassDialog({ selectedClass, open, setOpen }) {
       </TabPanel>
       <TabPanel value={value} index={2}>
         <AnnouncementPanel announcements={announcements} />
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        <FilePanel />
+      </TabPanel>
+      <TabPanel value={value} index={4}>
+        <LecturePanel />
       </TabPanel>
     </Dialog>
   );
