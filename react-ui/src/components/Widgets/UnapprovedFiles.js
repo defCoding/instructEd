@@ -13,9 +13,14 @@ export default function UnapprovedFiles(){
         setFiles(filesRef.current);
     }
 
-    function viewBtnClicked(){}
+    function viewBtnClicked(){
+        //If a video file load the video in the video player
+        //If not a video file then download the file for viewing
+    }
 
-    function fileListItemClicked(){}
+    function fileListItemClicked(){
+        //Bring up dialog that gives the option to approve/disapprove of the file's upload
+    }
 
     return (
         <List>
