@@ -1,9 +1,9 @@
 Different Categories for Files
 ------------------------------
-Submission Files (/submissions/)
-Assignment Files (/assignments/)
-Lecture Videos   (/lecture_videos/
-Regular Files    (/files/)
+Submission Files (/submissions/{submission_id})
+Assignment Files (/assignments/{assignment_id})
+Lecture Videos   (/courses/{course_id}/lecture_videos/)
+Regular Files    (/courses/{course_id}/files/)
 
 
 S3 Bucket
