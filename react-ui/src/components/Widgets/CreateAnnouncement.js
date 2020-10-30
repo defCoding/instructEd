@@ -8,7 +8,7 @@ const ITEM_HEIGHT = 50;
 
 const useStyle = makeStyles(theme => ({
   items: {
-    margin: theme.spacing(1)
+    margin:theme.spacing(1),
   },
   root: {
     '& .MuiFormControl-root': {
@@ -85,9 +85,7 @@ export default function CreateAnnouncement() {
   return (
     <Paper className={classes.root}>
       <form>
-        <Grid height="100%" spacing={1}>
-          <Grid item xs="12">
-          </Grid>
+        <Grid height="100%" spacing={1} classname={classes.items}>
           <Grid item xs="12">
             <Toolbar variant="dense">
               <Menu
