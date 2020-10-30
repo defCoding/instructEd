@@ -6,7 +6,6 @@ import axios from 'axios';
 
 const ITEM_HEIGHT = 50;
 
-
 const useStyle = makeStyles(theme => ({
   items: {
     margin: theme.spacing(1)
@@ -123,13 +122,13 @@ export default function CreateAnnouncement() {
             </Toolbar>
           </Grid>
           <Grid item xs="12">
-            <TextField color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
+            <TextField classname="items" color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
-            <TextField color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} />
+            <TextField classname="items" color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
-            <Button variant="contained" color="secondary" onClick={onClick}>Post Announcement</Button>
+            <Button classname="items" variant="contained" color="secondary" onClick={onClick}>Post Announcement</Button>
           </Grid>
         </Grid>
       </form>
