@@ -10,6 +10,13 @@ const useStyle = makeStyles(theme => ({
   items: {
     margin: theme.spacing(1)
   },
+  root: {
+    '& .MuiFormControl-root': {
+      width:'75%',
+      margin:theme.spacing(1),
+      display:'flex'
+    }
+  },
 }))
 
 export default function CreateAnnouncement() {
@@ -76,13 +83,10 @@ export default function CreateAnnouncement() {
 
 
   return (
-    <Paper>
+    <Paper className={classes.root}>
       <form>
         <Grid height="100%" spacing={1}>
           <Grid item xs="12">
-            <Typography align="left" variant="h6" color="inherit">
-            Course Name
-            </Typography>
           </Grid>
           <Grid item xs="12">
             <Toolbar variant="dense">
@@ -122,13 +126,13 @@ export default function CreateAnnouncement() {
             </Toolbar>
           </Grid>
           <Grid item xs="12">
-            <TextField classname="items" color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
+            <TextField classname={classes.items} color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
-            <TextField classname="items" color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} />
+            <TextField classname={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
-            <Button classname="items" variant="contained" color="secondary" onClick={onClick}>Post Announcement</Button>
+            <Button classname={classes.items} variant="contained" color="secondary" onClick={onClick}>Post Announcement</Button>
           </Grid>
         </Grid>
       </form>
