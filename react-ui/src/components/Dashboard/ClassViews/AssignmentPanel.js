@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Box, Tabs, Tab, List, ListItemText, Paper, IconButton, Drawer, Divider, ListItem, Typography, Dialog, AppBar, Toolbar } from '@material-ui/core';
+import { List, ListItemText, Paper, ListItem, Typography } from '@material-ui/core';
 import moment from 'moment';
-import axios from 'axios';
+import StudentAssignment from './StudentAssignment';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,26 +28,34 @@ const useStyles = makeStyles(theme => ({
 export default function AssignmentPanel(props) {
   const classes = useStyles();
   const assignments = props.assignments;
+  const [open, setOpen] = React.useState(false);
+  const [selectedAssignment, setSelectedAssignment] = React.useState(null);
 
   return (
-    <Paper className={classes.dialog}>
-      <Typography variant="h6">
-        Assignments
-    </Typography>
-      <List>
-        {
-        assignments.map(assignment => {
-          let date = moment(assignment.deadline).local();
-          date = date.format('[Due on] MM-DD-YY [at] h:mm A');
-
-          return (
-            <ListItem>
-              <ListItemText primary={assignment.assignment_name} secondary={date} />
-            </ListItem>
-          );
-        })
-        }
-      </List>
-    </Paper>
+    <>
+      <Paper className={classes.dialog}>
+        <Typography variant="h6">
+          Assignments
+      </Typography>
+        <List>
+          {
+          assignments.map(assignment => {
+            let date = moment(assignment.deadline).local();
+            date = date.format('[Due on] MM-DD-YY [at] h:mm A');
+            
+            return (
+              <ListItem onClick={() => {
+                setOpen(true);
+                setSelectedAssignment(assignment.assignment_name);
+              }}>
+                <ListItemText primary={assignment.assignment_name} secondary={date} />
+              </ListItem>
+            );
+          })
+          }
+        </List>
+      </Paper>
+      <StudentAssignment selectedAssignment={selectedAssignment} open={open} setOpen={setOpen} />
+    </>
   );
 }
