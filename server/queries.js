@@ -29,7 +29,7 @@ const client = new Client({
 
 aws.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY,
-  secretAccessKey: process.env.S3_SECRET_KEY 
+  secretAccessKey: process.env.S3_SECRET_KEY
 });
 
 const s3 = new aws.S3();

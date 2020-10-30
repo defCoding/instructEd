@@ -1,0 +1,46 @@
+Different Categories for Files
+------------------------------
+Submission Files (/submissions/)
+Assignment Files (/assignments/)
+Lecture Videos   (/lecture_videos/
+Regular Files    (/files/)
+
+
+S3 Bucket
+---------
+/root
+  |
+  |_ submissions/
+  |   |
+  |   |_ submission_id/
+  |       |
+  |       |_ file_1.pdf
+  |       |_ file_2.java
+  |       |_ file_3.txt
+  | 
+  |_ assignments/
+  |   |
+  |   |_ assignment_id/
+  |       |
+  |       |_ file_1.pdf
+  |       |_ file_2.java
+  |
+  |_ course/
+     |
+     |_ course_id/
+        |
+        |_ lecture_videos/
+        |   |
+        |   |_ video_id.mp4
+        |   
+        |_ files/
+            |
+            |_ course_file.pdf
+            |_ syllabus.pdf
+
+
+Since the front-end will have the course_id/assignment_id at hand, we do
+not need to query the database for it when asking for assigment files and
+course files. (Still unsure about lecture videos since we will need to discuss further).
+
+Now, if the front-end needs the submissions, we will need to query the database.
