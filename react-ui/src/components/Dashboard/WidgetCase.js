@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
   appBar: {
     position: 'relative',
   },
+  allWidgets: {
+    padding: theme.spacing(1),
+  },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
 }));
@@ -158,7 +161,7 @@ export default function WidgetCase(props) {
           </Toolbar>
         </AppBar>
         <Paper style={{ height: "100vh" }}>
-          <WidgetSelect currentWidget={currentWidget} />
+          <WidgetSelect currentWidget={currentWidget} className={classes.allWidgets} />
         </Paper>
       </Dialog>
     </Paper>

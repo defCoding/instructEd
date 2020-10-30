@@ -123,13 +123,13 @@ export default function CreateAnnouncement() {
               </IconButton>
             </Toolbar>
           </Grid>
-          <Grid item xs="12">
+          <Grid item xs="12" classname={classes.items}>
             <TextField classname={classes.items} color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
           </Grid>
-          <Grid item xs="12">
+          <Grid item xs="12" classname={classes.items}>
             <TextField classname={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} />
           </Grid>
-          <Grid item xs="12">
+          <Grid item xs="12" classname={classes.items}>
             <Button classname={classes.items} variant="contained" color="secondary" onClick={onClick}>Post Announcement</Button>
           </Grid>
         </Grid>
