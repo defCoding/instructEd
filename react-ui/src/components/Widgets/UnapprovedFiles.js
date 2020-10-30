@@ -3,8 +3,9 @@ import axios from 'axios';
 import { Button, List, ListItemText, ListItemSecondaryAction, ListItem, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
 
 export default function UnapprovedFiles(){
-    const [files, setFiles] = useState(["File"]) //Will be [] after testing
+    const [files, setFiles] = useState(["File"]); //Will be [] after testing
     const [open, setOpen] = React.useState(false);
+    const [file, setFile] = useState(null);
     useEffect(() => {
         //Place for get request
     });
@@ -21,8 +22,8 @@ export default function UnapprovedFiles(){
 
     function fileListItemClicked(filelistitem){
         //Bring up dialog that gives the option to approve/disapprove of the file's upload
-        setOpen(true)
-        setFile(filelistitem)
+        setOpen(true);
+        setFile(filelistitem);
     }
 
     return (
@@ -48,8 +49,8 @@ export default function UnapprovedFiles(){
     );
 }
 
-function ApprovalDialog(selectedFile, open, setOpen){
-    approved = null;
+function ApprovalDialog({selectedFile, open, setOpen}){
+    var approved = null;
 
     useEffect(() => {
         //check if selected file is null
@@ -79,7 +80,7 @@ function ApprovalDialog(selectedFile, open, setOpen){
         aria-labelled-by="approve-dialog-title"
         aria-described-by="approve-dialog-filename" //will be filled by actual filename variable
     >
-        <DialogTitle id="approve-dialog-title">{Approve/Disapprove}</DialogTitle>
+        <DialogTitle id="approve-dialog-title">{"Approve/Disapprove"}</DialogTitle>
         <DialogContent>
             <DialogContentText id="approve-dialog-filename">
                 FileName
