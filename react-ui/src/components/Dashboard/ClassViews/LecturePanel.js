@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, Paper, Typography } from '@material-ui/core';
+import VideoPlayer from './VideoPlayer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -23,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const lectureList = ['Watch Lecture 1', 'Watch Lecture 2'];
+const lectureList = ['https://www.youtube.com/watch?v=Rq5SEhs9lws', 'https://www.youtube.com/watch?v=-MkClg7XgRI'];
 
 export default function LecturePanel() {
   const classes = useStyles();
@@ -47,6 +48,7 @@ export default function LecturePanel() {
       ))}
       </List>
     </Paper>
+    <VideoPlayer open={open} setOpen={setOpen} videoFile={selectedLecture}/>
   </>
   );
 }
