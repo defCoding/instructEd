@@ -707,6 +707,37 @@ const addSubmission = (req, res) => {
   // submission ID (see RETURNING sql)
   // Once we have the submission ID (that's our folder to store the uploaded files),
   // We make an upload request to the AWS services to the specified directory
+  const userID = req.userID;
+  const assignmentID = req.body.assignmentID;
+  const timeSubmitted = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+  let sql = "INSERT INTO Submissions VALUES (default, $1, $2, $3) RETURNING submission_id;";
+  let values = [assignmentID, userID, timeSubmitted];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send();
+    } else {
+      const submission_id = result.rows[0].submission_id;
+      const form = new multiparty.Form();
+      form.parse(req, async (err2, fields, files) => {
+        if (err2) {
+          res.status(400).send(err2);
+        } else {
+          try {
+            const path = files.file[0].path;
+            const buffer = fs.readFileSync(path);
+            const type = await fileType.fromBuffer(buffer);
+            const fileName = `submissions/${submission_id}/`;
+            const data = await uploadFile(buffer, fileName, type);
+            return res.status(201).send(data);
+          } catch (err3) {
+            res.status(400).send(err3);
+          }
+        }
+      })
+      
+    }
+  });
 }
 
 
@@ -731,5 +762,6 @@ module.exports = {
   addCourse,
   addInstructorToCourse,
   addStudentToCourse,
-  addAnnouncement
+  addAnnouncement,
+  addSubmission
 };
