@@ -39,7 +39,6 @@ const uploadFile = (buffer, name, type) => {
     ACL: 'public-read',
     Body: buffer,
     Bucket: process.env.S3_BUCKET,
-    ContentType = type.mime,
     Key: `${name}.${type.ext}`
   };
 
@@ -712,7 +711,7 @@ const addSubmission = (req, res) => {
   const timeSubmitted = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
   let sql = "INSERT INTO Submissions VALUES (default, $1, $2, $3) RETURNING submission_id;";
   let values = [assignmentID, userID, timeSubmitted];
-
+ 
   client.query(sql, values, (err, result) => {
     if (err) {
       res.status(400).send();
@@ -735,7 +734,6 @@ const addSubmission = (req, res) => {
           }
         }
       })
-      
     }
   });
 }
