@@ -30,6 +30,12 @@ export default function LecturePanel() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [selectedLecture, setSelectedLecture] = React.useState(null);
+  var role = 0; //0 for non-instructor, 1 for instructor
+
+  useEffect(() => {
+    //Determine the role for the given class
+    //If instructor set role to 1, if admin or student set role to 0
+  });
 
   return (
     <>

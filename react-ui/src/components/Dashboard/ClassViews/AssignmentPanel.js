@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItemText, Paper, ListItem, Typography } from '@material-ui/core';
 import moment from 'moment';
 import StudentAssignment from './StudentAssignment';
+import InstructorAssignment from './InstructorAssignment';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,8 +29,15 @@ const useStyles = makeStyles(theme => ({
 export default function AssignmentPanel(props) {
   const classes = useStyles();
   const assignments = props.assignments;
-  const [open, setOpen] = React.useState(false);
+  const [sopen, setSopen] = React.useState(false);
+  const [iopen, setIopen] = React.useState(false);
   const [selectedAssignment, setSelectedAssignment] = React.useState(null);
+  var role = 0; // 0 for non-instructor, 1 for instructor
+
+  useEffect(() => {
+    //Determine the role for the given class
+    //If instructor set role to 1, if admin or student set role to 0
+  });
 
   return (
     <>
@@ -45,7 +53,8 @@ export default function AssignmentPanel(props) {
             
             return (
               <ListItem onClick={() => {
-                setOpen(true);
+                //Check for role before opening
+                setSOpen(true);
                 setSelectedAssignment(assignment.assignment_name);
               }}>
                 <ListItemText primary={assignment.assignment_name} secondary={date} />
@@ -55,7 +64,8 @@ export default function AssignmentPanel(props) {
           }
         </List>
       </Paper>
-      <StudentAssignment selectedAssignment={selectedAssignment} open={open} setOpen={setOpen} />
+      <StudentAssignment selectedAssignment={selectedAssignment} open={sopen} setOpen={setSopen} />
+      <InstructorAssignment selectedAssignment={selectedAssignment} open={iopen} setOpen={setIopen} />
     </>
   );
 }
