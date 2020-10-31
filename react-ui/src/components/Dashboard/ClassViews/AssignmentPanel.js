@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItemText, Paper, ListItem, Typography } from '@material-ui/core';
 import moment from 'moment';
@@ -54,7 +54,7 @@ export default function AssignmentPanel(props) {
             return (
               <ListItem onClick={() => {
                 //Check for role before opening
-                setSOpen(true);
+                setSopen(true);
                 setSelectedAssignment(assignment.assignment_name);
               }}>
                 <ListItemText primary={assignment.assignment_name} secondary={date} />
