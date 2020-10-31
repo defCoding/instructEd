@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, Paper, Typography } from '@material-ui/core';
+import { List, ListItem, Paper, Typography, Button } from '@material-ui/core';
 import VideoPlayer from './VideoPlayer';
 
 const useStyles = makeStyles(theme => ({
@@ -37,24 +37,55 @@ export default function LecturePanel() {
     //If instructor set role to 1, if admin or student set role to 0
   });
 
-  return (
-    <>
-    <Paper className={classes.dialog}>
-      <Typography variant="h6">
-        Lectures
-      </Typography>
-      <List>
-      {lectureList.map((text) => (
-        <ListItem button key={text} onClick={() => {
-          setOpen(true);
-          setSelectedLecture(text);
-        }}>
-          <Typography color='secondary'>{text}</Typography>
-        </ListItem>
-      ))}
-      </List>
-    </Paper>
-    <VideoPlayer open={open} setOpen={setOpen} videoFile={selectedLecture}/>
-  </>
-  );
+  function uploadClicked(){}
+
+  if(role == 0){
+
+    return (
+      <>
+      <Paper className={classes.dialog}>
+        <Typography variant="h6">
+          Lectures
+        </Typography>
+        <List>
+        {lectureList.map((text) => (
+          <ListItem button key={text} onClick={() => {
+            setOpen(true);
+            setSelectedLecture(text);
+          }}>
+            <Typography color='secondary'>{text}</Typography>
+          </ListItem>
+        ))}
+        </List>
+      </Paper>
+      <VideoPlayer open={open} setOpen={setOpen} videoFile={selectedLecture}/>
+    </>
+    );
+
+  }
+  else if(role == 1){
+
+    return (
+      <>
+      <Paper className={classes.dialog}>
+        <Typography variant="h6">
+          Lectures
+        </Typography>
+        <List>
+        {lectureList.map((text) => (
+          <ListItem button key={text} onClick={() => {
+            setOpen(true);
+            setSelectedLecture(text);
+          }}>
+            <Typography color='secondary'>{text}</Typography>
+          </ListItem>
+        ))}
+        </List>
+        <Button onClick={uploadClicked} color="primary" variant="contained">Upload</Button>
+      </Paper>
+      <VideoPlayer open={open} setOpen={setOpen} videoFile={selectedLecture}/>
+    </>
+    );
+
+  }
 }

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, Paper, Typography } from '@material-ui/core';
+import { List, ListItem, Paper, Typography, Button } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -36,23 +36,52 @@ export default function FilePanel() {
     //If instructor set role to 1, if admin or student set role to 0
   });
 
-  return (
-    <>
-    <Paper className={classes.dialog}>
-      <Typography variant="h6">
-        Files
-      </Typography>
-      <List>
-      {fileList.map((text) => (
-        <ListItem button key={text} onClick={() => {
-          setOpen(true);
-          setSelectedFile(text);
-        }}>
-          <Typography color='secondary'>{text}</Typography>
-        </ListItem>
-      ))}
-      </List>
-    </Paper>
-  </>
-  );
+  function uploadClicked(){}
+
+  if(role == 0){
+
+    return (
+      <>
+      <Paper className={classes.dialog}>
+        <Typography variant="h6">
+          Files
+        </Typography>
+        <List>
+        {fileList.map((text) => (
+          <ListItem button key={text} onClick={() => {
+            setOpen(true);
+            setSelectedFile(text);
+          }}>
+            <Typography color='secondary'>{text}</Typography>
+          </ListItem>
+        ))}
+        </List>
+      </Paper>
+    </>
+    );
+  }
+  else if(role == 1){
+
+    return (
+      <>
+      <Paper className={classes.dialog}>
+        <Typography variant="h6">
+          Files
+        </Typography>
+        <List>
+        {fileList.map((text) => (
+          <ListItem button key={text} onClick={() => {
+            setOpen(true);
+            setSelectedFile(text);
+          }}>
+            <Typography color='secondary'>{text}</Typography>
+          </ListItem>
+        ))}
+        </List>
+        <Button onClick={uploadClicked} color="primary" variant="contained">Upload</Button>
+      </Paper>
+    </>
+    );
+
+  }
 }
