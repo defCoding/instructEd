@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, Paper, Typography, Button } from '@material-ui/core';
+import FileUpload from "./FileUpload";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,6 +29,7 @@ const fileList = ['syllabus.pdf', 'lecture1.mp3'];
 export default function FilePanel() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [uploadOpen, setUploadOpen] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState(null);
   var role = 0; //0 for non-instructor, 1 for instructor
 
@@ -36,7 +38,9 @@ export default function FilePanel() {
     //If instructor set role to 1, if admin or student set role to 0
   });
 
-  function uploadClicked(){}
+  function uploadClicked(){
+    setUploadOpen(true);
+  }
 
   if(role == 0){
 
@@ -80,6 +84,7 @@ export default function FilePanel() {
         </List>
         <Button onClick={uploadClicked} color="primary" variant="contained">Upload</Button>
       </Paper>
+      <FileUpload open={uploadOpen} setOpen={setUploadOpen} />
     </>
     );
 
