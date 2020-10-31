@@ -54,7 +54,12 @@ export default function AssignmentPanel(props) {
             return (
               <ListItem onClick={() => {
                 //Check for role before opening
-                setSopen(true);
+                if(role == 0){
+                  setSopen(true);
+                }
+                else if(role == 1){
+                  setIopen(true);
+                }
                 setSelectedAssignment(assignment.assignment_name);
               }}>
                 <ListItemText primary={assignment.assignment_name} secondary={date} />
