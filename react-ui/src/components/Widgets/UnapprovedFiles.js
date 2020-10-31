@@ -32,7 +32,7 @@ export default function UnapprovedFiles(){
                 {files.map((file) =>
                     <>
                         <ListItem onClick={fileListItemClicked} button={true}>
-                            <ListItemText primary={file} />
+                            <ListItemText primary={file} secondary={"Uploader/CourseID"} />
                             <ListItemSecondaryAction>
                                 <Button onClick={viewBtnClicked} variant="contained" color="primary">
                                     View
