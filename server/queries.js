@@ -865,7 +865,9 @@ const getAssignmentSubmissions = (req, res) => {
                 Key: file.Key
               }
               let url = s3.getSignedUrl('getObject', p);
-              data.push({file_name: row.file_name, url: url});
+              let regex = /\/[^\/]+\..+/g
+              let filename = file.Key.match(regex)[0].substring(1);
+              data.push({file_name: filename, url: url});
             }
           }
         });
