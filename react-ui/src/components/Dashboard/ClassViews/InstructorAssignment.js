@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -27,6 +27,16 @@ const useStyles = makeStyles(theme => ({
 
 export default function InstructorAssignment({selectedAssignment, open, setOpen}) {
   const classes = useStyles();
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    //Place for get request to retrieve all users who are students of this class
+  });
+
+  function getStudentsFromResponse(res){
+    studentsRef.current = studentsRef.current.concat(res.data);
+    setStudents(studentsRef.current);
+  }
 
   const handleClose = () => {
     setOpen(false);
@@ -44,6 +54,20 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen}
         </Typography>
       </Toolbar>
     </AppBar>
+    <List>
+            {
+                students.map((student) => {
+                    var name = student.first_name + " " + student.last_name;
+
+                    return (<>
+                        <ListItem>
+                            <ListItemText primary={name} secondary={student.email} />
+                        </ListItem>
+                        <Divider />
+                    </>);
+                })
+            }
+        </List>
   </Dialog>
   );
 }
