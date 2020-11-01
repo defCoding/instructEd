@@ -120,7 +120,7 @@ export default function ClassDialog({ selectedClass, open, setOpen }) {
         <HomePanel courseData={courseData} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <AssignmentPanel assignments={assignments} />
+        <AssignmentPanel assignments={assignments} courseID={selectedClass.id} />
       </TabPanel>
       <TabPanel value={value} index={2}>
         <AnnouncementPanel announcements={announcements} />

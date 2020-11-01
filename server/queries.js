@@ -801,6 +801,68 @@ const getCourseFiles = (req, res) => {
   });
 }
 
+const getCourseStudents = (req, res) => {
+  const courseID = req.params.courseID;
+
+  const sql = `SELECT Users.id, Users.first_name, Users.last_name
+   FROM Enrollments INNER JOIN Users ON Enrollments.user_id=Users.id WHERE Enrollments.course_id=$1;`;
+  const values = [courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send(result.rows);
+    }
+  });
+}
+
+const getAssignmentSubmissions = (req, res) => {
+  const assignmentID = req.params.assignmentID;
+  let userID;
+
+  if (req.params.userID) {
+    userID = req.params.userID;
+  } else {
+    userID = req.userID;
+  }
+
+  const sql = `SELECT * FROM Submissions WHERE user_id=$1 AND assignment_id=$2;`;
+  const values = [userID, assignmentID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = [];
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Prefix: `submissions/${row.submission_id}/`
+        };
+
+        s3.listObjects(params, (err, files) => {
+          if (!err) {
+            for (const file of files) {
+              let p = {
+                Bucket: "instructed",
+                Key: file.Key
+              }
+              let url = s3.getSignedUrl('getObject', p);
+              data.push({file_name: row.file_name, url: url});
+            }
+          }
+        });
+      }
+
+      res.status(200).send(data);
+    }
+  });
+}
+
 
 module.exports = {
   createUser,
@@ -826,5 +888,7 @@ module.exports = {
   addAnnouncement,
   addSubmission,
   addCourseFile,
-  getCourseFiles
+  getCourseFiles,
+  getCourseStudents,
+  getAssignmentSubmissions
 };

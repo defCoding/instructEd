@@ -1,11 +1,15 @@
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+import { Cookies } from 'react-cookie';
 import { FormGroup, FormControlLabel, Typography, Switch, Menu, ListItem, MenuItem, Badge, ListItemIcon, IconButton, ListItemText } from '@material-ui/core';
 import { makeStyles, withStyles} from '@material-ui/core/styles';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { ThumbDown, ThumbUp, Delete } from '@material-ui/icons';
+import cookieParser from 'cookie-parser';
+import axios from 'axios';
 
 var notifications = [{"type": "File Upload", "body": "Upload approval"}, 
                         {"type": "Message", "body": "Message notification"},
@@ -51,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Navbar() {
+function Navbar(props) {
   const classes = useStyles();
   const [auth, setAuth] = React.useState(true);
   const [darkMode, setDarkMode] = React.useState(false);
@@ -69,6 +73,12 @@ export default function Navbar() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleLogout = () => {
+    axios.post('/logout')
+      .then(res => props.history.push('/login'))
+      .catch(console.log);
+  }
 
   const notificationClose = () => {
     setToggleNotifications(null);
@@ -169,9 +179,11 @@ export default function Navbar() {
           open={Boolean(anchorEl)}
           onClose={handleClose}
         >
-          <MenuItem onClick={handleClose}>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </Menu>
       </Toolbar>
     </AppBar>
   );
 }
+
+export default withRouter(Navbar);

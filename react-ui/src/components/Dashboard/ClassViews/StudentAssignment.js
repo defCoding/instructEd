@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -25,16 +25,17 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function StudentAssignment({selectedAssignment, open, setOpen}) {
+export default function StudentAssignment({selectedAssignment, open, setOpen, courseID}) {
   const classes = useStyles();
   const [submissons, setSubmissions] = useState([]);
+  const submissionsRef = useRef([]);
 
   useEffect(() => {
     //Place for get request to retrieve all submissions for this assignment for the given student
   });
 
   function getSubmissionsFromResponse(res){
-    submissionsRef.current = submissonsRef.current.concat(res.data);
+    submissionsRef.current = submissionsRef.current.concat(res.data);
     setSubmissions(submissionsRef.current);
   }
 

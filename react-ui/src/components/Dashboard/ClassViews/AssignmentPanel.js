@@ -32,7 +32,7 @@ export default function AssignmentPanel(props) {
   const [sopen, setSopen] = React.useState(false);
   const [iopen, setIopen] = React.useState(false);
   const [selectedAssignment, setSelectedAssignment] = React.useState(null);
-  var role = 0; // 0 for non-instructor, 1 for instructor
+  var role = 1; // 0 for non-instructor, 1 for instructor
 
   useEffect(() => {
     //Determine the role for the given class
@@ -69,8 +69,8 @@ export default function AssignmentPanel(props) {
           }
         </List>
       </Paper>
-      <StudentAssignment selectedAssignment={selectedAssignment} open={sopen} setOpen={setSopen} />
-      <InstructorAssignment selectedAssignment={selectedAssignment} open={iopen} setOpen={setIopen} />
+      <StudentAssignment selectedAssignment={selectedAssignment} open={sopen} setOpen={setSopen} courseID={props.courseID} />
+      <InstructorAssignment selectedAssignment={selectedAssignment} open={iopen} setOpen={setIopen} courseID={props.courseID}/>
     </>
   );
 }

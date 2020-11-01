@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
+import { Dialog, AppBar, Toolbar, IconButton, Typography, List, ListItem, ListItemText, Divider } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import axios from 'axios';
 
 
 const useStyles = makeStyles(theme => ({
@@ -25,16 +26,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function InstructorAssignment({selectedAssignment, open, setOpen}) {
+export default function InstructorAssignment({selectedAssignment, open, setOpen, courseID}) {
   const classes = useStyles();
   const [students, setStudents] = useState([]);
+  const studentsRef = useRef([]);
 
   useEffect(() => {
     //Place for get request to retrieve all users who are students of this class
-  });
+    axios.get(`/courses/${courseID}/students`)
+      .then(res => {
+        console.log(res.data);
+        addStudentsToList(res);
+      })
+      .catch(console.log);
+  }, []);
 
-  function getStudentsFromResponse(res){
-    studentsRef.current = studentsRef.current.concat(res.data);
+  function addStudentsToList(res){
+    for (const student of res.data) {
+      studentsRef.current = studentsRef.current.concat(student);
+    }
     setStudents(studentsRef.current);
   }
 

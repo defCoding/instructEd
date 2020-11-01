@@ -56,6 +56,12 @@ app.get('/authorize', withDuoAuth, (req, res) => {
   res.status(200).send();
 });
 
+app.post('/logout', (req, res) => {
+  res.clearCookie('LOGIN_TOKEN');
+  res.clearCookie('DUO_TOKEN');
+  res.status(200).send();
+})
+
 /**
  * Course, Assignments, and Announcements
  */
@@ -83,6 +89,9 @@ app.post('/enrollments', withDuoAuth, db.addStudentToCourse);
 app.post('/submissions', withDuoAuth, db.addSubmission);
 app.post('/course_files', withDuoAuth, db.addCourseFile);
 app.get('/course_files/:courseID', withDuoAuth, db.getCourseFiles);
+app.get('/courses/:courseID/students', withDuoAuth, db.getCourseStudents);
+app.get('/submissions/assignment/:assignmentID', withDuoAuth, db.getAssignmentSubmissions);
+app.get('/submissions/assignment/:assignmentID/student/:studentID', withDuoAuth, db.getAssignmentSubmissions);
 // app.post('/course_videos', withDuoAuth, db.addCourseVideo);
 
 // Catch All
