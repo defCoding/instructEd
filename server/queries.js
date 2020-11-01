@@ -819,7 +819,9 @@ const getCourseStudents = (req, res) => {
 }
 
 const getGrade = (req, res) => {
-  const values = req.params;
+  const userID = req.userID;
+  const assignmentID = req.body.assignmentID;
+  const values = [userID, assignmentID];
   const sql = 'SELECT grade FROM Grades WHERE user_id=$1 AND assignment_id=$2;';
 
   client.query(sql, values, (err, result) => {
@@ -829,6 +831,28 @@ const getGrade = (req, res) => {
       res.status(200).send(result.rows[0]);
     }
   })
+}
+
+const addGrade = (req, res) => {
+  const userID = req.userID;
+  const assignmentID = req.body.assignmentID;
+  const grade = req.body.grade;
+  const values = [assignmentID, userID, grade];
+  const sql = 'INSERT INTO Grades VALUES ($1, $2, $3);';
+
+  client.query(sql, values, (err) => {
+    if (err) {
+      if (err.constraint.includes('assignment')) {
+        res.status(400).send('Assignment ID does not exist.');
+      } else if (err.constraint.includes('user')) {
+        res.status(400).send('User ID does not exist.');
+      } else {
+        res.status(400).send('Something went wrong.');
+      }
+    } else {
+      res.status(201).send('Student added to the course.');
+    }
+  });
 }
 
 const getAssignmentSubmissions = (req, res) => {
@@ -907,5 +931,7 @@ module.exports = {
   addCourseFile,
   getCourseFiles,
   getCourseStudents,
-  getAssignmentSubmissions
+  getAssignmentSubmissions,
+  getGrade,
+  addGrade
 };
