@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import StudentAssignment from './StudentAssignment';
 
 
 const useStyles = makeStyles(theme => ({
@@ -49,6 +50,20 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen}
         </Typography>
       </Toolbar>
     </AppBar>
+    <List>
+            {
+                students.map((student) => {
+                    var name = student.first_name + " " + student.last_name;
+
+                    return (<>
+                        <ListItem>
+                            <ListItemText primary={name} secondary={student.email} />
+                        </ListItem>
+                        <Divider />
+                    </>);
+                })
+            }
+        </List>
   </Dialog>
   );
 }
