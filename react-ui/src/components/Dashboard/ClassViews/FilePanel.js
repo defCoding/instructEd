@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, Paper, Typography, Button } from '@material-ui/core';
 import FileUpload from "./FileUpload";
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,19 +25,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const fileList = ['syllabus.pdf', 'lecture1.mp3'];
 
-export default function FilePanel() {
+export default function FilePanel({courseID}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [uploadOpen, setUploadOpen] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState(null);
-  var role = 0; //0 for non-instructor, 1 for instructor
+  const [fileList, setFileList] = React.useState([]);
+  var role = 1; //0 for non-instructor, 1 for instructor
 
   useEffect(() => {
-    //Determine the role for the given class
-    //If instructor set role to 1, if admin or student set role to 0
-  });
+    axios.get(`/course_files/${courseID}`)
+      .then(res => setFileList(res.data))
+      .catch(console.log);
+  }, []);
 
   function uploadClicked(){
     setUploadOpen(true);
@@ -73,18 +75,20 @@ export default function FilePanel() {
           Files
         </Typography>
         <List>
-        {fileList.map((text) => (
-          <ListItem button key={text} onClick={() => {
-            setOpen(true);
-            setSelectedFile(text);
-          }}>
-            <Typography color='secondary'>{text}</Typography>
-          </ListItem>
+        {fileList.map((file) => (
+          <a href={file.url} target="_blank">
+            <ListItem button key={file.file_name} onClick={() => {
+              setOpen(true);
+              setSelectedFile(file.file_name);
+            }}>
+              <Typography color='secondary'>{file.file_name}</Typography>
+            </ListItem>
+          </a>
         ))}
         </List>
         <Button onClick={uploadClicked} color="primary" variant="contained">Upload</Button>
       </Paper>
-      <FileUpload open={uploadOpen} setOpen={setUploadOpen} />
+      <FileUpload open={uploadOpen} setOpen={setUploadOpen} courseID={courseID} />
     </>
     );
 

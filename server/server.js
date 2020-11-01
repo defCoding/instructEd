@@ -81,6 +81,9 @@ app.post('/courses', withDuoAuth, db.addCourse);
 app.post('/instructing', withDuoAuth, db.addInstructorToCourse);
 app.post('/enrollments', withDuoAuth, db.addStudentToCourse);
 app.post('/submissions', withDuoAuth, db.addSubmission);
+app.post('/course_files', withDuoAuth, db.addCourseFile);
+app.get('/course_files/:courseID', withDuoAuth, db.getCourseFiles);
+// app.post('/course_videos', withDuoAuth, db.addCourseVideo);
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));

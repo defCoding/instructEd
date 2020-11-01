@@ -106,3 +106,21 @@ CREATE TABLE Grades (
   FOREIGN KEY (user_id) REFERENCES Users (id),
   FOREIGN KEY (assignment_id) REFERENCES Assignments (assignment_id)
 );
+
+CREATE TABLE CourseFiles (
+  course_id INTEGER NOT NULL,
+  file_name VARCHAR(255) NOT NULL,
+  upload_date TIMESTAMP NOT NULL,
+  approved BOOLEAN NOT NULL,
+  PRIMARY KEY (course_id, file_name),
+  FOREIGN KEY (course_id) REFERENCES Courses (course_id)
+);
+
+CREATE TABLE CourseVideos (
+  course_id INTEGER NOT NULL,
+  file_name VARCHAR(255) NOT NULL,
+  upload_date TIMESTAMP NOT NULL,
+  approved BOOLEAN NOT NULL,
+  PRIMARY KEY (course_id, file_name),
+  FOREIGN KEY (course_id) REFERENCES Courses (course_id)
+);

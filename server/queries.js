@@ -5,7 +5,7 @@ const crypto = require('crypto-random-string');
 const moment = require('moment');
 const aws = require('aws-sdk');
 const multiparty = require('multiparty');
-const fileType = require('fs');
+const fs = require('fs');
 
 require('dotenv').config();
 
@@ -29,17 +29,19 @@ const client = new Client({
 
 aws.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY,
-  secretAccessKey: process.env.S3_SECRET_KEY
+  secretAccessKey: process.env.S3_SECRET_KEY,
+  signatureVersion: 'v4',
+  region: 'us-east-2'
 });
 
 const s3 = new aws.S3();
 
-const uploadFile = (buffer, name, type) => {
+const uploadFile = (buffer, name) => {
   const params = {
     ACL: 'public-read',
     Body: buffer,
     Bucket: process.env.S3_BUCKET,
-    Key: `${name}.${type.ext}`
+    Key: `${name}`
   };
 
   return s3.upload(params).promise();
@@ -723,17 +725,78 @@ const addSubmission = (req, res) => {
           res.status(400).send(err2);
         } else {
           try {
+            const origName = files.file[0].originalFilename;
             const path = files.file[0].path;
             const buffer = fs.readFileSync(path);
-            const type = await fileType.fromBuffer(buffer);
-            const fileName = `submissions/${submission_id}/`;
-            const data = await uploadFile(buffer, fileName, type);
+            const fileName = `submissions/${submission_id}/${origName}`;
+            const data = await uploadFile(buffer, fileName);
             return res.status(201).send(data);
           } catch (err3) {
             res.status(400).send(err3);
           }
         }
       })
+    }
+  });
+}
+
+const addCourseFile = (req, res) => {
+  const form = new multiparty.Form();
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const origName = files.file[0].originalFilename;
+      const path = files.file[0].path;
+      const courseID = fields.courseID[0];
+      const buffer = fs.readFileSync(path);
+      const fileName = `courses/${courseID}/files/${origName}`;
+
+      const uploadDate = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+      const sql = "INSERT INTO CourseFiles VALUES ($1, $2, $3, false);";
+      const values = [courseID, origName, uploadDate];
+
+      client.query(sql, values, async (err2, result) => {
+        if (err2) {
+          res.status(400).send(err);
+        } else {
+          try {
+            const data = await uploadFile(buffer, fileName);
+            res.status(201).send(data);
+          } catch (err3) {
+            console.log(err3);
+            res.status(400).send(err3);
+          }
+        }
+      });
+    }
+  });
+};
+
+const getCourseFiles = (req, res) => {
+  const courseID = req.params.courseID;
+
+  const sql = "SELECT * FROM CourseFiles WHERE course_id=$1;"
+  const values = [courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = []; 
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Key: `courses/${courseID}/files/${row.file_name}`
+        };
+
+        let url = s3.getSignedUrl('getObject', params);
+        data.push({file_name: row.file_name, url: url});
+      }
+
+      res.status(200).send(data);
     }
   });
 }
@@ -761,5 +824,7 @@ module.exports = {
   addInstructorToCourse,
   addStudentToCourse,
   addAnnouncement,
-  addSubmission
+  addSubmission,
+  addCourseFile,
+  getCourseFiles
 };

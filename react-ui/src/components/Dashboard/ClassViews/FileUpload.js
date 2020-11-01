@@ -1,30 +1,33 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core'
+import { Button, Dialog, TextField, DialogActions, DialogContent, DialogTitle } from '@material-ui/core'
 
-export default function FileUpload({open, setOpen}){
+export default function FileUpload({open, setOpen, courseID}){
   const [file, setFile] = useState(null);
 
   const handleClose = () => {  
     setOpen(false);
   };
 
-  const submitFile = async () => {
-    try {
-      if (!file) {
-        throw new Error('Select a file first!');
-      }
-      const formData = new FormData();
-      formData.append('file', file[0]);
-      await axios.post(`/test-upload`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      // handle success
-    } catch (error) {
-      // handle error
+  const submitFile = () => {
+    if (!file) {
+      throw new Error('Select a file first!');
     }
+    const formData = new FormData();
+    formData.append('file', file[0]);
+    formData.append('courseID', courseID);
+    axios.post(`/course_files`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }).then(res => {
+      if (res.status === 201) {
+        alert('File uploaded successfully!');
+      } 
+      setOpen(false);
+    }).catch(err => {
+      alert('There was an issue with uploading the file.');
+    });
   };
 
   return (

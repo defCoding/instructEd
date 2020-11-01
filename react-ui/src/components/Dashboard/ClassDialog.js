@@ -126,7 +126,7 @@ export default function ClassDialog({ selectedClass, open, setOpen }) {
         <AnnouncementPanel announcements={announcements} />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <FilePanel />
+        <FilePanel courseID={selectedClass.id}/>
       </TabPanel>
       <TabPanel value={value} index={4}>
         <LecturePanel />
