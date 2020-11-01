@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -27,6 +27,9 @@ const useStyles = makeStyles(theme => ({
 
 export default function InstructorAssignment({selectedAssignment, open, setOpen}) {
   const classes = useStyles();
+  const [students, setStudents] = useState([]);
+  var studentsToGrades = new Map(); //use map.set(key, value); to add a student as a key and a grade for the given assignment as a value
+  var studentsToSubmissions = new Map(); //use map.set(key, value); to add a student as a key and a submission for the given assignment as a value
 
   const handleClose = () => {
     setOpen(false);
