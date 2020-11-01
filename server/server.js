@@ -93,6 +93,8 @@ app.get('/courses/:courseID/students', withDuoAuth, db.getCourseStudents);
 app.get('/submissions/assignment/:assignmentID', withDuoAuth, db.getAssignmentSubmissions);
 app.get('/submissions/assignment/:assignmentID/student/:studentID', withDuoAuth, db.getAssignmentSubmissions);
 // app.post('/course_videos', withDuoAuth, db.addCourseVideo);
+app.get('/grades/:assignmentID/:studentID', withDuoAuth, db.getGrade);
+app.post('/grades/', withDuoAuth, db.addGrade);
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));
