@@ -14,6 +14,7 @@ export default function CalendarDialog({open, setOpen, time, date}) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     
     const handleInputChange = e => {
+        values.time = time;
         const {name, value} = e.target;
         setValues({
           ...values,

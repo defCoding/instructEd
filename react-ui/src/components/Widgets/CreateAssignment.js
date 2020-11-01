@@ -18,12 +18,10 @@ export default function CreateAssignment() {
   const noCourse = {course_id: undefined, course_name: 'None', course_term: ''};
   const [courses, setCourses] = useState([]);
   const [currentCourse, setCurrentCourse] = useState(noCourse);
-  const [dueDate, setDueDate] = useState(null);
-  const [time, setTime] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [cOpen, setCopen] = React.useState(false);
   const open = Boolean(anchorEl);
-  const [values, setValues] = useState({assignmentName: '', description: ''});
+  const [values, setValues] = useState({assignmentName: '', description: '', dueDate: null, time: ''});
 
   const handleInputChange = e => {
     const {name, value} = e.target;
@@ -44,19 +42,19 @@ export default function CreateAssignment() {
   }
 
   function selectDueDateClicked() {
-    
+    setCopen(true);
   }
 
   const onClick = (e) => {
     e.preventDefault();
-    if (currentCourse.course_id && values.assignmentName !== '' && values.description !== '') {
+    if (currentCourse.course_id && values.assignmentName !== '' && values.description !== '' && values.date !== null && values.time !== '') {
       axios.post('/announcements', {
         ...values,
         courseID: currentCourse.course_id
       }).then(res => {
         if (res.status === 201) {
           alert('Assignment created!');
-          setValues({assignmentName: '', description: ''});
+          setValues({assignmentName: '', description: '', dueDate: null, time: ''});
         }
       });
     } else {
@@ -130,7 +128,7 @@ export default function CreateAssignment() {
             </Toolbar>
           </Grid>
           <Grid item xs="12">
-            <TextField className={classes.items} color="secondary" variant="outlined" label="Assignment Name" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
+            <TextField className={classes.items} color="secondary" variant="outlined" label="Assignment Name" value={values.assignmentName} name="assignmentName" onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
             <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} />
@@ -146,7 +144,7 @@ export default function CreateAssignment() {
           </Grid>
         </Grid>
       </form>
-      <CalendarDialog setOpen={setCopen} open={cOpen} time={time} date={dueDate}/>
+      <CalendarDialog setOpen={setCopen} open={cOpen} time={values.time} date={values.dueDate}/>
     </Paper>
   );
 }
