@@ -4,8 +4,9 @@ import { Dialog, AppBar, Toolbar, IconButton, Typography, List, ListItem, ListIt
 import CloseIcon from '@material-ui/icons/Close';
 
 export default function SubAndGradePanel({selectedStudent, open, setOpen}){
+    const classes = useStyles();
     const [submissions, setSubmissions] = useState([]);
-    const grade = null;
+    const grade = '';
 
     useEffect(() => {
         //Place for get request to retrieve all submissions for this assignment for the given student
@@ -26,7 +27,18 @@ export default function SubAndGradePanel({selectedStudent, open, setOpen}){
       };
 
       return (
-          <List>
+        <Dialog fullScreen open={open} onClose={handleClose}>
+        <AppBar className={classes.appBar}>
+          <Toolbar className={classes.toolbar}>
+            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              {selectedStudent}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <List>
               {
                   submissions.map((submission) => {
                     let submissondate = moment(submission.time_submitted).local();
@@ -35,7 +47,7 @@ export default function SubAndGradePanel({selectedStudent, open, setOpen}){
 
                     return(<>
                         <ListItem>
-                            <ListItemText primary={submissondate} secondary={name} />
+                            <ListItemText primary={submissondate} secondary={name + " " + grade} />
                             <ListItemSecondaryAction>
                                 <Button onClick={viewBtnClicked} variant="contained" color="primary">
                                     View
@@ -46,5 +58,6 @@ export default function SubAndGradePanel({selectedStudent, open, setOpen}){
                   })
               }
           </List>
+      </Dialog>
       );
 }
