@@ -2,7 +2,6 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Cookies } from 'react-cookie';
 import { FormGroup, FormControlLabel, Typography, Switch, Menu, ListItem, MenuItem, Badge, ListItemIcon, IconButton, ListItemText } from '@material-ui/core';
 import { makeStyles, withStyles} from '@material-ui/core/styles';
 import NotificationsIcon from '@material-ui/icons/Notifications';
