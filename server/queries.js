@@ -818,6 +818,19 @@ const getCourseStudents = (req, res) => {
   });
 }
 
+const getGrade = (req, res) => {
+  const values = req.params;
+  const sql = 'SELECT grade FROM Grades WHERE user_id=$1 AND assignment_id=$2;';
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.status(200).send(result.rows[0]);
+    }
+  })
+}
+
 const getAssignmentSubmissions = (req, res) => {
   const assignmentID = req.params.assignmentID;
   let userID;
@@ -861,6 +874,8 @@ const getAssignmentSubmissions = (req, res) => {
       res.status(200).send(data);
     }
   });
+
+
 }
 
 
