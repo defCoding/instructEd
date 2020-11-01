@@ -740,6 +740,128 @@ const addSubmission = (req, res) => {
   });
 }
 
+const addCourseVideo = (req, res) => {
+  const form = new multiparty.Form();
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const origName = files.file[0].originalFilename;
+      const path = files.file[0].path;
+      const courseID = fields.courseID[0];
+      const buffer = fs.readFileSync(path);
+      const fileName = `courses/${courseID}/videos/${origName}`;
+
+      const uploadDate = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+      const sql = "INSERT INTO CourseVideos VALUES ($1, $2, $3, false);";
+      const values = [courseID, origName, uploadDate];
+
+      client.query(sql, values, async (err2, result) => {
+        if (err2) {
+          res.status(400).send(err);
+        } else {
+          try {
+            const data = await uploadFile(buffer, fileName);
+            res.status(201).send(data);
+          } catch (err3) {
+            console.log(err3);
+            res.status(400).send(err3);
+          }
+        }
+      });
+    }
+  });
+};
+
+const getCourseVideos = (req, res) => {
+  const courseID = req.params.courseID;
+
+  const sql = "SELECT * FROM CourseVideos WHERE course_id=$1;"
+  const values = [courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = []; 
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Key: `courses/${courseID}/videos/${row.file_name}`
+        };
+
+        let url = s3.getSignedUrl('getObject', params);
+        data.push({file_name: row.file_name, url: url});
+      }
+
+      res.status(200).send(data);
+    }
+  });
+}
+
+const addAssignmentFile = (req, res) => {
+  const form = new multiparty.Form();
+  form.parse(req, async (err, fields, files) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const origName = files.file[0].originalFilename;
+      const path = files.file[0].path;
+      const assignmentID = fields.assignmentID[0];
+      const buffer = fs.readFileSync(path);
+      const fileName = `assignments/${assignmentID}/${origName}`;
+
+      const uploadDate = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+      const sql = "INSERT INTO AssignmentFiles VALUES ($1, $2, $3, false);";
+      const values = [assignmentID, origName, uploadDate];
+
+      client.query(sql, values, async (err2, result) => {
+        if (err2) {
+          res.status(400).send(err);
+        } else {
+          try {
+            const data = await uploadFile(buffer, fileName);
+            res.status(201).send(data);
+          } catch (err3) {
+            console.log(err3);
+            res.status(400).send(err3);
+          }
+        }
+      });
+    }
+  });
+};
+
+const getAssignmentFiles = (req, res) => {
+  const assignmentID = req.params.assignmentID;
+
+  const sql = "SELECT * FROM AssignmentFiles WHERE assignment_id=$1;"
+  const values = [assignmentID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = []; 
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Key: `assignments/${assignmentID}/${row.file_name}`
+        };
+
+        let url = s3.getSignedUrl('getObject', params);
+        data.push({file_name: row.file_name, url: url});
+      }
+
+      res.status(200).send(data);
+    }
+  });
+}
+
 const addCourseFile = (req, res) => {
   const form = new multiparty.Form();
   form.parse(req, async (err, fields, files) => {
@@ -820,7 +942,7 @@ const getCourseStudents = (req, res) => {
 
 const getGrade = (req, res) => {
   const userID = req.userID;
-  const assignmentID = req.body.assignmentID;
+  const assignmentID = req.param.assignmentID;
   const values = [userID, assignmentID];
   const sql = 'SELECT grade FROM Grades WHERE user_id=$1 AND assignment_id=$2;';
 
@@ -828,13 +950,13 @@ const getGrade = (req, res) => {
     if (err) {
       res.status(400).send(err);
     } else {
-      res.status(200).send(result.rows[0]);
+      res.status(200).send(result.rows);
     }
   })
 }
 
 const addGrade = (req, res) => {
-  const userID = req.userID;
+  const userID = req.body.userID;
   const assignmentID = req.body.assignmentID;
   const grade = req.body.grade;
   const values = [assignmentID, userID, grade];
@@ -850,7 +972,7 @@ const addGrade = (req, res) => {
         res.status(400).send('Something went wrong.');
       }
     } else {
-      res.status(201).send('Student added to the course.');
+      res.status(201).send('Grade added.');
     }
   });
 }
@@ -900,8 +1022,6 @@ const getAssignmentSubmissions = (req, res) => {
       res.status(200).send(data);
     }
   });
-
-
 }
 
 
@@ -928,6 +1048,8 @@ module.exports = {
   addStudentToCourse,
   addAnnouncement,
   addSubmission,
+  addCourseVideo,
+  getCourseVideos,
   addCourseFile,
   getCourseFiles,
   getCourseStudents,

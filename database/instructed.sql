@@ -124,3 +124,12 @@ CREATE TABLE CourseVideos (
   PRIMARY KEY (course_id, file_name),
   FOREIGN KEY (course_id) REFERENCES Courses (course_id)
 );
+
+CREATE TABLE AssignmentFiles (
+  assignment_id INTEGER NOT NULL,
+  file_name VARCHAR(255) NOT NULL,
+  upload_date TIMESTAMP NOT NULL,
+  approved BOOLEAN NOT NULL,
+  PRIMARY KEY (assignment_id, file_name),
+  FOREIGN KEY (assignment_id) REFERENCES Assignments (assignment_id)
+);

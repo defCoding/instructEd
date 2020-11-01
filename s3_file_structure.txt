@@ -29,7 +29,7 @@ S3 Bucket
      |
      |_ course_id/
         |
-        |_ lecture_videos/
+        |_ videos/
         |   |
         |   |_ video_id.mp4
         |   
