@@ -28,11 +28,9 @@ const useStyles = makeStyles(theme => ({
 export default function InstructorAssignment({selectedAssignment, open, setOpen}) {
   const classes = useStyles();
   const [students, setStudents] = useState([]);
-  const [grades, setGrades] = useState(new Map());
-  const [submissions, setSubmissions] = useState(new Map());
 
   useEffect(() => {
-    //Place for get request to retrieve all users who are students of this class, and to map the grades and submissions to their user ids
+    //Place for get request to retrieve all users who are students of this class
   });
 
   const handleClose = () => {
