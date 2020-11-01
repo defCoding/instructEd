@@ -3,6 +3,7 @@ import { Paper, TextField, Grid, Button, IconButton, Menu, MenuItem, Typography,
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
+import CalendarDialog from './CalendarDialog';
 
 const ITEM_HEIGHT = 50;
 
@@ -12,14 +13,17 @@ const useStyle = makeStyles(theme => ({
   },
 }))
 
-export default function CreateAnnouncement() {
+export default function CreateAssignment() {
   const classes = useStyle();
   const noCourse = {course_id: undefined, course_name: 'None', course_term: ''};
   const [courses, setCourses] = useState([]);
   const [currentCourse, setCurrentCourse] = useState(noCourse);
+  const [dueDate, setDueDate] = useState(null);
+  const [time, setTime] = useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [cOpen, setCopen] = React.useState(false);
   const open = Boolean(anchorEl);
-  const [values, setValues] = useState({announcementName: '', description: ''});
+  const [values, setValues] = useState({assignmentName: '', description: ''});
 
   const handleInputChange = e => {
     const {name, value} = e.target;
@@ -39,16 +43,20 @@ export default function CreateAnnouncement() {
     setCurrentCourse(course);
   }
 
+  function selectDueDateClicked() {
+    
+  }
+
   const onClick = (e) => {
     e.preventDefault();
-    if (currentCourse.course_id && values.announcementName !== '' && values.description !== '') {
+    if (currentCourse.course_id && values.assignmentName !== '' && values.description !== '') {
       axios.post('/announcements', {
         ...values,
         courseID: currentCourse.course_id
       }).then(res => {
         if (res.status === 201) {
-          alert('Announcement created!');
-          setValues({announcementName: '', description: ''});
+          alert('Assignment created!');
+          setValues({assignmentName: '', description: ''});
         }
       });
     } else {
@@ -122,16 +130,23 @@ export default function CreateAnnouncement() {
             </Toolbar>
           </Grid>
           <Grid item xs="12">
-            <TextField className={classes.items} color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
+            <TextField className={classes.items} color="secondary" variant="outlined" label="Assignment Name" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
             <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
-            <Button className={classes.items} variant="contained" color="secondary" onClick={onClick}>Post Announcement</Button>
+            <Button className={classes.items} variant="contained" color ="primary" onClick={selectDueDateClicked}>Select Due Date</Button>
+            <Typography variant="b2" component="b2">
+              {dueDate.toString() + " at " + time}
+            </Typography>
+          </Grid>
+          <Grid item xs="12">
+            <Button className={classes.items} variant="contained" color="secondary" onClick={onClick}>Post Assignment</Button>
           </Grid>
         </Grid>
       </form>
+      <CalendarDialog setOpen={setCopen} open={cOpen} time={time} date={dueDate}/>
     </Paper>
   );
 }
