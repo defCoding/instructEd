@@ -212,7 +212,7 @@ function IsSubmitted({submitted, classes}) {
 
 export default function StudentAssignment({selectedAssignment, open, setOpen}) {
   const classes = useStyles();
-  let submitted = true;
+  let submitted = false;
 
   const handleClose = () => {
     setOpen(false);
