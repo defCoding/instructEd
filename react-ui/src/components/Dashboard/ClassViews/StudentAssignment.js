@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Button, Box, Tabs, Tab, Dialog, AppBar, Toolbar, IconButton, Typography, Grid, Drawer, Divider } from '@material-ui/core';
+import { TextField, Button, Box, Tabs, Tab, Dialog, AppBar, Toolbar, IconButton, Typography, Grid, Drawer, Divider  } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-
-const drawerHeight = 240;
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -26,7 +24,6 @@ function TabPanel(props) {
   );
 }
 
-
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.any.isRequired,
@@ -45,7 +42,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
   },
   drawer: {
-    height: drawerHeight,
     flexShrink: 0,
   },
   drawerPaper: {
@@ -64,8 +60,7 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(5),
   },
   panelItems: {
-    margin: theme.spacing(2),
-    marginRight: theme.spacing(1),
+    margin: theme.spacing(1),
   },
 }));
 
@@ -101,13 +96,40 @@ function IsSubmitted({submitted, classes}) {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            Submission
+            <Box height={250}>
+              <Grid container height="100%" spacing={1}>
+                <Grid item xs={12}>
+                  <Typography className={classes.panelItems}>Submission</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography className={classes.panelItems}>Uploaded files or text submission</Typography>
+                </Grid>
+              </Grid>
+            </Box>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            Comments
+            <Box height={250}>
+              <Grid container height="100%" spacing={1}>
+                <Grid item xs={12}>
+                  <Typography className={classes.panelItems}>Comments</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography className={classes.panelItems}>Comments from professor on grade here.</Typography>
+                </Grid>
+              </Grid>
+            </Box>
           </TabPanel>
           <TabPanel value={value} index={2}>
-            Grades
+            <Box height={250}>
+              <Grid container height="100%" spacing={1}>
+                <Grid item xs={12}>
+                  <Typography className={classes.panelItems}>Grade</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="h2" className={classes.panelItems}>90/100</Typography>
+                </Grid>
+              </Grid>
+            </Box>
           </TabPanel>
       </Drawer>
     );
@@ -129,10 +151,12 @@ function IsSubmitted({submitted, classes}) {
             <Box height={250}>
               <Grid container height="100%" spacing={1}>
                 <Grid item xs={12}>
-
+                  <Typography className={classes.panelItems}>File Upload</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Button variant="contained" color="secondary" onClick={onFileSubmit}>
+                </Grid>
+                <Grid item xs={12}>
+                  <Button className={classes.panelItems} variant="contained" color="secondary" onClick={onFileSubmit}>
                     Submit
                   </Button>
                 </Grid>
@@ -142,6 +166,9 @@ function IsSubmitted({submitted, classes}) {
           <TabPanel value={value} index={1}>
             <Box height={250}>
               <Grid container height="100%" spacing={1}>
+                <Grid item xs={12}>
+                  <Typography className={classes.panelItems}>Text Submission</Typography>
+                </Grid>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
@@ -165,6 +192,9 @@ function IsSubmitted({submitted, classes}) {
             <Box height={250}>
               <Grid container height="100%" spacing={1}>
                 <Grid item xs={12}>
+                  <Typography className={classes.panelItems}>Link Submission</Typography>
+                </Grid>
+                <Grid item xs={12}>
                   <TextField id="outlined-basic" label="Link" variant="outlined" className={classes.panelItems}/>
                 </Grid>
                 <Grid item xs={12}>
@@ -182,7 +212,7 @@ function IsSubmitted({submitted, classes}) {
 
 export default function StudentAssignment({selectedAssignment, open, setOpen}) {
   const classes = useStyles();
-  let submitted = false;
+  let submitted = true;
 
   const handleClose = () => {
     setOpen(false);
@@ -211,19 +241,6 @@ export default function StudentAssignment({selectedAssignment, open, setOpen}) {
       </Grid>
     </Grid>
     <IsSubmitted submitted={submitted} classes={classes} />
-    {/*
-    <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-        anchor="right"
-      >
-        <div className={classes.toolbar} />
-        <Typography variant='h4' align='center' color="primary">Submission</Typography>
-        <Divider />
-      </Drawer>*/}
   </Dialog>
   );
 }
