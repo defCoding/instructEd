@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { TextField, Button, Box, Tabs, Tab, Dialog, AppBar, Toolbar, IconButton, Typography, Grid, Drawer, Divider  } from '@material-ui/core';
+import { Box, Tabs, Tab, Dialog, AppBar, Toolbar, IconButton, Typography, Grid, Drawer, Divider  } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import FileUploadTab from './StudentAssignmentTabs/FileUploadTab';
+import TextUploadTab from './StudentAssignmentTabs/TextUploadTab';
+import LinkUploadTab from './StudentAssignmentTabs/LinkUploadTab';
+import SubmissionTab from './StudentAssignmentTabs/SubmissionTab';
+import CommentsTab from './StudentAssignmentTabs/CommentsTab';
+import GradeTab from './StudentAssignmentTabs/GradeTab';
+import axios from 'axios';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -66,20 +73,9 @@ const useStyles = makeStyles(theme => ({
 
 function IsSubmitted({submitted, classes}) {
   const [value, setValue] = React.useState(0);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-
-  const onFileSubmit = (event) => {
-    alert('file')
-  };
-
-  const onTextSubmit = (event) => {
-    alert('text')
-  };
-
-  const onLinkSubmit = (event) => {
-    alert('link')
   };
 
   if (submitted) {
@@ -96,40 +92,13 @@ function IsSubmitted({submitted, classes}) {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <Box height={250}>
-              <Grid container height="100%" spacing={1}>
-                <Grid item xs={12}>
-                  <Typography className={classes.panelItems}>Submission</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography className={classes.panelItems}>Uploaded files or text submission</Typography>
-                </Grid>
-              </Grid>
-            </Box>
+            <SubmissionTab classes={classes} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <Box height={250}>
-              <Grid container height="100%" spacing={1}>
-                <Grid item xs={12}>
-                  <Typography className={classes.panelItems}>Comments</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography className={classes.panelItems}>Comments from professor on grade here.</Typography>
-                </Grid>
-              </Grid>
-            </Box>
+            <CommentsTab classes={classes} />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <Box height={250}>
-              <Grid container height="100%" spacing={1}>
-                <Grid item xs={12}>
-                  <Typography className={classes.panelItems}>Grade</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="h2" className={classes.panelItems}>90/100</Typography>
-                </Grid>
-              </Grid>
-            </Box>
+            <GradeTab classes={classes} />
           </TabPanel>
       </Drawer>
     );
@@ -148,62 +117,13 @@ function IsSubmitted({submitted, classes}) {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <Box height={250}>
-              <Grid container height="100%" spacing={1}>
-                <Grid item xs={12}>
-                  <Typography className={classes.panelItems}>File Upload</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                </Grid>
-                <Grid item xs={12}>
-                  <Button className={classes.panelItems} variant="contained" color="secondary" onClick={onFileSubmit}>
-                    Submit
-                  </Button>
-                </Grid>
-              </Grid>
-            </Box>
+            <FileUploadTab classes={classes} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <Box height={250}>
-              <Grid container height="100%" spacing={1}>
-                <Grid item xs={12}>
-                  <Typography className={classes.panelItems}>Text Submission</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    className={classes.panelItems}
-                    id="outlined-multiline-static"
-                    label="Multiline"
-                    multiline
-                    rows={4}
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <Button className={classes.panelItems} variant="contained" color="secondary" onClick={onTextSubmit}>
-                    Submit
-                  </Button>
-                </Grid>
-              </Grid>
-            </Box>
+            <TextUploadTab classes={classes} />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <Box height={250}>
-              <Grid container height="100%" spacing={1}>
-                <Grid item xs={12}>
-                  <Typography className={classes.panelItems}>Link Submission</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField id="outlined-basic" label="Link" variant="outlined" className={classes.panelItems}/>
-                </Grid>
-                <Grid item xs={12}>
-                  <Button variant="contained" color="secondary" className={classes.panelItems} onClick={onLinkSubmit}>
-                    Submit
-                  </Button>
-                </Grid>
-              </Grid>
-            </Box>
+            <LinkUploadTab classes={classes} />
           </TabPanel>
       </Drawer>
     );
@@ -213,6 +133,23 @@ function IsSubmitted({submitted, classes}) {
 export default function StudentAssignment({selectedAssignment, open, setOpen}) {
   const classes = useStyles();
   let submitted = false;
+  const [submissions, setSubmissions] = useState([]);
+  const [grade, setGrade] = useState('');
+  const [files, setFiles] = useState([]);
+
+  useEffect = () => {
+    axios.get(`/submissions/assignment/:${selectedAssignment.assignment_id}`)
+      .then(res => setSubmissions(res.data)).catch(console.log);
+
+    axios.get(`/grades/${selectedAssignment.assignment_id}`)
+      .then(res => setGrade(res.data.grade)).catch(console.log);
+
+    axios.get(`/assignment_files/${selectedAssignment.assignment_id}`)
+      .then(res => setFiles(res.data)).catch(console.log);
+      if(submissions.length > 0){
+        submitted = true;
+      }
+  };
 
   const handleClose = () => {
     setOpen(false);

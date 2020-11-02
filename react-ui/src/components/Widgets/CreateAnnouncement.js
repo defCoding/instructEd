@@ -89,6 +89,7 @@ export default function CreateAnnouncement() {
           <Grid item xs="12">
             <Toolbar variant="dense">
               <Menu
+              className={classes.items}
                 id="long-menu"
                 anchorEl={anchorEl}
                 keepMounted
@@ -97,7 +98,6 @@ export default function CreateAnnouncement() {
                 PaperProps={{
                   style: {
                     maxHeight: ITEM_HEIGHT * 4.5,
-                    width: '20ch',
                   },
                 }}>
                 {courses.map((course) => (
@@ -123,14 +123,14 @@ export default function CreateAnnouncement() {
               </IconButton>
             </Toolbar>
           </Grid>
-          <Grid item xs="12" classname={classes.items}>
-            <TextField classname={classes.items} color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
+          <Grid item xs="12">
+            <TextField className={classes.items} color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
+          </Grid>
+          <Grid item xs="12">
+            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12" classname={classes.items}>
-            <TextField classname={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} />
-          </Grid>
-          <Grid item xs="12" classname={classes.items}>
-            <Button classname={classes.items} variant="contained" color="secondary" onClick={onClick}>Post Announcement</Button>
+            <Button className={classes.items} variant="contained" color="secondary" onClick={onClick}>Post Announcement</Button>
           </Grid>
         </Grid>
       </form>
