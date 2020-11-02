@@ -98,7 +98,6 @@ export default function CreateAnnouncement() {
                 PaperProps={{
                   style: {
                     maxHeight: ITEM_HEIGHT * 4.5,
-                    width: '20ch',
                   },
                 }}>
                 {courses.map((course) => (
