@@ -753,7 +753,7 @@ const addLinkSubmission = (req, res) => {
     if (err) {
       res.status(400).send();
     } else {
-      res.status(200).send();
+      res.status(201).send();
     }
   });
 }
@@ -958,6 +958,21 @@ const getCourseStudents = (req, res) => {
   });
 }
 
+const getStudentGrade = (req, res) => {
+  const userID = req.param.userID;
+  const assignmentID = req.param.assignmentID;
+  const values = [userID, assignmentID];
+  const sql = 'SELECT grade FROM Grades WHERE user_id=$1 AND assignment_id=$2;';
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.status(200).send(result.rows);
+    }
+  })
+}
+
 const getGrade = (req, res) => {
   const userID = req.userID;
   const assignmentID = req.param.assignmentID;
@@ -1089,5 +1104,6 @@ module.exports = {
   getAssignmentSubmissions,
   getAssignmentFiles,
   getGrade,
+  getStudentGrade,
   addGrade
 };
