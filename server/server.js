@@ -92,7 +92,7 @@ app.post('/course_files', withDuoAuth, db.addCourseFile);
 app.post('/assignment_files', withDuoAuth, db.addAssignmentFile);
 app.post('/course_videos', withDuoAuth, db.addCourseVideo);
 app.get('/course_files/:courseID', withDuoAuth, db.getCourseFiles);
-app.post('/assignment_files/:assignmentID', withDuoAuth, db.getAssignmentFiles);
+app.get('/assignment_files/:assignmentID', withDuoAuth, db.getAssignmentFiles);
 app.get('/course_videos/:courseID', withDuoAuth, db.getCourseVideos);
 app.get('/courses/:courseID/students', withDuoAuth, db.getCourseStudents);
 app.get('/submissions/assignment/:assignmentID', withDuoAuth, db.getAssignmentSubmissions);
