@@ -114,12 +114,12 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
                         <List className={innerClasses}>
                           {
                             submissionsPerStudent.map((submission) => {
+                            if(submission.user_id == student.user_id){ //Might need to be changed to submission.user_id == selectedStudent.user_id
                               let submissiondate = moment(submission.time_submitted).local();
                               submissiondate = submissiondate.format('[Submitted on] MM-DD-YY [at] h:mm A');
-                            if(submission.user_id == student.user_id){ //Might need to be changed to submission.user_id == selectedStudent.user_id
                             return(<>
                               <ListItem>
-                                <ListItemText primary={submissiondate}/>
+                                <ListItemText primary={submissiondate} secondary={'Spot for File'}/>
                               </ListItem>
                               <Divider />
                             </>);
