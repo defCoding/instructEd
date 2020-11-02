@@ -35,16 +35,13 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
     //Place for get request to retrieve all users who are students of this class
     axios.get(`/courses/${courseID}/students`)
       .then(res => {
-        console.log(res.data);
         addStudentsToList(res);
       })
       .catch(console.log);
   }, []);
 
   function addStudentsToList(res){
-    for (const student of res.data) {
-      studentsRef.current = studentsRef.current.concat(student);
-    }
+    studentsRef.current = studentsRef.current.concat(res.data);
     setStudents(studentsRef.current);
   }
 
@@ -65,19 +62,20 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
       </Toolbar>
     </AppBar>
     <List>
-            {
-                students.map((student) => {
-                    var name = student.first_name + " " + student.last_name;
+        {
+          students.map((student) => {
+            var name = student.first_name + " " + student.last_name;
 
-                    return (<>
-                        <ListItem>
-                            <ListItemText primary={name} secondary={student.email} />
-                        </ListItem>
-                        <Divider />
-                    </>);
-                })
-            }
-        </List>
-  </Dialog>
+
+            return (<>
+              <ListItem>
+                <ListItemText primary={name} secondary={student.id} />
+              </ListItem>
+              <Divider />
+            </>);
+          })
+        }
+      </List>
+    </Dialog>
   );
 }

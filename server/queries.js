@@ -710,35 +710,33 @@ const addSubmission = (req, res) => {
   // Once we have the submission ID (that's our folder to store the uploaded files),
   // We make an upload request to the AWS services to the specified directory
   const userID = req.userID;
-  const assignmentID = req.body.assignmentID;
-  const timeSubmitted = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
-  let sql = "INSERT INTO Submissions VALUES (default, $1, $2, $3, null) RETURNING submission_id;";
-  let values = [assignmentID, userID, timeSubmitted];
- 
-  client.query(sql, values, (err, result) => {
+  const form = new multiparty.Form();
+  form.parse(req, async (err, fields, files) => {
     if (err) {
-      res.status(400).send();
+      res.status(400).send(err);
     } else {
-      const submission_id = result.rows[0].submission_id;
-      const form = new multiparty.Form();
-      form.parse(req, async (err2, fields, files) => {
-        if (err2) {
-          res.status(400).send(err2);
+      const origName = files.file[0].originalFilename;
+      const path = files.file[0].path;
+      const buffer = fs.readFileSync(path);
+      const assignmentID = fields.assignmentID[0];
+      const timeSubmitted = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+      let sql = "INSERT INTO Submissions VALUES (default, $1, $2, $3, null) RETURNING submission_id;";
+      let values = [assignmentID, userID, timeSubmitted];
+
+      client.query(sql, values, async (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(400).send(err);
         } else {
-          try {
-            const origName = files.file[0].originalFilename;
-            const path = files.file[0].path;
-            const buffer = fs.readFileSync(path);
-            const fileName = `submissions/${submission_id}/${origName}`;
-            const data = await uploadFile(buffer, fileName);
-            return res.status(201).send(data);
-          } catch (err3) {
-            res.status(400).send(err3);
-          }
+          const submission_id = result.rows[0].submission_id;
+          const fileName = `submissions/${submission_id}/${origName}`;
+          const data = await uploadFile(buffer, fileName);
+          res.status(201).send(data);
         }
-      })
+      });
     }
   });
+ 
 }
 
 const addLinkSubmission = (req, res) => {
@@ -958,21 +956,6 @@ const getCourseStudents = (req, res) => {
   });
 }
 
-const getStudentGrade = (req, res) => {
-  const userID = req.param.userID;
-  const assignmentID = req.param.assignmentID;
-  const values = [userID, assignmentID];
-  const sql = 'SELECT grade FROM Grades WHERE user_id=$1 AND assignment_id=$2;';
-
-  client.query(sql, values, (err, result) => {
-    if (err) {
-      res.status(400).send(err);
-    } else {
-      res.status(200).send(result.rows);
-    }
-  })
-}
-
 const getGrade = (req, res) => {
   const userID = req.userID;
   const assignmentID = req.param.assignmentID;
@@ -988,8 +971,23 @@ const getGrade = (req, res) => {
   })
 }
 
+const getStudentGrade = (req, res) => {
+  const userID = req.param.userID;
+  const assignmentID = req.param.assignmentID;
+  const values = [userID, assignmentID];
+  const sql = 'SELECT grade FROM Grades WHERE user_id=$1 AND assignment_id=$2;';
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.status(200).send(result.rows);
+    }
+  })
+}
+
 const addGrade = (req, res) => {
-  const userID = req.body.userID;
+const userID = req.body.userID;
   const assignmentID = req.body.assignmentID;
   const grade = req.body.grade;
   const values = [assignmentID, userID, grade];
@@ -1020,12 +1018,13 @@ const getAssignmentSubmissions = (req, res) => {
     userID = req.userID;
   }
 
-  let sql = `SELECT * FROM Submissions WHERE user_id=$1 AND assignment_id=$2 AND link=null;`;
+  let sql = `SELECT * FROM Submissions WHERE user_id=$1 AND assignment_id=$2 AND link IS NULL;`;
   const values = [userID, assignmentID];
   const data = [];
 
-  client.query(sql, values, (err, result) => {
+  client.query(sql, values, async (err, result) => {
     if (err) {
+      console.log(err);
       res.status(400).send(err);
     } else {
       const rows = result.rows;
@@ -1036,9 +1035,9 @@ const getAssignmentSubmissions = (req, res) => {
           Prefix: `submissions/${row.submission_id}/`
         };
 
-        s3.listObjects(params, (err, files) => {
+        await s3.listObjects(params, (err, files) => {
           if (!err) {
-            for (const file of files) {
+            for (const file of files.Contents) {
               let p = {
                 Bucket: "instructed",
                 Key: file.Key
@@ -1046,28 +1045,53 @@ const getAssignmentSubmissions = (req, res) => {
               let url = s3.getSignedUrl('getObject', p);
               let regex = /\/[^\/]+\..+/g
               let filename = file.Key.match(regex)[0].substring(1);
-              data.push({file_name: filename, url: url});
+              let objectData = {file_name: filename, url: url};
+              // Not the greatest, but not sure why I'm getting duplicates.
+              if (!data.includes(objectData)) {
+                data.push(objectData);
+              }
             }
           }
-        });
+        }).promise();
       }
+
+      sql = `SELECT * FROM Submissions WHERE user_id=$1 AND assignment_id=$2 AND link IS NOT NULL;`;
+      client.query(sql, values, (err, result) => {
+        if (err) {
+          res.status(400).send(err);
+        } else {
+          const rows = result.rows;
+
+          for (const row of rows) {
+            data.push({file_name: row.link, url: row.link});
+          }
+
+          res.status(200).send(data);
+        }
+      });
 
     }
   });
+}
 
-  sql = `SELECT * FROM Submissions WHERE user_id=$1 AND assignment_id=$2 AND link=null;`;
+const getRoleInCourse = (req, res) => {
+  const userID = req.userID;
+  const courseID = req.params.courseID;
+  let sql = `SELECT FROM Instructing WHERE user_id=$1 and course_id=$2;`;
+  let values = [userID, courseID];
+
   client.query(sql, values, (err, result) => {
     if (err) {
+      console.log(err);
       res.status(400).send(err);
     } else {
-      const rows = result.rows;
-
-      for (const row of rows) {
-        data.push({file_name: row.link, url: row.link});
+      if (result.rows.length) {
+        res.status(200).send('instructor');
+      } else {
+        res.status(200).send('student');
       }
     }
-  })
-  res.status(200).send(data);
+  });
 }
 
 
@@ -1080,6 +1104,7 @@ module.exports = {
   updatePassword,
   getRole,
   setRole,
+  getRoleInCourse,
   getAllCourses,
   getAllAnnouncements,
   getAllAssignments,
@@ -1103,7 +1128,7 @@ module.exports = {
   getCourseStudents,
   getAssignmentSubmissions,
   getAssignmentFiles,
-  getGrade,
   getStudentGrade,
+  getGrade,
   addGrade
 };

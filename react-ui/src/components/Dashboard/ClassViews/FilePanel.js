@@ -88,7 +88,7 @@ export default function FilePanel({courseID}) {
         </List>
         <Button onClick={uploadClicked} color="primary" variant="contained">Upload</Button>
       </Paper>
-      <FileUpload open={uploadOpen} setOpen={setUploadOpen} courseID={courseID} />
+      <FileUpload open={uploadOpen} setOpen={setUploadOpen} endpoint='/course_files' data={{courseID}} />
     </>
     );
 

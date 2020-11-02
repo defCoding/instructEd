@@ -68,7 +68,6 @@ export default function ClassDialog({ selectedClass, open, setOpen }) {
     if (selectedClass.id != null) {
       axios.get(`/courses/${selectedClass.id}`)
         .then(res => {
-          console.log(res.data);
           setCourseData(res.data);
         })
         .catch(console.log);

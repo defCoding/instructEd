@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, Dialog, TextField, DialogActions, DialogContent, DialogTitle } from '@material-ui/core'
 
-export default function FileUpload({open, setOpen, courseID}){
+export default function FileUpload({open, setOpen, endpoint, data}){
   const [file, setFile] = useState(null);
 
   const handleClose = () => {  
@@ -15,8 +15,12 @@ export default function FileUpload({open, setOpen, courseID}){
     }
     const formData = new FormData();
     formData.append('file', file[0]);
-    formData.append('courseID', courseID);
-    axios.post(`/course_files`, formData, {
+
+    for (const key in data) {
+      formData.append(key, data[key]);
+    }
+
+    axios.post(endpoint, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },

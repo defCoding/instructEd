@@ -4,6 +4,7 @@ import { List, ListItemText, Paper, ListItem, Typography } from '@material-ui/co
 import moment from 'moment';
 import StudentAssignment from './StudentAssignment';
 import InstructorAssignment from './InstructorAssignment';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,13 +32,24 @@ export default function AssignmentPanel(props) {
   const assignments = props.assignments;
   const [sopen, setSopen] = React.useState(false);
   const [iopen, setIopen] = React.useState(false);
-  const [selectedAssignment, setSelectedAssignment] = React.useState(null);
+  const [selectedAssignment, setSelectedAssignment] = React.useState({ assignment_name: '', assignment_id: -1, deadline: '', assignment_description: '' });
   var role = 0; // 0 for non-instructor, 1 for instructor
 
   useEffect(() => {
-    //Determine the role for the given class
-    //If instructor set role to 1, if admin or student set role to 0
-  });
+    axios.get('/roles')
+      .then(res => {
+        if (res.data === 'admin') {
+          role = 1;
+        } else {
+          axios.get(`/roles/course/${props.courseID}`)
+            .then(res => {
+              if (res.data === 'instructor') {
+                role = 1;
+              }
+            });
+        }
+      });
+  }, []);
 
   return (
     <>
@@ -60,7 +72,7 @@ export default function AssignmentPanel(props) {
                 else if(role == 1){
                   setIopen(true);
                 }
-                setSelectedAssignment(assignment.assignment_name);
+                setSelectedAssignment(assignment);
               }}>
                 <ListItemText primary={assignment.assignment_name} secondary={date} />
               </ListItem>

@@ -9,6 +9,7 @@ export default function FileUploadTab(props) {
   const [selectedFile, setSelectedFile] = React.useState(null);
 
   function uploadClicked(){
+    console.log(props);
     setUploadOpen(true);
   }
 
@@ -23,7 +24,7 @@ export default function FileUploadTab(props) {
       <Grid container height="100%" spacing={1}>
         <Grid item xs={12}>
           <Button className={classes.panelItems} onClick={uploadClicked} color="primary" variant="contained">Upload</Button>
-          <FileUpload open={uploadOpen} setOpen={setUploadOpen} courseID={courseID} />
+          <FileUpload open={uploadOpen} setOpen={setUploadOpen} courseID={courseID} endpoint='/submissions' data={props.data}/>
         </Grid>
         <Grid item xs={12}>
           <Button className={classes.panelItems} variant="contained" color="secondary" onClick={onFileSubmit}>

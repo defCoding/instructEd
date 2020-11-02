@@ -67,6 +67,7 @@ app.post('/logout', (req, res) => {
  */
 app.get('/roles', withDuoAuth, db.getRole);
 app.put('/roles', withDuoAuth, db.setRole);
+app.get('/roles/course/:courseID', withDuoAuth, db.getRoleInCourse);
 app.get('/courses', withDuoAuth, db.getAllCourses('admin')); // select all
 app.get('/courses/instructor', withDuoAuth, db.getAllCourses('instructor')); // instructing
 app.get('/courses/student', withDuoAuth, db.getAllCourses('student')); // enrollments
