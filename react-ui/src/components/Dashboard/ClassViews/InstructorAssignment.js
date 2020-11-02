@@ -57,7 +57,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
           <CloseIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
-          {selectedAssignment}
+          {selectedAssignment.assignment_name}
         </Typography>
       </Toolbar>
     </AppBar>

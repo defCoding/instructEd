@@ -33,18 +33,18 @@ export default function AssignmentPanel(props) {
   const [sopen, setSopen] = React.useState(false);
   const [iopen, setIopen] = React.useState(false);
   const [selectedAssignment, setSelectedAssignment] = React.useState({ assignment_name: '', assignment_id: -1, deadline: '', assignment_description: '' });
-  var role = 0; // 0 for non-instructor, 1 for instructor
+  const [role, setRole] = React.useState(0);
 
   useEffect(() => {
     axios.get('/roles')
       .then(res => {
         if (res.data === 'admin') {
-          role = 1;
+          setRole(1);
         } else {
           axios.get(`/roles/course/${props.courseID}`)
             .then(res => {
               if (res.data === 'instructor') {
-                role = 1;
+                setRole(1);
               }
             });
         }

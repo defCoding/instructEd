@@ -32,12 +32,26 @@ export default function FilePanel({courseID}) {
   const [uploadOpen, setUploadOpen] = React.useState(false);
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [fileList, setFileList] = React.useState([]);
-  var role = 1; //0 for non-instructor, 1 for instructor
+  const [role, setRole] = React.useState(0);
 
   useEffect(() => {
     axios.get(`/course_files/${courseID}`)
       .then(res => setFileList(res.data))
       .catch(console.log);
+
+    axios.get('/roles')
+      .then(res => {
+        if (res.data === 'admin') {
+          setRole(1);
+        } else {
+          axios.get(`/roles/course/${courseID}`)
+            .then(res => {
+              if (res.data === 'instructor') {
+                setRole(1);
+              }
+            });
+        }
+      });
   }, []);
 
   function uploadClicked(){
@@ -53,12 +67,14 @@ export default function FilePanel({courseID}) {
           Files
         </Typography>
         <List>
-        {fileList.map((text) => (
-          <ListItem button key={text} onClick={() => {
+        {fileList.map((file) => (
+          <ListItem button key={file.file_name} onClick={() => {
             setOpen(true);
-            setSelectedFile(text);
+            setSelectedFile(file.file_name);
           }}>
-            <Typography color='secondary'>{text}</Typography>
+            <a href={file.url} target="_blank">
+            <Typography color='secondary'>{file.file_name}</Typography>
+            </a>
           </ListItem>
         ))}
         </List>
@@ -76,14 +92,14 @@ export default function FilePanel({courseID}) {
         </Typography>
         <List>
         {fileList.map((file) => (
-          <a href={file.url} target="_blank">
             <ListItem button key={file.file_name} onClick={() => {
               setOpen(true);
               setSelectedFile(file.file_name);
             }}>
-              <Typography color='secondary'>{file.file_name}</Typography>
+              <a href={file.url} target="_blank">
+                <Typography color='secondary'>{file.file_name}</Typography>
+              </a>
             </ListItem>
-          </a>
         ))}
         </List>
         <Button onClick={uploadClicked} color="primary" variant="contained">Upload</Button>
