@@ -9,7 +9,7 @@ const drawerWidth = 250;
 
 const adminWidgets = ['Add Course', 'Add User to Class', 'Set Role'];
 const studentWidgets = ['Announcements', 'Assignments', 'Calendar'];
-const instructorWidgets = studentWidgets.concat(['Create Announcement']);
+const instructorWidgets = studentWidgets.concat(['Create Announcement', 'Create Assignment']);
 let currentRoleWidgets = [];
 
 const useStyles = makeStyles((theme) => ({
