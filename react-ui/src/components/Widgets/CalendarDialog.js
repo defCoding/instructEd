@@ -1,33 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, {  } from 'react';
 import Calendar from 'react-calendar';
-import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItemText, Paper, IconButton, Button, Drawer, Divider, ListItem, Typography, Dialog, DialogActions, DialogTitle, DialogContent, AppBar, Toolbar } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import axios from 'axios';
-import moment from 'moment';
+import { Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@material-ui/core';
 
-export default function CalendarDialog({open, setOpen, time, date}) {
+
+export default function CalendarDialog({open, setOpen, time, setTime, date, setDate}) {
     const classes = useStyle();
-    date = Date.now();
-    const [open, setOpen] = React.useState(false);
-    const [values, setValues] = useState({time: ''});
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    
-    const handleInputChange = e => {
-        values.time = time;
-        const {name, value} = e.target;
-        setValues({
-          ...values,
-          [name] : value
-        });
-      }
   
-    //const onChange = date => {
-      //setDate(date);
-    //};
+    const handleTimeChange = e => {
+      setTime(e.target.value);
+    }
   
-    const onClickDay = date => {
-      setDate(date);
+    const onClickDay = e => {
+      setDate(e);
     }
 
     function handleClose(e){
@@ -54,7 +38,7 @@ export default function CalendarDialog({open, setOpen, time, date}) {
             onClickDay={onClickDay}
             value={date}
             />
-            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Time" value={time} name="time" onChange={handleInputChange} />
+            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Time" value={time} name="time" onChange={handleTimeChange} />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">Submit</Button>
