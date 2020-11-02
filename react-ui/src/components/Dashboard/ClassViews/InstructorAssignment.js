@@ -26,10 +26,36 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const useInnerStyles = makeStyles(theme => ({
+  root: {
+    display: 'flex',
+  },
+  drawer: {
+    flexShrink: 0,
+  },
+  drawerPaper: {
+    background: theme.palette.secondary.main,
+  },
+  appBar: {
+    position: 'relative',
+  },
+  // necessary for content to be below app bar
+  toolbar: theme.mixins.toolbar,
+  dialog: {
+    padding: theme.spacing(3),
+    height: "100vh",
+  }
+}));
+
 export default function InstructorAssignment({selectedAssignment, open, setOpen, courseID}) {
   const classes = useStyles();
+  const innerClasses = useInnerStyles();
+  innerClasses.theme.margin.left(3);
   const [students, setStudents] = useState([]);
   const studentsRef = useRef([]);
+  let selectedStudent = null;
+  const [submissionsPerStudent, setSubmissionsPerStudent] = useState([]);
+  const grade = '';
 
   useEffect(() => {
     //Place for get request to retrieve all users who are students of this class
@@ -42,10 +68,22 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   }, []);
 
   function addStudentsToList(res){
-    for (const student of res.data) {
-      studentsRef.current = studentsRef.current.concat(student);
-    }
+    studentsRef.current = studentsRef.current.concat(res.data);
     setStudents(studentsRef.current);
+  }
+
+  function studentClicked(student){
+    if(selectedStudent == null){
+      axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.user_id}`)
+      .then(res => setSubmissionsPerStudent(res.data)).catch(console.log);
+      selectedStudent = student;
+    }
+    else if(submissionsPerStudent != 0){
+      setSubmissionsPerStudent([]);
+      axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.user_id}`)
+      .then(res => setSubmissionsPerStudent(res.data)).catch(console.log);
+      selectedStudent = student;
+    }
   }
 
   const handleClose = () => {
@@ -60,7 +98,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
           <CloseIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
-          {selectedAssignment}
+          {selectedAssignment.assignment_name}
         </Typography>
       </Toolbar>
     </AppBar>
@@ -70,9 +108,25 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
                     var name = student.first_name + " " + student.last_name;
 
                     return (<>
-                        <ListItem>
-                            <ListItemText primary={name} secondary={student.email} />
+                        <ListItem button={true} onClick={studentClicked}>
+                            <ListItemText primary={name} secondary={student.user_id} />
                         </ListItem>
+                        <List className={innerClasses}>
+                          {
+                            submissionsPerStudent.map((submission) => {
+                              let submissiondate = moment(submission.time_submitted).local();
+                              submissiondate = submissiondate.format('[Submitted on] MM-DD-YY [at] h:mm A');
+                            if(submission.user_id == student.user_id){ //Might need to be changed to submission.user_id == selectedStudent.user_id
+                            return(<>
+                              <ListItem>
+                                <ListItemText primary={submissiondate}/>
+                              </ListItem>
+                              <Divider />
+                            </>);
+                            }
+                            })
+                          } 
+                        </List>
                         <Divider />
                     </>);
                 })
