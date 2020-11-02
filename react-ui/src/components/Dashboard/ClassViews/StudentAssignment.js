@@ -66,20 +66,33 @@ const useStyles = makeStyles(theme => ({
 
 function IsSubmitted({submitted, classes}) {
   const [value, setValue] = React.useState(0);
+  const [textValue, setTextValue] = React.useState("");
+  const [linkValue, setLinkValue] = React.useState("");
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  const handleTextChange = e => {
+    console.log(e.target.value);
+    setTextValue(e.target.value);
+  }
+
+  const handleLinkChange = e => {
+    console.log(e.target.value);
+    setLinkValue(e.target.value);
+  }
+  
   const onFileSubmit = (event) => {
-    alert('file')
+    alert('file');
   };
 
   const onTextSubmit = (event) => {
-    alert('text')
+    alert(textValue);
   };
 
   const onLinkSubmit = (event) => {
-    alert('link')
+    alert(linkValue);
   };
 
   if (submitted) {
@@ -126,7 +139,7 @@ function IsSubmitted({submitted, classes}) {
                   <Typography className={classes.panelItems}>Grade</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <Typography variant="h2" className={classes.panelItems}>90/100</Typography>
+                  <Typography variant="h2" className={classes.panelItems}>grade here</Typography>
                 </Grid>
               </Grid>
             </Box>
@@ -154,6 +167,9 @@ function IsSubmitted({submitted, classes}) {
                   <Typography className={classes.panelItems}>File Upload</Typography>
                 </Grid>
                 <Grid item xs={12}>
+                  <Button classname={classes.panelItems} variant="contained" onClick={openFileSelect}>
+                    Upload File
+                  </Button>
                 </Grid>
                 <Grid item xs={12}>
                   <Button className={classes.panelItems} variant="contained" color="secondary" onClick={onFileSubmit}>
@@ -178,6 +194,8 @@ function IsSubmitted({submitted, classes}) {
                     multiline
                     rows={4}
                     variant="outlined"
+                    value={textValue}
+                    onChange={handleTextChange}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -195,7 +213,13 @@ function IsSubmitted({submitted, classes}) {
                   <Typography className={classes.panelItems}>Link Submission</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField id="outlined-basic" label="Link" variant="outlined" className={classes.panelItems}/>
+                  <TextField 
+                    value={linkValue}
+                    onChange={handleLinkChange}
+                    id="outlined-basic" 
+                    label="Link" 
+                    variant="outlined" 
+                    className={classes.panelItems}/>
                 </Grid>
                 <Grid item xs={12}>
                   <Button variant="contained" color="secondary" className={classes.panelItems} onClick={onLinkSubmit}>
