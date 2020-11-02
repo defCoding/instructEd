@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Box, Tabs, Tab, Dialog, AppBar, Toolbar, IconButton, Typography, Grid, Drawer, Divider  } from '@material-ui/core';
@@ -9,6 +9,7 @@ import LinkUploadTab from './StudentAssignmentTabs/LinkUploadTab';
 import SubmissionTab from './StudentAssignmentTabs/SubmissionTab';
 import CommentsTab from './StudentAssignmentTabs/CommentsTab';
 import GradeTab from './StudentAssignmentTabs/GradeTab';
+import axios from 'axios';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -132,6 +133,23 @@ function IsSubmitted({submitted, classes}) {
 export default function StudentAssignment({selectedAssignment, open, setOpen}) {
   const classes = useStyles();
   let submitted = false;
+  const [submissions, setSubmissions] = useState([]);
+  const [grade, setGrade] = useState('');
+  const [files, setFiles] = useState([]);
+
+  useEffect = () => {
+    axios.get(`/submissions/assignment/:${selectedAssignment.assignment_id}`)
+      .then(res => setSubmissions(res.data)).catch(console.log);
+
+    axios.get(`/grades/${selectedAssignment.assignment_id}`)
+      .then(res => setGrade(res.data.grade)).catch(console.log);
+
+    axios.get(`/assignment_files/${selectedAssignment.assignment_id}`)
+      .then(res => setFiles(res.data)).catch(console.log);
+      if(submissions.length > 0){
+        submitted = true;
+      }
+  };
 
   const handleClose = () => {
     setOpen(false);
