@@ -32,7 +32,7 @@ export default function AssignmentPanel(props) {
   const [sopen, setSopen] = React.useState(false);
   const [iopen, setIopen] = React.useState(false);
   const [selectedAssignment, setSelectedAssignment] = React.useState(null);
-  var role = 1; // 0 for non-instructor, 1 for instructor
+  var role = 0; // 0 for non-instructor, 1 for instructor
 
   useEffect(() => {
     //Determine the role for the given class

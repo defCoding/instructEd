@@ -87,6 +87,7 @@ app.post('/courses', withDuoAuth, db.addCourse);
 app.post('/instructing', withDuoAuth, db.addInstructorToCourse);
 app.post('/enrollments', withDuoAuth, db.addStudentToCourse);
 app.post('/submissions', withDuoAuth, db.addSubmission);
+app.post('/submissions/link', withDuoAuth, db.addLinkSubmission);
 app.post('/course_files', withDuoAuth, db.addCourseFile);
 app.post('/assignment_files', withDuoAuth, db.addAssignmentFile);
 app.post('/course_videos', withDuoAuth, db.addCourseVideo);

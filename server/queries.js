@@ -6,6 +6,7 @@ const moment = require('moment');
 const aws = require('aws-sdk');
 const multiparty = require('multiparty');
 const fs = require('fs');
+const { url } = require('inspector');
 
 require('dotenv').config();
 
@@ -711,7 +712,7 @@ const addSubmission = (req, res) => {
   const userID = req.userID;
   const assignmentID = req.body.assignmentID;
   const timeSubmitted = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
-  let sql = "INSERT INTO Submissions VALUES (default, $1, $2, $3) RETURNING submission_id;";
+  let sql = "INSERT INTO Submissions VALUES (default, $1, $2, $3, null) RETURNING submission_id;";
   let values = [assignmentID, userID, timeSubmitted];
  
   client.query(sql, values, (err, result) => {
@@ -736,6 +737,23 @@ const addSubmission = (req, res) => {
           }
         }
       })
+    }
+  });
+}
+
+const addLinkSubmission = (req, res) => {
+  const userID = req.userID;
+  const assignmentID = req.body.assignmentID;
+  const link = req.body.link;
+  const timeSubmitted = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+  let sql = "INSERT INTO Submissions VALUES (default, $1, $2, $3, $4) RETURNING submission_id;";
+  let values = [assignmentID, userID, timeSubmitted, link];
+ 
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send();
+    } else {
+      res.status(200).send();
     }
   });
 }
@@ -987,15 +1005,15 @@ const getAssignmentSubmissions = (req, res) => {
     userID = req.userID;
   }
 
-  const sql = `SELECT * FROM Submissions WHERE user_id=$1 AND assignment_id=$2;`;
+  let sql = `SELECT * FROM Submissions WHERE user_id=$1 AND assignment_id=$2 AND link=null;`;
   const values = [userID, assignmentID];
+  const data = [];
 
   client.query(sql, values, (err, result) => {
     if (err) {
       res.status(400).send(err);
     } else {
       const rows = result.rows;
-      const data = [];
 
       for (const row of rows) {
         let params = {
@@ -1019,9 +1037,22 @@ const getAssignmentSubmissions = (req, res) => {
         });
       }
 
-      res.status(200).send(data);
     }
   });
+
+  sql = `SELECT * FROM Submissions WHERE user_id=$1 AND assignment_id=$2 AND link=null;`;
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+
+      for (const row of rows) {
+        data.push({file_name: row.link, url: row.link});
+      }
+    }
+  })
+  res.status(200).send(data);
 }
 
 
@@ -1048,12 +1079,15 @@ module.exports = {
   addStudentToCourse,
   addAnnouncement,
   addSubmission,
+  addLinkSubmission,
+  addAssignmentFile,
   addCourseVideo,
   getCourseVideos,
   addCourseFile,
   getCourseFiles,
   getCourseStudents,
   getAssignmentSubmissions,
+  getAssignmentFiles,
   getGrade,
   addGrade
 };

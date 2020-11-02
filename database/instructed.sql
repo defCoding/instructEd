@@ -93,6 +93,7 @@ CREATE TABLE Submissions (
   assignment_id INTEGER NOT NULL,
   user_id INTEGER NOT NULL,
   time_submitted TIMESTAMP,
+  link TEXT,
   PRIMARY KEY (submission_id),
   FOREIGN KEY (user_id) REFERENCES Users (id),
   FOREIGN KEY (assignment_id) REFERENCES Assignments (assignment_id)
