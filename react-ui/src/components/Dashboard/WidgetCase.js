@@ -12,6 +12,8 @@ import CreateAnnouncement from '../Widgets/CreateAnnouncement';
 import AddToClass from '../Widgets/AddToClass';
 import SetRole from '../Widgets/SetRole';
 import UpcomingAssignments from '../Widgets/UpcomingAssignments';
+import CreateAssignment from '../Widgets/CreateAssignment';
+import UnapprovedFiles from '../Widgets/UnapprovedFiles';
 
 const ITEM_HEIGHT = 50;
 
@@ -52,6 +54,10 @@ function WidgetSelect({currentWidget}) {
       return (<Calendar />);
     case 'Assignments':
       return (<UpcomingAssignments />);
+    case 'Create Assignment':
+      return (<CreateAssignment />);
+    case 'Unapproved Files':
+      return (<UnapprovedFiles />);
     default:
       return null;
   }
