@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Button, List, ListItemText, ListItemSecondaryAction, ListItem, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
 
@@ -6,6 +6,7 @@ export default function UnapprovedFiles(){
     const [files, setFiles] = useState(["File"]); //Will be [] after testing
     const [open, setOpen] = React.useState(false);
     const [file, setFile] = useState(null);
+    const filesRef = useRef([]);
     useEffect(() => {
         //Place for get request
     });

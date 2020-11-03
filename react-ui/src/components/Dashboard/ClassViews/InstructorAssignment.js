@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Dialog, AppBar, Toolbar, IconButton, Typography, List, ListItem, ListItemText, Divider } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import axios from 'axios';
+import moment from 'moment';
 
 
 const useStyles = makeStyles(theme => ({
@@ -106,19 +107,6 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
           students.map((student) => {
             var name = student.first_name + " " + student.last_name;
 
-<<<<<<< HEAD
-
-            return (<>
-              <ListItem>
-                <ListItemText primary={name} secondary={student.id} />
-              </ListItem>
-              <Divider />
-            </>);
-          })
-        }
-      </List>
-    </Dialog>
-=======
                     return (<>
                         <ListItem button={true} onClick={studentClicked}>
                             <ListItemText primary={name} secondary={student.user_id} />
@@ -145,6 +133,5 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
             }
         </List>
   </Dialog>
->>>>>>> frontend
   );
 }
