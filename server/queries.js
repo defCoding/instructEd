@@ -48,8 +48,12 @@ const uploadFile = (buffer, name) => {
   return s3.upload(params).promise();
 };
 
-client.connect(() => {
-  console.log("Connected to database.");
+client.connect((err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('Connected to database.');
+  }
 });
 
 /**
