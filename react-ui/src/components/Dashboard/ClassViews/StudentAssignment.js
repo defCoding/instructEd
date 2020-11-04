@@ -142,6 +142,8 @@ export default function StudentAssignment({selectedAssignment, open, setOpen}) {
       .then(res => {
         if (res.data.length > 0) {
           setSubmitted(true);
+        } else {
+          setSubmitted(false);
         }
         setSubmissions(res.data);
       }).catch(console.log);
