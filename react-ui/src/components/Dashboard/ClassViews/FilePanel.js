@@ -35,7 +35,7 @@ export default function FilePanel({courseID}) {
   const [role, setRole] = React.useState(0);
 
   useEffect(() => {
-    axios.get(`/course_files/${courseID}`)
+    axios.get(`/course_files/approved/${courseID}`)
       .then(res => setFileList(res.data))
       .catch(console.log);
 
