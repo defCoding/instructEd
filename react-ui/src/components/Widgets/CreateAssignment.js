@@ -50,7 +50,7 @@ export default function CreateAssignment() {
   const onClick = (e) => {
     e.preventDefault();
     if (currentCourse.course_id && assignmentName !== '' && description !== '' && date !== null && time !== '') {
-      axios.post('/announcements', {
+      axios.post('/assignments', {
         assignmentName,
         description,
         date,
