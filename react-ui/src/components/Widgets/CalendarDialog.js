@@ -4,7 +4,6 @@ import { Button, Dialog, DialogActions, DialogTitle, DialogContent, TextField } 
 
 
 export default function CalendarDialog({open, setOpen, time, setTime, date, setDate}) {
-    const classes = useStyle();
   
     const handleTimeChange = e => {
       setTime(e.target.value);
@@ -38,7 +37,7 @@ export default function CalendarDialog({open, setOpen, time, setTime, date, setD
             onClickDay={onClickDay}
             value={date}
             />
-            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Time" value={time} name="time" onChange={handleTimeChange} />
+            <TextField color="secondary" multiline="true" variant="outlined" label="Time" value={time} name="time" onChange={handleTimeChange} />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose} color="primary">Submit</Button>

@@ -1098,6 +1098,27 @@ const getRoleInCourse = (req, res) => {
   });
 }
 
+const addAssignment = (req, res) => {
+  const info = req.body;
+  console.log(info);
+  const date = moment(info.deadline).format('YYYY-MM-DD HH:mm:ss');
+  const name = info.assignmentName;
+  const desc = info.description;
+  const courseID = info.courseID;
+
+  const sql = `INSERT INTO Assignments VALUES (default, $1, $2, $3, $4, '{}');`
+  const values = [name, desc, courseID, date];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(201).send('Assignment added.');
+    }
+  });
+}
+
 
 module.exports = {
   createUser,
@@ -1117,6 +1138,7 @@ module.exports = {
   getAssignmentsByDate,
   getUpcomingAssignments,
   getAssignment,
+  addAssignment,
   getCourse,
   addCourse,
   addInstructorToCourse,
