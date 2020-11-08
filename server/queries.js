@@ -25,7 +25,7 @@ const client = new Client({
 
 const client = new Client({
   host: 'localhost',
-  database: 'demo', user: 'demo'
+  database: 'demo', user: 'demo', password: 'demo', port: '5433'
 });
 
 aws.config.update({
@@ -49,7 +49,13 @@ const uploadFile = (buffer, name) => {
 };
 
 client.connect(() => {
-  console.log("Connected to database.");
+  err => {
+    if (err) {
+      console.log(err);
+    } else{
+      console.log("Connected to database.");
+    }
+  }
 });
 
 /**
