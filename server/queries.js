@@ -1101,7 +1101,7 @@ const getRoleInCourse = (req, res) => {
 const addAssignment = (req, res) => {
   const info = req.body;
   console.log(info);
-  const date = moment(info.deadline).format('YYYY-MM-DD HH:mm:ss');
+  const date = moment(info.date).format('YYYY-MM-DD HH:mm:ss');
   const name = info.assignmentName;
   const desc = info.description;
   const courseID = info.courseID;
