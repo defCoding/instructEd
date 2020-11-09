@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, TextField, Grid, Button, IconButton, Menu, MenuItem, Typography, Toolbar } from '@material-ui/core';
+import { Paper, TextField, Grid, Button, IconButton, Menu, MenuItem, Typography, Toolbar, Divider } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import CalendarDialog from './CalendarDialog';
+import Calendar from 'react-calendar';
 
 const ITEM_HEIGHT = 50;
 
@@ -19,12 +19,15 @@ export default function CreateAssignment() {
   const [courses, setCourses] = useState([]);
   const [currentCourse, setCurrentCourse] = useState(noCourse);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [cOpen, setCopen] = React.useState(false);
+  const [tAnchorEl, setTAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const topen = Boolean(tAnchorEl);
   const [assignmentName, setAssignmentName] = React.useState('');
   const [description, setDescription] = React.useState('');
   const [date, setDate] = React.useState(new Date(Date.now()));
   const [time, setTime] = React.useState('');
+  const [dateString, setDateString] = React.useState(date.toDateString());
+  const [amOrPM, setAmOrPM] = React.useState('PM');
 
   const handleDescriptionChange = e => {
     setDescription(e.target.value);
@@ -38,24 +41,50 @@ export default function CreateAssignment() {
     setAnchorEl(event.currentTarget);
   };
 
-  function handleClose(course) {
+  const handleTClick = (event) => {
+    setTAnchorEl(event.currentTarget);
+  }
+
+  function handleCloseCourse(course) {
     setAnchorEl(null);
     setCurrentCourse(course);
   }
 
-  function selectDueDateClicked() {
-    setCopen(true);
+  function handleCloseTime(timeOfDay){
+    setTAnchorEl(null);
+    setAmOrPM(timeOfDay);
+  }
+
+  const handleTimeChange = e => {
+    setTime(e.target.value);
+  }
+
+  const onClickDayCD = day => {
+    setDate(day);
+    setDateString(date.toDateString());
+    console.log(date.toDateString());
   }
 
   const onClick = (e) => {
-    e.preventDefault();
-    if (currentCourse.course_id && assignmentName !== '' && description !== '' && date !== null && time !== '') {
+    //e.preventDefault();
+    if (currentCourse.course_id && assignmentName !== '' && description !== '' && date !== '' && time !== '') {
+      let hour = Number(time.split(':')[0]);
+      let minute = Number(time.split(':')[1]);
+      if(hour < 0 || hour > 12 || minute < 0 || minute > 59){
+        alert("Hours must be between 0-12, minutes must be between 0-59.");
+      }
+      else {
+        if(amOrPM == 'PM'){
+          hour = hour + 12;
+        }
+        date.setHours(hour);
+        date.setMinutes(minute);
+        console.log(date.toDateString());
       axios.post('/assignments', {
         assignmentName,
         description,
-        date,
-        time,
-        courseID: currentCourse.course_id
+        courseID: currentCourse.course_id,
+        date
       }).then(res => {
         if (res.status === 201) {
           alert('Assignment created!');
@@ -64,7 +93,8 @@ export default function CreateAssignment() {
           setDate(new Date(Date.now()));
           setTime('');
         }
-      });
+      }); 
+    }
     } else {
       alert('All fields must be filled.');
     }
@@ -101,11 +131,11 @@ export default function CreateAssignment() {
           <Grid item xs="12">
             <Toolbar variant="dense">
               <Menu
-                id="long-menu"
+                id="course-menu"
                 anchorEl={anchorEl}
                 keepMounted
                 open={open}
-                onClose={() => handleClose(noCourse)}
+                onClose={() => handleCloseCourse(noCourse)}
                 PaperProps={{
                   style: {
                     maxHeight: ITEM_HEIGHT * 4.5,
@@ -116,7 +146,7 @@ export default function CreateAssignment() {
                   <MenuItem 
                     key={course.course_name} 
                     selected={course === currentCourse} 
-                    onClick={() => handleClose(course)}>
+                    onClick={() => handleCloseCourse(course)}>
                     {course.course_name}
                   </MenuItem>
                 ))}
@@ -126,7 +156,7 @@ export default function CreateAssignment() {
               </Typography>
               <IconButton
                 aria-label="more"
-                aria-controls="long-menu"
+                aria-controls="course-menu"
                 aria-haspopup="true"
                 onClick={handleClick}
                 color="secondary"
@@ -142,9 +172,58 @@ export default function CreateAssignment() {
             <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={description} name="description" onChange={handleDescriptionChange} />
           </Grid>
           <Grid item xs="12">
-            <Button className={classes.items} variant="contained" color ="primary" onClick={selectDueDateClicked}>Select Due Date</Button>
-            <Typography variant="b2" component="b2">
-              {date + " at " + time}
+          <Calendar
+            //onChange={onChange}
+            onClickDay={onClickDayCD}
+            value={date}
+            />
+          </Grid>
+          <Grid item xs="12">
+            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Time" value={time} name="time" onChange={handleTimeChange}  />
+            <Toolbar variant="dense">
+              <Menu
+                id="time-menu"
+                anchorEl={tAnchorEl}
+                keepMounted
+                open={topen}
+                onClose={() => handleCloseTime(amOrPM)}
+                PaperProps={{
+                  style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                    width: '20ch',
+                  },
+                }}>
+                
+                  <MenuItem 
+                    key={'AM'} 
+                    selected={'AM' === amOrPM} 
+                    onClick={() => handleCloseTime('AM')}>AM
+                  </MenuItem>
+
+                <MenuItem 
+                  key={'PM'} 
+                  selected={'PM' === amOrPM} 
+                  onClick={() => handleCloseTime('PM')}>PM
+                </MenuItem>
+                
+              </Menu>
+              <Typography align="right" variant="h6" color="inherit">
+                {amOrPM}
+              </Typography>
+              <IconButton
+                aria-label="more"
+                aria-controls="time-menu"
+                aria-haspopup="true"
+                onClick={handleTClick}
+                color="secondary"
+              >
+                <ArrowDropDownIcon />
+              </IconButton>
+            </Toolbar>
+          </Grid>
+          <Grid item xs="12">
+            <Typography className={classes.items} variant="body2" component="body2">
+              {dateString + " at " + time + " " + amOrPM}
             </Typography>
           </Grid>
           <Grid item xs="12">
@@ -152,7 +231,6 @@ export default function CreateAssignment() {
           </Grid>
         </Grid>
       </form>
-      <CalendarDialog setOpen={setCopen} open={cOpen} time={time} setTime={setTime} date={date} setTime={setDate} />
     </Paper>
   );
 }

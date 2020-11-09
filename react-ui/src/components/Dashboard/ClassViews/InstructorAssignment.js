@@ -45,13 +45,13 @@ const useInnerStyles = makeStyles(theme => ({
   dialog: {
     padding: theme.spacing(3),
     height: "100vh",
-  }
+    margin: theme.spacing(1, 2)
+  },
 }));
 
 export default function InstructorAssignment({selectedAssignment, open, setOpen, courseID}) {
   const classes = useStyles();
   const innerClasses = useInnerStyles();
-  innerClasses.theme.margin.left(3);
   const [students, setStudents] = useState([]);
   const studentsRef = useRef([]);
   let selectedStudent = null;
