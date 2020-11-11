@@ -54,7 +54,8 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   const innerClasses = useInnerStyles();
   const [students, setStudents] = useState([]);
   const studentsRef = useRef([]);
-  let selectedStudent = null;
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [clickedStudent, setClickedStudent] = useState(null);
   const [submissionsPerStudent, setSubmissionsPerStudent] = useState([]);
   const grade = '';
 
@@ -72,18 +73,29 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
     setStudents(studentsRef.current);
   }
 
-  function studentClicked(student){
+  const studentClicked = (student) => () =>{
     if(selectedStudent == null){
-      axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.user_id}`)
-      .then(res => setSubmissionsPerStudent(res.data)).catch(console.log);
-      selectedStudent = student;
+      //axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
+      //.then(res => setSubmissionsPerStudent(res.data)).catch(console.log);
+      setSubmissionsPerStudent([{submission_id: 1, assignment_id: 1, user_id: 9999, time_submitted: new Date(Date.now()), link: ''}]);
+      console.log(submissionsPerStudent);
+      setSelectedStudent(student);
     }
-    else if(submissionsPerStudent != 0){
-      setSubmissionsPerStudent([]);
-      axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.user_id}`)
-      .then(res => setSubmissionsPerStudent(res.data)).catch(console.log);
-      selectedStudent = student;
-    }
+    else if(submissionsPerStudent.length != 0 && selectedStudent != null){
+      if(student.id == selectedStudent.id){
+        setSubmissionsPerStudent([]);
+        setSelectedStudent(null);
+        console.log(submissionsPerStudent);
+      }
+      else{
+        setSubmissionsPerStudent([]);
+        //axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
+        //.then(res => setSubmissionsPerStudent(res.data)).catch(console.log);
+        setSubmissionsPerStudent([{submission_id: 1, assignment_id: 1, user_id: 9999, time_submitted: new Date(Date.now()), link: ''}]);
+        console.log(submissionsPerStudent);
+        setSelectedStudent(student);
+      }
+    } 
   }
 
   const handleClose = () => {
@@ -106,15 +118,16 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
         {
           students.map((student) => {
             var name = student.first_name + " " + student.last_name;
+            var id = String(student.id);
 
                     return (<>
-                        <ListItem button={true} onClick={studentClicked}>
-                            <ListItemText primary={name} secondary={student.user_id} />
+                        <ListItem button={true} onClick={studentClicked(student)}>
+                            <ListItemText primary={name} secondary={id} />
                         </ListItem>
                         <List className={innerClasses}>
                           {
                             submissionsPerStudent.map((submission) => {
-                            if(submission.user_id == student.user_id){ //Might need to be changed to submission.user_id == selectedStudent.user_id
+                            if(submission.user_id == student.id){ //Might need to be changed to submission.user_id == selectedStudent.user_id
                               let submissiondate = moment(submission.time_submitted).local();
                               submissiondate = submissiondate.format('[Submitted on] MM-DD-YY [at] h:mm A');
                             return(<>
