@@ -9,6 +9,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { ThumbDown, ThumbUp, Delete } from '@material-ui/icons';
 import cookieParser from 'cookie-parser';
 import axios from 'axios';
+import SearchIcon from '@material-ui/icons/Search';
 
 var notifications = [{"type": "File Upload", "body": "Upload approval"}, 
                         {"type": "Message", "body": "Message notification"},
@@ -51,7 +52,30 @@ const useStyles = makeStyles((theme) => ({
   },
   notificationButton: {
     margin: theme.spacing(2),
-  }
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
+      width: 'auto',
+    },
+  },
 }));
 
 function Navbar(props) {
@@ -137,13 +161,28 @@ function Navbar(props) {
     <AppBar position="fixed" className={classes.appBar} color="primary">
       <Toolbar>
         <Typography color="secondary" align="left" variant="h6" className={classes.title}>
-          instructED
+          
         </Typography>
       {/*
         <FormGroup>
           <FormControlLabel control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />} />
         </FormGroup>
       */}
+
+        <div className={classes.search}>
+          <div className={classes.searchIcon}>
+            <SearchIcon />
+          </div>
+          <InputBase
+            placeholder="Search…"
+            classes={{
+              root: classes.inputRoot,
+              input: classes.inputInput,
+            }}
+            inputProps={{ 'aria-label': 'search' }}
+          />
+        </div>
+
         <IconButton
           color="secondary"
           onClick={displayNotifications}
