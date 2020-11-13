@@ -64,7 +64,7 @@ const createUser = ((req, res) => {
   const info = req.body;
 
   const sql = "INSERT INTO Users VALUES(default, default, $1, $2, $3, crypt($4, gen_salt('bf')), false);";
-  const values = [info.email, info.firstName, info.lastName, info.password];
+  const values = [info.email.trim(), info.firstName.trim(), info.lastName.trim(), info.password];
 
   client.query(sql, values, (err, result) => {
     if (err) {
@@ -1260,6 +1260,21 @@ const approveAssignmentFile = (req, res) => {
   });
 }
 
+const searchUsers = (req, res) => {
+  const query = req.params.query;
+  const sql = `SELECT id, first_name, last_name, email FROM Users WHERE CONCAT(first_name, ' ', last_name) ILIKE '%$1%';`;
+  const values = [query];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send(result.rows);
+    }
+  });
+}
+
 
 module.exports = {
   createUser,
@@ -1303,5 +1318,6 @@ module.exports = {
   addGrade,
   approveAssignmentFile,
   approveCourseFile,
-  approveCourseVideo
+  approveCourseVideo,
+  searchUsers
 };
