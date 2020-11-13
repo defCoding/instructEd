@@ -65,7 +65,7 @@ export default function AddCourse() {
             <TextField required color="secondary" variant="outlined" label="Instructor ID" name="instructorID" className={classes.items} onChange={handleInputChange} />
           </Grid>
           <FormControl color="secondary" variant="outlined" className={classes.items}>
-            <InputLabel id="demo-simple-select-outlined-label">Filter</InputLabel>
+            <InputLabel id="demo-simple-select-outlined-label">Term</InputLabel>
             <Select
               color="secondary"
               style={{ width: 150 }}
