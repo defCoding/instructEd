@@ -1133,7 +1133,7 @@ const getAssignmentSubmissions = (req, res) => {
               let url = s3.getSignedUrl('getObject', p);
               let regex = /\/[^\/]+\..+/g
               let filename = file.Key.match(regex)[0].substring(1);
-              let objectData = {file_name: filename, url: url};
+              let objectData = {file_name: filename, url: url, time_submitted: row.time_submitted};
               // Not the greatest, but not sure why I'm getting duplicates.
               if (!data.includes(objectData)) {
                 data.push(objectData);
@@ -1151,7 +1151,7 @@ const getAssignmentSubmissions = (req, res) => {
           const rows = result.rows;
 
           for (const row of rows) {
-            data.push({file_name: row.link, url: row.link});
+            data.push({file_name: row.link, url: row.link, time_submitted: row.time_submitted});
           }
 
           res.status(200).send(data);
