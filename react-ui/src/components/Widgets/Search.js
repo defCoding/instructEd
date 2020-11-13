@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FormControl, Select, Paper, TextField, Grid, MenuItem, FormControl } from '@material-ui/core';
+import { InputLabel, FormControl, Select, Paper, TextField, Grid, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 
@@ -64,10 +64,10 @@ export default function Search() {
       <form>
         <Grid height="100%" spacing={1}>
           <Grid item xs="12">
-            <TextField required color="secondary" variant="outlined" label="Name" name="name" onChange={handleInputChange} />
+            <TextField color="secondary" variant="outlined" label="Name" name="name" onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
-            <TextField required color="secondary" variant="outlined" label="Class" name="class" onChange={handleInputChange} />
+            <TextField color="secondary" variant="outlined" label="Class" name="class" onChange={handleInputChange} />
           </Grid>
           <FormControl color="secondary" variant="outlined" className={classes.items}>
             <InputLabel>Filter</InputLabel>

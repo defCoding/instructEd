@@ -53,16 +53,16 @@ export default function AddCourse() {
       <form>
         <Grid height="100%" spacing={1}>
           <Grid item xs="12">
-            <TextField required color="secondary" variant="outlined" label="Class Name" name="courseName" className={classes.items} onChange={handleInputChange} />
+            <TextField color="secondary" variant="outlined" label="Class Name" name="courseName" className={classes.items} onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
-            <TextField required color="secondary" variant="outlined" label="Class Number" name="courseNumber" className={classes.items} onChange={handleInputChange} />
+            <TextField color="secondary" variant="outlined" label="Class Number" name="courseNumber" className={classes.items} onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
-            <TextField required color="secondary" variant="outlined" label="Department" name="courseDept" className={classes.items} onChange={handleInputChange} />
+            <TextField color="secondary" variant="outlined" label="Department" name="courseDept" className={classes.items} onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
-            <TextField required color="secondary" variant="outlined" label="Instructor ID" name="instructorID" className={classes.items} onChange={handleInputChange} />
+            <TextField color="secondary" variant="outlined" label="Instructor ID" name="instructorID" className={classes.items} onChange={handleInputChange} />
           </Grid>
           <FormControl color="secondary" variant="outlined" className={classes.items}>
             <InputLabel id="demo-simple-select-outlined-label">Term</InputLabel>
