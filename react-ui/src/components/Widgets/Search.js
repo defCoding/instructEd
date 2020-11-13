@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, Paper, TextField, Grid, MenuItem } from '@material-ui/core';
+import { FormControl, Select, Paper, TextField, Grid, MenuItem, FormControl } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 
@@ -26,20 +26,8 @@ const useStyle = makeStyles(theme => ({
 
 export default function Search() {
   const classes = useStyle();
-  const blankCourse = {courseName: '', courseNumber: '', courseDept: '', instructorID: '', courseTerm: ''};
-  const [values, setValues] = useState(blankCourse);
-  const [currentFilter, setCurrentFilter] = React.useState('None');
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
-  function handleClose(name) {
-    setAnchorEl(null);
-    setCurrentFilter(name);
-  }
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const blankSearch = {name: '', class: '', filter: ''};
+  const [values, setValues] = useState(blankSearch);
 
   useEffect(() => {
     axios.get('/roles')
@@ -79,28 +67,24 @@ export default function Search() {
             <TextField required color="secondary" variant="outlined" label="Name" name="name" onChange={handleInputChange} />
           </Grid>
           <Grid item xs="12">
-          <TextField required color="secondary" variant="outlined" label="Class" name="class" onChange={handleInputChange} />
+            <TextField required color="secondary" variant="outlined" label="Class" name="class" onChange={handleInputChange} />
           </Grid>
-          <Menu
-              id="long-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={open}
-              onClose={() => handleClose('None')}
-              PaperProps={{
-                style: {
-                  maxHeight: ITEM_HEIGHT * 4.5,
-                },
-              }}
-            >
-            {currentSearch.map((current) => (
-              <MenuItem key={current}
-                selected={current === currentFilter} 
-                onClick={() => handleClose(current)}>
-                {current}
-              </MenuItem>
-            ))}
-          </Menu>
+          <FormControl color="secondary" variant="outlined" className={classes.items}>
+            <InputLabel>Filter</InputLabel>
+            <Select
+                color="secondary"
+                style={{ width: 150 }}
+                onChange={handleInputChange}
+                label="Filter"
+                name="filter"
+              >
+              {currentSearch.map((current) => (
+                <MenuItem key={current} value={current} >
+                  {current}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </Grid>
       </form>
     </Paper>
