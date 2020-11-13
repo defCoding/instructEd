@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, Paper, Typography, Button } from '@material-ui/core';
+import { List, ListItem, Paper, Typography, Button, TextField } from '@material-ui/core';
 import FileUpload from "./FileUpload";
 import axios from 'axios';
 
@@ -25,7 +25,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-
 export default function FilePanel({courseID}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -33,6 +32,11 @@ export default function FilePanel({courseID}) {
   const [selectedFile, setSelectedFile] = React.useState(null);
   const [fileList, setFileList] = React.useState([]);
   const [role, setRole] = React.useState(0);
+  const [search, setSearch] = React.useState('');
+
+  const handleSearchChange = e => {
+    setSearch(e.target);
+  }
 
   useEffect(() => {
     axios.get(`/course_files/${courseID}`)
@@ -59,7 +63,6 @@ export default function FilePanel({courseID}) {
   }
 
   if(role == 0){
-
     return (
       <>
       <Paper className={classes.dialog}>
@@ -83,13 +86,10 @@ export default function FilePanel({courseID}) {
     );
   }
   else if(role == 1){
-
     return (
       <>
       <Paper className={classes.dialog}>
-        <Typography variant="h6">
-          Files
-        </Typography>
+        <TextField color="secondary" variant="outlined" label="Search" name="search" onChange={handleSearchChange} className={classes.items} />
         <List>
         {fileList.map((file) => (
             <ListItem button key={file.file_name} onClick={() => {
