@@ -7,9 +7,9 @@ import axios from 'axios';
 
 const drawerWidth = 250;
 
-const adminWidgets = ['Add Course', 'Add User to Class', 'Set Role', 'Unapproved Files'];
-const studentWidgets = ['Announcements', 'Assignments', 'Calendar'];
-const instructorWidgets = studentWidgets.concat(['Create Announcement', 'Create Assignment']);
+const adminWidgets = ['Add Course', 'Add User to Class', 'Set Role', 'Unapproved Files', 'Search'];
+const studentWidgets = ['Announcements', 'Assignments', 'Calendar', 'Search'];
+const instructorWidgets = studentWidgets.concat(['Create Announcement', 'Create Assignment', 'Search']);
 let currentRoleWidgets = [];
 
 const useStyles = makeStyles((theme) => ({

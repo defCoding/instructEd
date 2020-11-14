@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Dialog, AppBar, Toolbar, IconButton, Typography, List, ListItem, ListItemText, Divider } from '@material-ui/core';
+import { Dialog, AppBar, Toolbar, IconButton, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, TextField, Divider, Button, Grid } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import axios from 'axios';
 import moment from 'moment';
@@ -45,18 +45,19 @@ const useInnerStyles = makeStyles(theme => ({
   dialog: {
     padding: theme.spacing(3),
     height: "100vh",
-  }
+    margin: theme.spacing(1, 2)
+  },
 }));
 
 export default function InstructorAssignment({selectedAssignment, open, setOpen, courseID}) {
   const classes = useStyles();
   const innerClasses = useInnerStyles();
-  innerClasses.theme.margin.left(3);
   const [students, setStudents] = useState([]);
   const studentsRef = useRef([]);
-  let selectedStudent = null;
+  const submissionsRef = useRef([]);
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const [submissionsPerStudent, setSubmissionsPerStudent] = useState([]);
-  const grade = '';
+  const [newGrade, setNewGrade] = useState('');
 
   useEffect(() => {
     //Place for get request to retrieve all users who are students of this class
@@ -66,24 +67,61 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
       })
       .catch(console.log);
   }, []);
+  /*
+  function addSubmissionsToList(res){
+    submissionsRef.current = submissionsRef.current.concat(res.data);
+    setSubmissionsPerStudent(submissionsRef.current);
+  }
+*/
 
+  const handleGradeChange = e => {
+    setNewGrade(e.target.value);
+  }
   function addStudentsToList(res){
     studentsRef.current = studentsRef.current.concat(res.data);
     setStudents(studentsRef.current);
   }
 
-  function studentClicked(student){
+  const setGradeClicked = (student) => () =>{
+    var gradeString = newGrade.split('/');
+    var givenPoints = parseFloat(gradeString[0]);
+    var maxPoints = parseFloat(gradeString[1]);
+    var grade = (givenPoints / maxPoints) * 100;
+    console.log(grade);
+    axios.post(`/grades/`, {
+      user_id: student.id,
+      assignment_id: selectedAssignment.assignment_id,
+      grade: grade
+    }).then(res =>{
+      if(res.status === 400){
+        alert(res.statusText);
+      }
+    })
+  }
+
+  const studentClicked = (student) => () =>{
+    //console.log(student.id);
     if(selectedStudent == null){
-      axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.user_id}`)
-      .then(res => setSubmissionsPerStudent(res.data)).catch(console.log);
-      selectedStudent = student;
+      //axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
+      //.then(res => {setSubmissionsPerStudent(res.data)}).catch(console.log);
+      setSubmissionsPerStudent([{file_name: 'file1', url: 'url'}, {file_name: 'file2', url: 'url'}]);
+      setSelectedStudent(student);
+      console.log(submissionsPerStudent);
     }
-    else if(submissionsPerStudent != 0){
-      setSubmissionsPerStudent([]);
-      axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.user_id}`)
-      .then(res => setSubmissionsPerStudent(res.data)).catch(console.log);
-      selectedStudent = student;
-    }
+    else if(selectedStudent != null){
+      if(student.id == selectedStudent.id){
+        setSubmissionsPerStudent([]);
+        setSelectedStudent(null);
+        console.log(submissionsPerStudent);
+      }
+      else{
+        //axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
+        //.then(res => {setSubmissionsPerStudent(res.data)}).catch(console.log);
+        setSubmissionsPerStudent([{file_name: 'file1', url: 'url'}, {file_name: 'file2', url: 'url'}]);
+        setSelectedStudent(student);
+        console.log(submissionsPerStudent);
+      }
+    } 
   }
 
   const handleClose = () => {
@@ -106,28 +144,45 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
         {
           students.map((student) => {
             var name = student.first_name + " " + student.last_name;
+            var id = String(student.id);
 
                     return (<>
-                        <ListItem button={true} onClick={studentClicked}>
-                            <ListItemText primary={name} secondary={student.user_id} />
+                        <ListItem className={classes.items} divider={true} button={true} onClick={studentClicked(student)}>
+                            <ListItemText primary={name} secondary={id} />
+                            <ListItemSecondaryAction>
+                              <Grid
+                              className={classes.items}
+                              container
+                              spacing={5}
+                              direction="row"
+                              justify="space-between"
+                              alignItems="center"
+                              >
+                                
+                                  <TextField className={classes.items} size="small" color="secondary" multiline="true" variant="standard" /*helperText="Given Points/Max Possible"*/ label="Change Grade" value={newGrade} name="changegrade" onChange={handleGradeChange} />
+                               
+                                  <Divider orientation="vertical" flexItem/>
+                                
+                                  <Button size="small" className={classes.items} onClick={setGradeClicked(student)} variant="contained" color="secondary">
+                                    Submit Grade
+                                  </Button>
+                                
+                              </Grid>
+                            </ListItemSecondaryAction>
                         </ListItem>
                         <List className={innerClasses}>
                           {
                             submissionsPerStudent.map((submission) => {
-                            if(submission.user_id == student.user_id){ //Might need to be changed to submission.user_id == selectedStudent.user_id
-                              let submissiondate = moment(submission.time_submitted).local();
-                              submissiondate = submissiondate.format('[Submitted on] MM-DD-YY [at] h:mm A');
+                            if(selectedStudent.id == student.id){ //Might need to be changed to submission.user_id == selectedStudent.user_id
                             return(<>
-                              <ListItem>
-                                <ListItemText primary={submissiondate} secondary={'Spot for File'}/>
+                              <ListItem divider={true}>
+                                <ListItemText primary={submission.file_name} secondary={submission.url}/>
                               </ListItem>
-                              <Divider />
                             </>);
                             }
                             })
                           } 
                         </List>
-                        <Divider />
                     </>);
                 })
             }
