@@ -86,11 +86,11 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
     var gradeString = newGrade.split('/');
     var givenPoints = parseFloat(gradeString[0]);
     var maxPoints = parseFloat(gradeString[1]);
-    var grade = (givenPoints / maxPoints) * 100;
+    var grade = (givenPoints / maxPoints) * 100.0;
     console.log(grade);
     axios.post(`/grades/`, {
-      user_id: student.id,
-      assignment_id: selectedAssignment.assignment_id,
+      userID: student.id,
+      assignmentID: selectedAssignment.assignment_id,
       grade: grade
     }).then(res =>{
       if(res.status === 400){
@@ -102,9 +102,9 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   const studentClicked = (student) => () =>{
     //console.log(student.id);
     if(selectedStudent == null){
-      //axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
-      //.then(res => {setSubmissionsPerStudent(res.data)}).catch(console.log);
-      setSubmissionsPerStudent([{file_name: 'file1', url: 'url'}, {file_name: 'file2', url: 'url'}]);
+      axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
+      .then(res => {setSubmissionsPerStudent(res.data)}).catch(console.log);
+      //setSubmissionsPerStudent([{file_name: 'file1', url: 'url'}, {file_name: 'file2', url: 'url'}]);
       setSelectedStudent(student);
       console.log(submissionsPerStudent);
     }
@@ -115,9 +115,9 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
         console.log(submissionsPerStudent);
       }
       else{
-        //axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
-        //.then(res => {setSubmissionsPerStudent(res.data)}).catch(console.log);
-        setSubmissionsPerStudent([{file_name: 'file1', url: 'url'}, {file_name: 'file2', url: 'url'}]);
+        axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
+        .then(res => {setSubmissionsPerStudent(res.data)}).catch(console.log);
+        //setSubmissionsPerStudent([{file_name: 'file1', url: 'url'}, {file_name: 'file2', url: 'url'}]);
         setSelectedStudent(student);
         console.log(submissionsPerStudent);
       }
