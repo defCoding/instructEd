@@ -108,7 +108,8 @@ app.post('/grades/', withDuoAuth, db.addGrade);
 app.put('/assignment_files', withDuoAuth, db.approveAssignmentFile);
 app.put('/course_files', withDuoAuth, db.approveCourseFile);
 app.put('/course_videos', withDuoAuth, db.approveCourseVideo);
-app.get('/search/users/:query', withDuoAuth, db.searchUsers);
+app.get('/search/users/:query/filter/:role', withDuoAuth, db.searchUsers);
+app.get('/search/courses/:query', withDuoAuth, db.searchCourses);
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));

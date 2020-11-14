@@ -1262,7 +1262,23 @@ const approveAssignmentFile = (req, res) => {
 
 const searchUsers = (req, res) => {
   const query = req.params.query;
-  const sql = `SELECT id, first_name, last_name, email FROM Users WHERE CONCAT(first_name, ' ', last_name) ILIKE '%$1%';`;
+  const role = req.params.role.toLowerCase();
+  const sql = `SELECT id, first_name, last_name, email FROM Users WHERE CONCAT(first_name, ' ', last_name) ILIKE '%$1%' ${role != '' ? 'AND role=$2' : ''};`;
+  const values = [query, role];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send(result.rows);
+    }
+  });
+}
+
+const searchCourses = (req, res) => {
+  const query = req.params.query;
+  const sql = `SELECT * FROM Courses WHERE course_name ILIKE '%$1%';`;
   const values = [query];
 
   client.query(sql, values, (err, result) => {
@@ -1319,5 +1335,6 @@ module.exports = {
   approveAssignmentFile,
   approveCourseFile,
   approveCourseVideo,
-  searchUsers
+  searchUsers,
+  searchCourses
 };
