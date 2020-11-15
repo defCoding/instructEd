@@ -134,12 +134,10 @@ export default function Search() {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
-    console.log(event.target.value);
   }
 
   const handleSearchChange = (event) => {
       setValue(event.target.value);
-      console.log(event.target.value);
   }
 
   return (
