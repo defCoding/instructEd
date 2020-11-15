@@ -173,7 +173,8 @@ function GradingDialog({selectedStudent, selectedAssignment, open, setOpen}){
     studentName = selectedStudent.first_name + " " + selectedStudent.last_name;
   }
 
-const handleClose = () => {  
+const handleClose = () => {
+  setNewGrade('');  
   setOpen(false);
 };
 
@@ -195,6 +196,7 @@ const setGradeClicked = (student) => () =>{
     if(res.status === 400){
       alert(res.statusText);
     }
+    setNewGrade('');
   })
 }
 

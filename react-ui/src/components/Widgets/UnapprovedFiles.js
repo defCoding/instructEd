@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Button, List, ListItemText, ListItemSecondaryAction, ListItem, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
+import { Button, List, ListItemText, ListItemSecondaryAction, ListItem, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@material-ui/core'
 
 export default function UnapprovedFiles(){
     const [files, setFiles] = useState(["File"]); //Will be [] after testing
     const [open, setOpen] = React.useState(false);
     const [file, setFile] = useState(null);
+    const [fOpen, setFopen] = React.useState(false);
     const filesRef = useRef([]);
     useEffect(() => {
         //Place for get request
@@ -16,27 +17,32 @@ export default function UnapprovedFiles(){
         setFiles(filesRef.current);
     }
 
-    function viewBtnClicked(){
-        //If a video file load the video in the video player
-        //If not a video file then download the file for viewing
-    }
-
-    function fileListItemClicked(filelistitem){
-        //Bring up dialog that gives the option to approve/disapprove of the file's upload
+    const viewBtnClicked =(filelistitem) => () => {
         setOpen(true);
         setFile(filelistitem);
     }
+
+    //function fileListItemClicked(filelistitem){
+        //Bring up dialog that gives the option to approve/disapprove of the file's upload
+        //setFile(filelistitem);
+        
+    //}
 
     return (
         <div>
             <List>
                 {files.map((file) =>
                     <>
-                        <ListItem onClick={fileListItemClicked} button={true}>
-                            <ListItemText primary={file} secondary={"Uploader/CourseID"} />
+                        <ListItem onClick={() => {
+                        setFopen(true);
+                        setFile(file.file_name);
+                        }} button={true}>
+                            <a href={file.url} target="_blank">
+                                <Typography color='secondary'>{file.file_name}</Typography>
+                            </a>
                             <ListItemSecondaryAction>
                                 <Button onClick={viewBtnClicked} variant="contained" color="primary">
-                                    View
+                                    Approve/Disapprove
                                 </Button>
                             </ListItemSecondaryAction>
 
