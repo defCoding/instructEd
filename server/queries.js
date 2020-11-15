@@ -821,6 +821,34 @@ const getApprovedCourseVideos = (req, res) => {
   });
 }
 
+const getCourseVideos = (req, res) => {
+  const courseID = req.params.courseID;
+
+  const sql = "SELECT * FROM CourseVideos WHERE course_id=$1;"
+  const values = [courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = []; 
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Key: `courses/${courseID}/videos/${row.file_name}`
+        };
+
+        let url = s3.getSignedUrl('getObject', params);
+        data.push({file_name: row.file_name, url: url});
+      }
+
+      res.status(200).send(data);
+    }
+  });
+}
+
 const getUnapprovedCourseVideos = (req, res) => {
   const courseID = req.params.courseID;
 
@@ -910,6 +938,34 @@ const getApprovedAssignmentFiles = (req, res) => {
   });
 }
 
+const getAssignmentFiles = (req, res) => {
+  const assignmentID = req.params.assignmentID;
+
+  const sql = "SELECT * FROM AssignmentFiles WHERE assignment_id=$1;"
+  const values = [assignmentID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = []; 
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Key: `assignments/${assignmentID}/${row.file_name}`
+        };
+
+        let url = s3.getSignedUrl('getObject', params);
+        data.push({file_name: row.file_name, url: url});
+      }
+
+      res.status(200).send(data);
+    }
+  });
+}
+
 const getUnapprovedAssignmentFiles = (req, res) => {
   const assignmentID = req.params.assignmentID;
 
@@ -975,6 +1031,34 @@ const getApprovedCourseFiles = (req, res) => {
   const courseID = req.params.courseID;
 
   const sql = "SELECT * FROM CourseFiles WHERE course_id=$1 and approved;"
+  const values = [courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = []; 
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Key: `courses/${courseID}/files/${row.file_name}`
+        };
+
+        let url = s3.getSignedUrl('getObject', params);
+        data.push({file_name: row.file_name, url: url});
+      }
+
+      res.status(200).send(data);
+    }
+  });
+}
+
+const getCourseFiles = (req, res) => {
+  const courseID = req.params.courseID;
+
+  const sql = "SELECT * FROM CourseFiles WHERE course_id=$1;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -1320,13 +1404,16 @@ module.exports = {
   addLinkSubmission,
   addAssignmentFile,
   addCourseVideo,
+  getCourseVideos,
   getApprovedCourseVideos,
   getUnapprovedCourseVideos,
   addCourseFile,
+  getCourseFiles,
   getApprovedCourseFiles,
   getUnapprovedCourseFiles,
   getCourseStudents,
   getAssignmentSubmissions,
+  getAssignmentFiles,
   getApprovedAssignmentFiles,
   getUnapprovedAssignmentFiles,
   getStudentGrade,
