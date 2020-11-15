@@ -214,26 +214,6 @@ function Navbar(props) {
         <Typography color="secondary" align="left" variant="h6" className={classes.title}>
           instructED
         </Typography>
-        <div className={classes.search}>
-          <div className={classes.searchIcon}>
-            <SearchIcon />
-          </div>
-          <InputBase
-            placeholder="Search…"
-            classes={{
-              root: classes.inputRoot,
-              input: classes.inputInput,
-            }}
-            inputProps={{ 'aria-label': 'search' }}
-          />
-          {groupedOptions.length > 0 ? (
-            <ul className={classes.listbox} {...getListboxProps()}>
-              {groupedOptions.map((option, index) => (
-                <li {...getOptionProps({ option, index })}>{option.title}</li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
         <IconButton
           color="secondary"
           onClick={displayNotifications}

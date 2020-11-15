@@ -86,10 +86,7 @@ export default function Registration(props) {
             <TextField color="secondary" variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
           </Grid>
           <Grid container justify="center">
-            <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Create Account</Button>
-          </Grid>
-          <Grid container justify="center">
-           <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email,picture" callback={responseFacebook} className={classes.extraItemsForm} />
+            <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Register</Button>
           </Grid>
           <Grid container justify="center">
             <MuiLink component={Link} to="/login" color="secondary" variant="body1" className={classes.links}>Already have an account?</MuiLink>
