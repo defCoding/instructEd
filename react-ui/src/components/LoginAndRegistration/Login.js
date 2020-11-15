@@ -86,7 +86,7 @@ export default function Login(props) {
       <Paper className={classes.paperContent}>
         <form className={classes.root}>
           <Grid container justify="center">
-            <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Login</Typography>
+            <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Sign in to your account</Typography>
           </Grid>
           <Grid container justify="center">
             <TextField color="secondary" variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
