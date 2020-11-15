@@ -1263,7 +1263,7 @@ const approveAssignmentFile = (req, res) => {
 const searchUsers = (req, res) => {
   const query = req.params.query;
   const role = req.params.role.toLowerCase();
-  const sql = `SELECT id, first_name, last_name, email FROM Users WHERE CONCAT(first_name, ' ', last_name) ILIKE '%$1%' ${role != '' ? 'AND role=$2' : ''};`;
+  const sql = `SELECT id, main_role, first_name, last_name, email FROM Users WHERE CONCAT(first_name, ' ', last_name) ILIKE '%$1%' ${role != '' ? 'AND role=$2' : ''};`;
   const values = [query, role];
 
   client.query(sql, values, (err, result) => {
