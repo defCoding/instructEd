@@ -24,9 +24,6 @@ function DisplaySearchResults(props) {
     return (
       <table border="2" width="100%">
         <tr>
-          <th>All Users</th>
-        </tr>
-        <tr>
           <th>ID</th>
           <th>Department</th>
           <th>Number</th>
@@ -50,9 +47,6 @@ function DisplaySearchResults(props) {
     return (
       <table border="2" width="100%">
         <tr>
-          <th>Students</th>
-        </tr>
-        <tr>
           <th>ID</th>
           <th>Department</th>
           <th>Number</th>
@@ -75,9 +69,6 @@ function DisplaySearchResults(props) {
   else if (props.filter === "Instructors") {
     return (
       <table border="2" width="100%">
-        <tr>
-          <th>Instructors</th>
-        </tr>
         <tr>
           <th>ID</th>
           <th>Department</th>
@@ -103,9 +94,6 @@ function DisplaySearchResults(props) {
   else if (props.filter === "Classes") {
     return (
       <table border="2" width="100%">
-        <tr>
-          <th>Classes</th>
-        </tr>
         <tr>
           <th>ID</th>
           <th>Department</th>
@@ -186,7 +174,7 @@ export default function Search() {
         </FormControl>
       </Grid>
       <Grid item xs="12">
-        <Typography className={classes.items}>Search Results</Typography>
+        <Typography className={classes.items}>{filter}</Typography>
       </Grid>
       <Grid item xs="12">
         <DisplaySearchResults filter={filter} value={value} />
