@@ -28,13 +28,21 @@ function DisplaySearchResults(props) {
         </tr>
         <tr>
           <th>ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
+          <th>Department</th>
+          <th>Number</th>
+          <th>Name</th>
+          <th>Term</th>
         </tr>
-        <tr>
-          <td><Typography>{props.value}</Typography></td>
-        </tr>
+        {top100Films.map((option) => {
+          if (option.title.toLowerCase().includes(props.value.toLowerCase()) && props.value.length > 1) {
+            return (
+              <tr>
+                <td>{option.title}</td>
+                <td>{option.year}</td>
+              </tr>
+            )
+          }
+        })}
       </table>
     );
   }
@@ -46,13 +54,21 @@ function DisplaySearchResults(props) {
         </tr>
         <tr>
           <th>ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
+          <th>Department</th>
+          <th>Number</th>
+          <th>Name</th>
+          <th>Term</th>
         </tr>
-        <tr>
-          <td><Typography>{props.value}</Typography></td>
-        </tr>
+        {top100Films.map((option) => {
+          if (option.title.toLowerCase().includes(props.value.toLowerCase()) && props.value.length > 1) {
+            return (
+              <tr>
+                <td>{option.title}</td>
+                <td>{option.year}</td>
+              </tr>
+            )
+          }
+        })}
       </table>
     );
   }
@@ -64,13 +80,23 @@ function DisplaySearchResults(props) {
         </tr>
         <tr>
           <th>ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
+          <th>Department</th>
+          <th>Number</th>
+          <th>Name</th>
+          <th>Term</th>
+          <th>title</th>
+          <th>year</th>
         </tr>
-        <tr>
-          <td><Typography>{props.value}</Typography></td>
-        </tr>
+        {top100Films.map((option) => {
+          if (option.title.toLowerCase().includes(props.value.toLowerCase()) && props.value.length > 1) {
+            return (
+              <tr>
+                <td>{option.title}</td>
+                <td>{option.year}</td>
+              </tr>
+            )
+          }
+        })}
       </table>
     );
   }
@@ -90,7 +116,7 @@ function DisplaySearchResults(props) {
           <th>year</th>
         </tr>
         {top100Films.map((option) => {
-          if (option.title.toLowerCase().includes(props.value.toLowerCase())) {
+          if (option.title.toLowerCase().includes(props.value.toLowerCase()) && props.value.length > 1) {
             return (
               <tr>
                 <td>{option.title}</td>
