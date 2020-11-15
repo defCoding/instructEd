@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { InputLabel, FormControl, Select, Paper, TextField, Grid, MenuItem, Menu } from '@material-ui/core';
+import { InputLabel, FormControl, Select, Paper, TextField, Grid, MenuItem, Menu, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -23,51 +23,48 @@ const useStyle = makeStyles(theme => ({
 export default function Search() {
   const classes = useStyle();
   const blankSearch = {search: '', filter: ''};
-  const [values, setValues] = useState(blankSearch);
+  const [filter, setFilter] = useState("All Users");
 
-  const handleInputChange = e => {
-    const {name, value} = e.target;
-    setValues({
-      ...values,
-      [name] : value
-    });
+  const handleFilterChange = e => {
+    setFilter(e.target.value);
   }
 
   return (
-    <Paper className="root">
-      <form>
-        <Grid height="100%" spacing={1}>
-          <Grid item xs="12">
-          <div style={{ width: 300 }}>
-            <Autocomplete
-              id="free-solo-demo"
-              freeSolo
-              options={top100Films.map((option) => option.title)}
-              renderInput={(params) => (
-                <TextField {...params} label="Search..." margin="normal" variant="outlined" onChange={handleInputChange} className={classes.items} />
-              )}
-            />
-            </div>
-          </Grid>
-          <FormControl color="secondary" variant="outlined" className={classes.items}>
-            <InputLabel>Filter</InputLabel>
-            <Select
-                color="secondary"
-                style={{ width: 150 }}
-                onChange={handleInputChange}
-                label="Filter"
-                name="filter"
-              >
-                <MenuItem value='Classes'>Classes</MenuItem>
-                <MenuItem value='Students'>Students</MenuItem>
-                <MenuItem value='Instructors'>Instructors</MenuItem>
-                <MenuItem value='Assignments'>Assignments</MenuItem>
-                <MenuItem value='Announcements'>Announcements</MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
-      </form>
-    </Paper>
+    <Grid height="100%" spacing={1}>
+      <Grid item xs="12">
+        <div style={{ width: 300 }}>
+          <Autocomplete
+            id="free-solo-demo"
+            freeSolo
+            options={top100Films.map((option) => option.title)}
+            renderInput={(params) => (
+              <TextField {...params} label="Search..." margin="normal" variant="outlined" className={classes.items} />
+            )}
+          />
+        </div>
+      </Grid>
+      <Grid item xs="12">
+        <FormControl color="secondary" variant="outlined" className={classes.items}>
+          <InputLabel>Filter</InputLabel>
+          <Select
+              color="secondary"
+              style={{ width: 150 }}
+              onChange={handleFilterChange}
+              label="Filter"
+              name="filter"
+              required
+            >
+              <MenuItem value='Classes'>Classes</MenuItem>
+              <MenuItem value='Students'>Students</MenuItem>
+              <MenuItem value='Instructors'>Instructors</MenuItem>
+              <MenuItem value='All Users'>All Users</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
+      <Grid item xs="12">
+        <Typography className={classes.items}>Search Results</Typography>
+      </Grid>
+    </Grid>
   );
 }
 
