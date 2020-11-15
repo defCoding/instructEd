@@ -22,27 +22,92 @@ const useStyle = makeStyles(theme => ({
 function DisplaySearchResults(props) {
   if (props.filter === "All Users") {
     return (
-      <Typography>All Users</Typography>
+      <table border="2" width="100%">
+        <tr>
+          <th>All Users</th>
+        </tr>
+        <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+        </tr>
+        <tr>
+          <td><Typography>{props.value}</Typography></td>
+        </tr>
+      </table>
     );
   }
   else if (props.filter === "Students") {
     return (
-      <Typography>Students</Typography>
+      <table border="2" width="100%">
+        <tr>
+          <th>Students</th>
+        </tr>
+        <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+        </tr>
+        <tr>
+          <td><Typography>{props.value}</Typography></td>
+        </tr>
+      </table>
     );
   }
   else if (props.filter === "Instructors") {
     return (
-      <Typography>Instructors</Typography>
+      <table border="2" width="100%">
+        <tr>
+          <th>Instructors</th>
+        </tr>
+        <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+        </tr>
+        <tr>
+          <td><Typography>{props.value}</Typography></td>
+        </tr>
+      </table>
     );
   }
   else if (props.filter === "Classes") {
     return (
-      <Typography>Classes</Typography>
+      <table border="2" width="100%">
+        <tr>
+          <th>Classes</th>
+        </tr>
+        <tr>
+          <th>ID</th>
+          <th>Department</th>
+          <th>Number</th>
+          <th>Name</th>
+          <th>Term</th>
+          <th>title</th>
+          <th>year</th>
+        </tr>
+        {top100Films.map((option) => {
+          if (option.title.toLowerCase().includes(props.value.toLowerCase())) {
+            return (
+              <tr>
+                <td>{option.title}</td>
+                <td>{option.year}</td>
+              </tr>
+            )
+          }
+        })}
+      </table>
     );
   }
   else {
     return (
-      <Typography>error</Typography>
+      <>
+        <Typography>error</Typography>
+        <Typography>{props.value}</Typography>
+      </>
     );
   }
 }
@@ -51,34 +116,28 @@ function DisplaySearchResults(props) {
 export default function Search() {
   const classes = useStyle();
   const [filter, setFilter] = React.useState("All Users");
-  const [value, setValue] = React.useState(null);
+  const [value, setValue] = React.useState("");
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
     console.log(event.target.value);
   }
 
-  const handleSelectedItem = (event) => {
-    console.log(event.target.value);
+  const handleSearchChange = (event) => {
+      setValue(event.target.value);
+      console.log(event.target.value);
   }
 
   return (
     <Grid height="100%" spacing={1}>
       <Grid item xs="12">
         <div style={{ width: 300 }}>
-          <Autocomplete
-            value={value}
-            onChange={(event, newValue) => {
-              setValue(newValue);
-              console.log(newValue);
-            }}
-            id="free-solo-demo"
-            freeSolo
-            options={top100Films.map((option) => option.title)}
-            renderInput={(params) => (
-              <TextField {...params} label="Search..." margin="normal" variant="outlined" className={classes.items} />
-            )}
-          />
+          <TextField 
+            onChange={handleSearchChange}
+            label="Search..." 
+            margin="normal" 
+            variant="outlined" 
+            className={classes.items} />
         </div>
       </Grid>
       <Grid item xs="12">
@@ -104,7 +163,7 @@ export default function Search() {
         <Typography className={classes.items}>Search Results</Typography>
       </Grid>
       <Grid item xs="12">
-        <DisplaySearchResults filter={filter} />
+        <DisplaySearchResults filter={filter} value={value} />
       </Grid>
     </Grid>
   );
