@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Dialog, AppBar, Toolbar, IconButton, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, TextField, Divider, Button, Grid } from '@material-ui/core';
+import { Dialog, AppBar, Toolbar, IconButton, Typography, List, ListItem, ListItemText, ListItemSecondaryAction, TextField, DialogContentText, Button, Grid, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import axios from 'axios';
 import moment from 'moment';
@@ -56,8 +56,8 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   const studentsRef = useRef([]);
   const submissionsRef = useRef([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [gOpen, setGopen] = React.useState(false);
   const [submissionsPerStudent, setSubmissionsPerStudent] = useState([]);
-  const [newGrade, setNewGrade] = useState('');
 
   useEffect(() => {
     //Place for get request to retrieve all users who are students of this class
@@ -67,43 +67,23 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
       })
       .catch(console.log);
   }, []);
-  /*
+  
   function addSubmissionsToList(res){
     submissionsRef.current = submissionsRef.current.concat(res.data);
     setSubmissionsPerStudent(submissionsRef.current);
   }
-*/
 
-  const handleGradeChange = e => {
-    setNewGrade(e.target.value);
-  }
+
   function addStudentsToList(res){
     studentsRef.current = studentsRef.current.concat(res.data);
     setStudents(studentsRef.current);
   }
 
-  const setGradeClicked = (student) => () =>{
-    var gradeString = newGrade.split('/');
-    var givenPoints = parseFloat(gradeString[0]);
-    var maxPoints = parseFloat(gradeString[1]);
-    var grade = (givenPoints / maxPoints) * 100.0;
-    console.log(grade);
-    axios.post(`/grades/`, {
-      userID: student.id,
-      assignmentID: selectedAssignment.assignment_id,
-      grade: grade
-    }).then(res =>{
-      if(res.status === 400){
-        alert(res.statusText);
-      }
-    })
-  }
-
   const studentClicked = (student) => () =>{
-    //console.log(student.id);
+    console.log(student);
     if(selectedStudent == null){
       axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
-      .then(res => {setSubmissionsPerStudent(res.data)}).catch(console.log);
+      .then(res => {addSubmissionsToList(res)}).catch(console.log);
       //setSubmissionsPerStudent([{file_name: 'file1', url: 'url'}, {file_name: 'file2', url: 'url'}]);
       setSelectedStudent(student);
       console.log(submissionsPerStudent);
@@ -116,12 +96,18 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
       }
       else{
         axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
-        .then(res => {setSubmissionsPerStudent(res.data)}).catch(console.log);
+        .then(res => {addSubmissionsToList(res)}).catch(console.log);
         //setSubmissionsPerStudent([{file_name: 'file1', url: 'url'}, {file_name: 'file2', url: 'url'}]);
         setSelectedStudent(student);
         console.log(submissionsPerStudent);
       }
     } 
+  }
+
+  const gradeClicked = (student) => () => {
+    console.log(student);
+    setSelectedStudent(student);
+    setGopen(true);
   }
 
   const handleClose = () => {
@@ -150,24 +136,12 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
                         <ListItem className={classes.items} divider={true} button={true} onClick={studentClicked(student)}>
                             <ListItemText primary={name} secondary={id} />
                             <ListItemSecondaryAction>
-                              <Grid
-                              className={classes.items}
-                              container
-                              spacing={5}
-                              direction="row"
-                              justify="space-between"
-                              alignItems="center"
-                              >
-                                
-                                  <TextField className={classes.items} size="small" color="secondary" multiline="true" variant="standard" /*helperText="Given Points/Max Possible"*/ label="Change Grade" value={newGrade} name="changegrade" onChange={handleGradeChange} />
-                               
-                                  <Divider orientation="vertical" flexItem/>
-                                
-                                  <Button size="small" className={classes.items} onClick={setGradeClicked(student)} variant="contained" color="secondary">
-                                    Submit Grade
+
+                                  <Button size="small" className={classes.items} onClick={gradeClicked(student)} variant="contained" color="secondary">
+                                    Grade Assignment
                                   </Button>
                                 
-                              </Grid>
+                              
                             </ListItemSecondaryAction>
                         </ListItem>
                         <List className={innerClasses}>
@@ -176,7 +150,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
                             if(selectedStudent.id == student.id){ //Might need to be changed to submission.user_id == selectedStudent.user_id
                             return(<>
                               <ListItem divider={true}>
-                                <ListItemText primary={submission.file_name} secondary={submission.url}/>
+                                <ListItemText primary={submission.file_name} secondary={submission.url}/> 
                               </ListItem>
                             </>);
                             }
@@ -187,6 +161,66 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
                 })
             }
         </List>
+        <GradingDialog selectedStudent={selectedStudent} selectedAssignment={selectedAssignment} open={gOpen} setOpen={setGopen}/>
   </Dialog>
   );
+}
+
+function GradingDialog({selectedStudent, selectedAssignment, open, setOpen}){
+  const [newGrade, setNewGrade] = useState('');
+  var studentName = "";
+  if(selectedStudent != null){
+    studentName = selectedStudent.first_name + " " + selectedStudent.last_name;
+  }
+
+const handleClose = () => {  
+  setOpen(false);
+};
+
+const handleGradeChange = e => {
+  setNewGrade(e.target.value);
+}
+
+const setGradeClicked = (student) => () =>{
+  var gradeString = newGrade.split('/');
+  var givenPoints = parseFloat(gradeString[0]);
+  var maxPoints = parseFloat(gradeString[1]);
+  var grade = (givenPoints / maxPoints) * 100.0;
+  console.log(grade);
+  axios.post(`/grades/`, {
+    userID: student.id,
+    assignmentID: selectedAssignment.assignment_id,
+    grade: grade
+  }).then(res =>{
+    if(res.status === 400){
+      alert(res.statusText);
+    }
+  })
+}
+
+
+return (
+  <Dialog
+      open = {open}
+      onClose = {handleClose}
+      aria-labelledby="grade-dialog-title"
+      aria-describedby="grade-dialog-assignment" //will be filled by actual filename variable
+  >
+      <DialogTitle id="grade-dialog-title">{studentName}</DialogTitle>
+      <DialogContent>
+          <DialogContentText id="grade-dialog-assignment">
+              {selectedAssignment.assignment_name}
+          </DialogContentText>
+          <TextField size="small" color="secondary" multiline="true" variant="standard" helperText="Given Points/Max Possible" label="Change Grade" value={newGrade} name="changegrade" onChange={handleGradeChange} />
+      </DialogContent>
+      <DialogActions>
+          <Button onClick={setGradeClicked(selectedStudent)} color="primary">
+              Submit Grade
+          </Button>
+          <Button onClick={handleClose} color="primary">
+              Cancel
+          </Button>
+      </DialogActions>
+  </Dialog>
+);
 }

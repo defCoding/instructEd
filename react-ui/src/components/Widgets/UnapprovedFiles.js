@@ -78,8 +78,8 @@ function ApprovalDialog({selectedFile, open, setOpen}){
     <Dialog
         open = {open}
         onClose = {handleClose}
-        aria-labelled-by="approve-dialog-title"
-        aria-described-by="approve-dialog-filename" //will be filled by actual filename variable
+        aria-labelledby="approve-dialog-title"
+        aria-describedby="approve-dialog-filename" //will be filled by actual filename variable
     >
         <DialogTitle id="approve-dialog-title">{"Approve/Disapprove"}</DialogTitle>
         <DialogContent>
