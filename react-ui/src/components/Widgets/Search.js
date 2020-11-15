@@ -19,14 +19,47 @@ const useStyle = makeStyles(theme => ({
   },
 }))
 
+function DisplaySearchResults(props) {
+  if (props.filter === "All Users") {
+    return (
+      <Typography>All Users</Typography>
+    );
+  }
+  else if (props.filter === "Students") {
+    return (
+      <Typography>Students</Typography>
+    );
+  }
+  else if (props.filter === "Instructors") {
+    return (
+      <Typography>Instructors</Typography>
+    );
+  }
+  else if (props.filter === "Classes") {
+    return (
+      <Typography>Classes</Typography>
+    );
+  }
+  else {
+    return (
+      <Typography>error</Typography>
+    );
+  }
+}
+
 
 export default function Search() {
   const classes = useStyle();
-  const blankSearch = {search: '', filter: ''};
-  const [filter, setFilter] = useState("All Users");
+  const [filter, setFilter] = React.useState("All Users");
+  const [value, setValue] = React.useState(null);
 
-  const handleFilterChange = e => {
-    setFilter(e.target.value);
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+    console.log(event.target.value);
+  }
+
+  const handleSelectedItem = (event) => {
+    console.log(event.target.value);
   }
 
   return (
@@ -34,6 +67,11 @@ export default function Search() {
       <Grid item xs="12">
         <div style={{ width: 300 }}>
           <Autocomplete
+            value={value}
+            onChange={(event, newValue) => {
+              setValue(newValue);
+              console.log(newValue);
+            }}
             id="free-solo-demo"
             freeSolo
             options={top100Films.map((option) => option.title)}
@@ -50,6 +88,7 @@ export default function Search() {
               color="secondary"
               style={{ width: 150 }}
               onChange={handleFilterChange}
+              value={filter}
               label="Filter"
               name="filter"
               required
@@ -63,6 +102,9 @@ export default function Search() {
       </Grid>
       <Grid item xs="12">
         <Typography className={classes.items}>Search Results</Typography>
+      </Grid>
+      <Grid item xs="12">
+        <DisplaySearchResults filter={filter} />
       </Grid>
     </Grid>
   );
