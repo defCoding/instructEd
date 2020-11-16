@@ -1,13 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Button, List, ListItemText, ListItemSecondaryAction, ListItem, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
+import { Button, List, ListItemText, ListItemSecondaryAction, ListItem, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@material-ui/core'
 
 export default function UnapprovedFiles(){
-    const [files, setFiles] = useState(["File"]); //Will be [] after testing
+    const [files, setFiles] = useState([]); //Will be [] after testing
     const [open, setOpen] = React.useState(false);
     const [file, setFile] = useState(null);
+    const [fOpen, setFopen] = React.useState(false);
+    const filesRef = useRef([]);
     useEffect(() => {
-        //Place for get request
+        //Get request for course files
+        axios.get(`/course_files/unapproved/${''}`)
+        .then(res => {getFilesFromResponse(res)})
+        .catch(console.log);
+
+        //Get request for assignment files
+        axios.get(`/assignment_files/unapproved/${''}`)
+        .then(res => {getFilesFromResponse(res)})
+        .catch(console.log);
+
+        //Get request for course videos
+        axios.get(`/course_videos/unapproved/${''}`)
+        .then(res => {getFilesFromResponse(res)})
+        .catch(console.log);
+
     });
 
     function getFilesFromResponse(res){
@@ -15,27 +31,32 @@ export default function UnapprovedFiles(){
         setFiles(filesRef.current);
     }
 
-    function viewBtnClicked(){
-        //If a video file load the video in the video player
-        //If not a video file then download the file for viewing
-    }
-
-    function fileListItemClicked(filelistitem){
-        //Bring up dialog that gives the option to approve/disapprove of the file's upload
+    const viewBtnClicked =(filelistitem) => () => {
         setOpen(true);
         setFile(filelistitem);
     }
+
+    //function fileListItemClicked(filelistitem){
+        //Bring up dialog that gives the option to approve/disapprove of the file's upload
+        //setFile(filelistitem);
+        
+    //}
 
     return (
         <div>
             <List>
                 {files.map((file) =>
                     <>
-                        <ListItem onClick={fileListItemClicked} button={true}>
-                            <ListItemText primary={file} secondary={"Uploader/CourseID"} />
+                        <ListItem onClick={() => {
+                        setFopen(true);
+                        setFile(file.file_name);
+                        }} button={true}>
+                            <a href={file.url} target="_blank">
+                                <Typography color='secondary'>{file.file_name}</Typography>
+                            </a>
                             <ListItemSecondaryAction>
                                 <Button onClick={viewBtnClicked} variant="contained" color="primary">
-                                    View
+                                    Approve/Disapprove
                                 </Button>
                             </ListItemSecondaryAction>
 
@@ -77,8 +98,8 @@ function ApprovalDialog({selectedFile, open, setOpen}){
     <Dialog
         open = {open}
         onClose = {handleClose}
-        aria-labelled-by="approve-dialog-title"
-        aria-described-by="approve-dialog-filename" //will be filled by actual filename variable
+        aria-labelledby="approve-dialog-title"
+        aria-describedby="approve-dialog-filename" //will be filled by actual filename variable
     >
         <DialogTitle id="approve-dialog-title">{"Approve/Disapprove"}</DialogTitle>
         <DialogContent>

@@ -24,7 +24,7 @@ const client = new Client({
 /*
 const client = new Client({
   host: 'localhost',
-  database: 'demo', user: 'demo'
+  database: 'demo', user: 'demo', password: 'demo', port: '5433'
 });
 */
 
@@ -48,8 +48,12 @@ const uploadFile = (buffer, name) => {
   return s3.upload(params).promise();
 };
 
-client.connect(() => {
-  console.log("Connected to database.");
+client.connect((err) => {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log('Connected to database.');
+  }
 });
 
 /**
@@ -60,7 +64,7 @@ const createUser = ((req, res) => {
   const info = req.body;
 
   const sql = "INSERT INTO Users VALUES(default, default, $1, $2, $3, crypt($4, gen_salt('bf')), false);";
-  const values = [info.email, info.firstName, info.lastName, info.password];
+  const values = [info.email.trim(), info.firstName.trim(), info.lastName.trim(), info.password];
 
   client.query(sql, values, (err, result) => {
     if (err) {
@@ -158,7 +162,7 @@ const forgotPassword = ((req, res) => {
       });
     } else {
       const id = result.rows[0]['id'];
-      token = await createPasswordResetToken(id);
+      var token = await createPasswordResetToken(id);
 
       if (token === -1) {
         res.status(400).send('Something went wrong.');
@@ -789,10 +793,66 @@ const addCourseVideo = (req, res) => {
   });
 };
 
+const getApprovedCourseVideos = (req, res) => {
+  const courseID = req.params.courseID;
+
+  const sql = "SELECT * FROM CourseVideos WHERE $1='' OR course_id=$1 and approved;"
+  const values = [courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = []; 
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Key: `courses/${courseID}/videos/${row.file_name}`
+        };
+
+        let url = s3.getSignedUrl('getObject', params);
+        data.push({file_name: row.file_name, url: url});
+      }
+
+      res.status(200).send(data);
+    }
+  });
+}
+
 const getCourseVideos = (req, res) => {
   const courseID = req.params.courseID;
 
-  const sql = "SELECT * FROM CourseVideos WHERE course_id=$1;"
+  const sql = "SELECT * FROM CourseVideos WHERE $1='' OR course_id=$1;"
+  const values = [courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = []; 
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Key: `courses/${courseID}/videos/${row.file_name}`
+        };
+
+        let url = s3.getSignedUrl('getObject', params);
+        data.push({file_name: row.file_name, url: url});
+      }
+
+      res.status(200).send(data);
+    }
+  });
+}
+
+const getUnapprovedCourseVideos = (req, res) => {
+  const courseID = req.params.courseID;
+
+  const sql = "SELECT * FROM CourseVideos WHERE $1='' OR course_id=$1 and not approved;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -850,10 +910,66 @@ const addAssignmentFile = (req, res) => {
   });
 };
 
+const getApprovedAssignmentFiles = (req, res) => {
+  const assignmentID = req.params.assignmentID;
+
+  const sql = "SELECT * FROM AssignmentFiles WHERE $1='' OR assignment_id=$1 and approved;"
+  const values = [assignmentID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = []; 
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Key: `assignments/${assignmentID}/${row.file_name}`
+        };
+
+        let url = s3.getSignedUrl('getObject', params);
+        data.push({file_name: row.file_name, url: url});
+      }
+
+      res.status(200).send(data);
+    }
+  });
+}
+
 const getAssignmentFiles = (req, res) => {
   const assignmentID = req.params.assignmentID;
 
-  const sql = "SELECT * FROM AssignmentFiles WHERE assignment_id=$1;"
+  const sql = "SELECT * FROM AssignmentFiles WHERE $1='' OR assignment_id=$1;"
+  const values = [assignmentID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = []; 
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Key: `assignments/${assignmentID}/${row.file_name}`
+        };
+
+        let url = s3.getSignedUrl('getObject', params);
+        data.push({file_name: row.file_name, url: url});
+      }
+
+      res.status(200).send(data);
+    }
+  });
+}
+
+const getUnapprovedAssignmentFiles = (req, res) => {
+  const assignmentID = req.params.assignmentID;
+
+  const sql = "SELECT * FROM AssignmentFiles WHERE $1='' OR assignment_id=$1 and not approved;"
   const values = [assignmentID];
 
   client.query(sql, values, (err, result) => {
@@ -911,10 +1027,66 @@ const addCourseFile = (req, res) => {
   });
 };
 
+const getApprovedCourseFiles = (req, res) => {
+  const courseID = req.params.courseID;
+
+  const sql = "SELECT * FROM CourseFiles WHERE $1='' OR course_id=$1 and approved;"
+  const values = [courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = []; 
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Key: `courses/${courseID}/files/${row.file_name}`
+        };
+
+        let url = s3.getSignedUrl('getObject', params);
+        data.push({file_name: row.file_name, url: url});
+      }
+
+      res.status(200).send(data);
+    }
+  });
+}
+
 const getCourseFiles = (req, res) => {
   const courseID = req.params.courseID;
 
-  const sql = "SELECT * FROM CourseFiles WHERE course_id=$1;"
+  const sql = "SELECT * FROM CourseFiles WHERE $1='' OR course_id=$1;"
+  const values = [courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      const rows = result.rows;
+      const data = []; 
+
+      for (const row of rows) {
+        let params = {
+          Bucket: "instructed",
+          Key: `courses/${courseID}/files/${row.file_name}`
+        };
+
+        let url = s3.getSignedUrl('getObject', params);
+        data.push({file_name: row.file_name, url: url});
+      }
+
+      res.status(200).send(data);
+    }
+  });
+}
+
+const getUnapprovedCourseFiles = (req, res) => {
+  const courseID = req.params.courseID;
+
+  const sql = "SELECT * FROM CourseFiles WHERE $1='' OR course_id=$1 and not approved;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -1045,9 +1217,17 @@ const getAssignmentSubmissions = (req, res) => {
               let url = s3.getSignedUrl('getObject', p);
               let regex = /\/[^\/]+\..+/g
               let filename = file.Key.match(regex)[0].substring(1);
-              let objectData = {file_name: filename, url: url};
+              let objectData = {file_name: filename, url: url, time_submitted: row.time_submitted};
               // Not the greatest, but not sure why I'm getting duplicates.
-              if (!data.includes(objectData)) {
+              let contains = false;
+              for (let i = 0; i < data.length; i++) {
+                if (data[i].filename == objectData.filename) {
+                  contains = true;
+                  break;
+                }
+              }
+
+              if (!contains) {
                 data.push(objectData);
               }
             }
@@ -1063,7 +1243,7 @@ const getAssignmentSubmissions = (req, res) => {
           const rows = result.rows;
 
           for (const row of rows) {
-            data.push({file_name: row.link, url: row.link});
+            data.push({file_name: row.link, url: row.link, time_submitted: row.time_submitted});
           }
 
           res.status(200).send(data);
@@ -1094,6 +1274,117 @@ const getRoleInCourse = (req, res) => {
   });
 }
 
+const addAssignment = (req, res) => {
+  const info = req.body;
+  console.log(info);
+  const date = moment(info.date).format('YYYY-MM-DD HH:mm:ss');
+  const name = info.assignmentName;
+  const desc = info.description;
+  const courseID = info.courseID;
+
+  const sql = `INSERT INTO Assignments VALUES (default, $1, $2, $3, $4, '{}');`
+  const values = [name, desc, courseID, date];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(201).send('Assignment added.');
+    }
+  });
+}
+
+const approveCourseFile = (req, res) => {
+  const info = req.body;
+  const courseID = info.courseID;
+  const fileName = info.fileName;
+  const isApproved = info.isApproved;
+
+  const sql = `UPDATE CourseFiles SET approved=$1 WHERE course_id=$2 AND file_name=$3;`;
+  const values = [isApproved, courseID, fileName];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send();
+    }
+  });
+}
+
+const approveCourseVideo = (req, res) => {
+  const info = req.body;
+  const courseID = info.courseID;
+  const fileName = info.fileName;
+  const isApproved = info.isApproved;
+
+  const sql = `UPDATE CourseVideos SET approved=$1 WHERE course_id=$2 AND file_name=$3;`;
+  const values = [isApproved, courseID, fileName];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send();
+    }
+  });
+}
+
+const approveAssignmentFile = (req, res) => {
+  const info = req.body;
+  const assignmentID = info.assignmentID;
+  const fileName = info.fileName;
+  const isApproved = info.isApproved;
+
+  const sql = `UPDATE AssignmentFiles SET approved=$1 WHERE assignment_id=$2 AND file_name=$3;`;
+  const values = [isApproved, assignmentID, fileName];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send();
+    }
+  });
+}
+
+const searchUsers = (req, res) => {
+  let query = req.params.query;
+  query = `%${query}%`;
+  const role = req.params.role.toLowerCase();
+  const sql = `SELECT id, main_role, first_name, last_name, email FROM Users WHERE (CONCAT(first_name, ' ', last_name) ILIKE $1 OR email ILIKE $1) ${role != 'any' ? 'AND main_role=$2' : 'AND $2=$2'};`;
+  const values = [query, role];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send(result.rows);
+    }
+  });
+}
+
+const searchCourses = (req, res) => {
+  let query = req.params.query;
+  query = `%${query}%`;
+  const sql = `SELECT * FROM Courses WHERE course_name ILIKE $1;`;
+  const values = [query];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send(result.rows);
+    }
+  });
+}
+
 
 module.exports = {
   createUser,
@@ -1113,6 +1404,7 @@ module.exports = {
   getAssignmentsByDate,
   getUpcomingAssignments,
   getAssignment,
+  addAssignment,
   getCourse,
   addCourse,
   addInstructorToCourse,
@@ -1123,12 +1415,23 @@ module.exports = {
   addAssignmentFile,
   addCourseVideo,
   getCourseVideos,
+  getApprovedCourseVideos,
+  getUnapprovedCourseVideos,
   addCourseFile,
   getCourseFiles,
+  getApprovedCourseFiles,
+  getUnapprovedCourseFiles,
   getCourseStudents,
   getAssignmentSubmissions,
   getAssignmentFiles,
+  getApprovedAssignmentFiles,
+  getUnapprovedAssignmentFiles,
   getStudentGrade,
   getGrade,
-  addGrade
+  addGrade,
+  approveAssignmentFile,
+  approveCourseFile,
+  approveCourseVideo,
+  searchUsers,
+  searchCourses
 };

@@ -92,13 +92,13 @@ function IsSubmitted({submitted, classes, assignmentID}) {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <SubmissionTab classes={classes} />
+            <SubmissionTab classes={classes} data={{assignmentID}} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <CommentsTab classes={classes} />
+            <CommentsTab classes={classes} data={{assignmentID}} />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <GradeTab classes={classes} />
+            <GradeTab classes={classes} data={{assignmentID}} />
           </TabPanel>
       </Drawer>
     );
@@ -151,7 +151,7 @@ export default function StudentAssignment({selectedAssignment, open, setOpen}) {
     axios.get(`/grades/${selectedAssignment.assignment_id}`)
       .then(res => setGrade(res.data.grade)).catch(console.log);
 
-    axios.get(`/assignment_files/${selectedAssignment.assignment_id}`)
+    axios.get(`/assignment_files/approved/${selectedAssignment.assignment_id}`)
       .then(res => setFiles(res.data)).catch(console.log);
     }, [selectedAssignment]);
 

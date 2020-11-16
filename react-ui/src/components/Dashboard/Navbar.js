@@ -2,13 +2,15 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { FormGroup, FormControlLabel, Typography, Switch, Menu, ListItem, MenuItem, Badge, ListItemIcon, IconButton, ListItemText } from '@material-ui/core';
-import { makeStyles, withStyles} from '@material-ui/core/styles';
+import { InputBase, FormGroup, FormControlLabel, Typography, Switch, Menu, ListItem, MenuItem, Badge, ListItemIcon, IconButton, ListItemText } from '@material-ui/core';
+import { fade, makeStyles, withStyles} from '@material-ui/core/styles';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { ThumbDown, ThumbUp, Delete } from '@material-ui/icons';
 import cookieParser from 'cookie-parser';
 import axios from 'axios';
+import SearchIcon from '@material-ui/icons/Search';
+import useAutocomplete from '@material-ui/lab/useAutocomplete';
 
 var notifications = [{"type": "File Upload", "body": "Upload approval"}, 
                         {"type": "Message", "body": "Message notification"},
@@ -51,7 +53,68 @@ const useStyles = makeStyles((theme) => ({
   },
   notificationButton: {
     margin: theme.spacing(2),
-  }
+  },
+  search: {
+    margin: theme.spacing(2),
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginLeft: 0,
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(1),
+      width: 'auto',
+    },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRoot: {
+    color: 'inherit',
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('sm')]: {
+      width: '12ch',
+      '&:focus': {
+        width: '20ch',
+      },
+    },
+  },
+  listbox: {
+    width: 200,
+    margin: 0,
+    padding: 0,
+    zIndex: 1,
+    position: 'absolute',
+    listStyle: 'none',
+    backgroundColor: theme.palette.background.paper,
+    overflow: 'auto',
+    maxHeight: 200,
+    border: '1px solid rgba(0,0,0,.25)',
+    '& li[data-focus="true"]': {
+      backgroundColor: '#4a8df6',
+      color: 'white',
+      cursor: 'pointer',
+    },
+    '& li:active': {
+      backgroundColor: '#2977f5',
+      color: 'white',
+    },
+  },
 }));
 
 function Navbar(props) {
@@ -60,7 +123,7 @@ function Navbar(props) {
   const [darkMode, setDarkMode] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [toggleNotifications, setToggleNotifications] = React.useState(null);
-
+  
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -139,11 +202,6 @@ function Navbar(props) {
         <Typography color="secondary" align="left" variant="h6" className={classes.title}>
           instructED
         </Typography>
-      {/*
-        <FormGroup>
-          <FormControlLabel control={<Switch checked={auth} onChange={handleChange} aria-label="login switch" />} />
-        </FormGroup>
-      */}
         <IconButton
           color="secondary"
           onClick={displayNotifications}
