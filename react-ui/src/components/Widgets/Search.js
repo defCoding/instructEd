@@ -130,7 +130,7 @@ export default function Search() {
   }
 
   const handleSearchChange = (event) => {
-      setValue(event.target.value);
+    setValue(event.target.value);
   }
 
   return (

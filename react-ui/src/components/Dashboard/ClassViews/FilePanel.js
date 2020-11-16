@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, Paper, Typography, Button, TextField } from '@material-ui/core';
+import { Grid, List, ListItem, Paper, Typography, Button, TextField } from '@material-ui/core';
 import FileUpload from "./FileUpload";
 import axios from 'axios';
 
@@ -25,17 +25,56 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function GetFileList(props) {
+  if (props.searchValue === '') {
+    return (
+      <List>
+        {props.fileList.map((file) => (
+          <ListItem button key={file.file_name} onClick={() => {
+            props.setOpen(true);
+            props.setSelectedFile(file.file_name);
+          }}>
+            <a href={file.url} target="_blank">
+            <Typography color='secondary'>{file.file_name}</Typography>
+            </a>
+          </ListItem>
+        ))}
+      </List>
+    );
+  }
+  else {
+    return (
+      <List>
+        {props.fileList.map((file) => {
+          if (file.file_name.toLowerCase().includes(props.searchValue.toLowerCase())) {
+            return (
+              <ListItem button key={file.file_name} onClick={() => {
+                props.setOpen(true);
+                props.setSelectedFile(file.file_name);
+              }}>
+                <a href={file.url} target="_blank">
+                <Typography color='secondary'>{file.file_name}</Typography>
+                </a>
+              </ListItem>
+            );
+          }
+        })}
+      </List>
+    )
+  }
+}
+
 export default function FilePanel({courseID}) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const setOpen = React.useState(false);
   const [uploadOpen, setUploadOpen] = React.useState(false);
-  const [selectedFile, setSelectedFile] = React.useState(null);
-  const [fileList, setFileList] = React.useState([]);
+  const setSelectedFile = React.useState(null);
+  var [fileList, setFileList] = React.useState([]);
+  var [searchValue, setSearchValue] = React.useState('');
   const [role, setRole] = React.useState(0);
-  const [search, setSearch] = React.useState('');
 
-  const handleSearchChange = e => {
-    setSearch(e.target);
+  const handleSearchChange = (event) => {
+    setSearchValue(event.target.value);
   }
 
   useEffect(() => {
@@ -62,51 +101,36 @@ export default function FilePanel({courseID}) {
     setUploadOpen(true);
   }
 
-  if(role == 0){
+  if (role == 0) {
     return (
       <>
       <Paper className={classes.dialog}>
+        <Grid container justify="flex-end">
+          <TextField label="Search" variant="outlined" color="secondary" onChange={handleSearchChange} />
+        </Grid>
         <Typography variant="h6">
           Files
         </Typography>
-        <List>
-        {fileList.map((file) => (
-          <ListItem button key={file.file_name} onClick={() => {
-            setOpen(true);
-            setSelectedFile(file.file_name);
-          }}>
-            <a href={file.url} target="_blank">
-            <Typography color='secondary'>{file.file_name}</Typography>
-            </a>
-          </ListItem>
-        ))}
-        </List>
+        <GetFileList fileList={fileList} searchValue={searchValue} setOpen={setOpen} setSelectedFile={setSelectedFile} />
       </Paper>
     </>
     );
   }
-  else if(role == 1){
+  else if (role == 1) {
     return (
       <>
       <Paper className={classes.dialog}>
-        <TextField color="secondary" variant="outlined" label="Search" name="search" onChange={handleSearchChange} className={classes.items} />
-        <List>
-        {fileList.map((file) => (
-            <ListItem button key={file.file_name} onClick={() => {
-              setOpen(true);
-              setSelectedFile(file.file_name);
-            }}>
-              <a href={file.url} target="_blank">
-                <Typography color='secondary'>{file.file_name}</Typography>
-              </a>
-            </ListItem>
-        ))}
-        </List>
+        <Grid container justify="flex-end">
+          <TextField label="Search" variant="outlined" color="secondary" onChange={handleSearchChange} />
+        </Grid>
+        <Typography variant="h6">
+          Files
+        </Typography>
+        <GetFileList fileList={fileList} searchValue={searchValue} setOpen={setOpen} setSelectedFile={setSelectedFile} />
         <Button onClick={uploadClicked} color="primary" variant="contained">Upload</Button>
       </Paper>
       <FileUpload open={uploadOpen} setOpen={setUploadOpen} endpoint='/course_files' data={{courseID}} />
     </>
     );
-
   }
 }
