@@ -36,7 +36,10 @@ function GetAssignmentList(props) {
         date = date.format('[Due on] MM-DD-YY [at] h:mm A');
         
         return (
-          <ListItem onClick={() => {
+          <ListItem button onClick={() => {
+            props.setSelectedAssignment(assignment);
+            console.log(props.role);
+            console.log(props.selectedAssignment);
             //Check for role before opening
             if(props.role == 0){
               props.setSopen(true);
@@ -44,7 +47,6 @@ function GetAssignmentList(props) {
             else if(props.role == 1){
               props.setIopen(true);
             }
-            props.setSelectedAssignment(assignment);
           }}>
             <ListItemText primary={assignment.assignment_name} secondary={date} />
           </ListItem>
@@ -63,7 +65,8 @@ function GetAssignmentList(props) {
           if (assignment.assignment_name.toLowerCase().includes(props.searchValue.toLowerCase()) || 
                 date.toLowerCase().includes(props.searchValue.toLowerCase())) {
             return (
-              <ListItem onClick={() => {
+              <ListItem button onClick={() => {
+                props.setSelectedAssignment(assignment);
                 //Check for role before opening
                 if(props.role == 0){
                   props.setSopen(true);
@@ -71,7 +74,6 @@ function GetAssignmentList(props) {
                 else if(props.role == 1){
                   props.setIopen(true);
                 }
-                props.setSelectedAssignment(assignment);
               }}>
                 <ListItemText primary={assignment.assignment_name} secondary={date} />
               </ListItem>
@@ -121,7 +123,7 @@ export default function AssignmentPanel(props) {
         <Typography variant="h6">
           Assignments
         </Typography>
-        <GetAssignmentList assignmentList={assignments} searchValue={searchValue} setSOpen={setSopen} setIOpen={setIopen} setSelectedAssignment={setSelectedAssignment} role={role} />
+        <GetAssignmentList assignmentList={assignments} searchValue={searchValue} setSopen={setSopen} setIopen={setIopen} selectedAssignment={selectedAssignment} setSelectedAssignment={setSelectedAssignment} role={role} />
       </Paper>
       <StudentAssignment selectedAssignment={selectedAssignment} open={sopen} setOpen={setSopen} courseID={props.courseID} />
       <InstructorAssignment selectedAssignment={selectedAssignment} open={iopen} setOpen={setIopen} courseID={props.courseID}/>

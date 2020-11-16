@@ -149,7 +149,7 @@ export default function StudentAssignment({selectedAssignment, open, setOpen}) {
     axios.get(`/grades/${selectedAssignment.assignment_id}`)
       .then(res => setGrade(res.data.grade)).catch(console.log);
 
-    axios.get(`/assignment_files/${selectedAssignment.assignment_id}`)
+    axios.get(`/assignment_files/approved/${selectedAssignment.assignment_id}`)
       .then(res => setFiles(res.data)).catch(console.log);
     }, [selectedAssignment]);
 
