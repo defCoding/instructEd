@@ -123,7 +123,7 @@ export default function AssignmentPanel(props) {
         <Typography variant="h6">
           Assignments
         </Typography>
-        <GetAssignmentList assignmentList={assignments} searchValue={searchValue} setSopen={setSopen} setIopen={setIopen} selectedAssignment={selectedAssignment} setSelectedAssignment={setSelectedAssignment} role={role} />
+        <GetAssignmentList assignmentList={assignments} searchValue={searchValue} iopen={iopen} sopen={sopen} setSopen={setSopen} setIopen={setIopen} selectedAssignment={selectedAssignment} setSelectedAssignment={setSelectedAssignment} role={role} />
       </Paper>
       <StudentAssignment selectedAssignment={selectedAssignment} open={sopen} setOpen={setSopen} courseID={props.courseID} />
       <InstructorAssignment selectedAssignment={selectedAssignment} open={iopen} setOpen={setIopen} courseID={props.courseID}/>
