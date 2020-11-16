@@ -57,6 +57,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   const submissionsRef = useRef([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [gOpen, setGopen] = React.useState(false);
+  const [fOpen, setFopen] =  React.useState(false);
   const [submissionsPerStudent, setSubmissionsPerStudent] = useState([]);
 
   useEffect(() => {
@@ -82,9 +83,9 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   const studentClicked = (student) => () =>{
     console.log(student);
     if(selectedStudent == null){
-      axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
-      .then(res => {addSubmissionsToList(res)}).catch(console.log);
-      //setSubmissionsPerStudent([{file_name: 'file1', url: 'url'}, {file_name: 'file2', url: 'url'}]);
+      //axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
+      //.then(res => {addSubmissionsToList(res)}).catch(console.log);
+      setSubmissionsPerStudent([{file_name: 'google', url: 'google.com'}, {file_name: 'github', url: 'github.com'}]);
       setSelectedStudent(student);
       console.log(submissionsPerStudent);
     }
@@ -95,9 +96,9 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
         console.log(submissionsPerStudent);
       }
       else{
-        axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
-        .then(res => {addSubmissionsToList(res)}).catch(console.log);
-        //setSubmissionsPerStudent([{file_name: 'file1', url: 'url'}, {file_name: 'file2', url: 'url'}]);
+        //axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
+        //.then(res => {addSubmissionsToList(res)}).catch(console.log);
+        setSubmissionsPerStudent([{file_name: 'google', url: 'google.com'}, {file_name: 'github', url: 'github.com'}]);
         setSelectedStudent(student);
         console.log(submissionsPerStudent);
       }
@@ -150,7 +151,9 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
                             if(selectedStudent.id == student.id){ //Might need to be changed to submission.user_id == selectedStudent.user_id
                             return(<>
                               <ListItem divider={true}>
-                                <ListItemText primary={submission.file_name} secondary={submission.url}/> 
+                              <a href={submission.url} target="_blank">
+                                <Typography color='secondary'>{submission.file_name}</Typography>
+                              </a>
                               </ListItem>
                             </>);
                             }
@@ -206,7 +209,7 @@ return (
       open = {open}
       onClose = {handleClose}
       aria-labelledby="grade-dialog-title"
-      aria-describedby="grade-dialog-assignment" //will be filled by actual filename variable
+      aria-describedby="grade-dialog-assignment"
   >
       <DialogTitle id="grade-dialog-title">{studentName}</DialogTitle>
       <DialogContent>

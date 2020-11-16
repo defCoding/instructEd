@@ -92,13 +92,13 @@ function IsSubmitted({submitted, classes, assignmentID}) {
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <SubmissionTab classes={classes} />
+            <SubmissionTab classes={classes} data={{assignmentID}} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <CommentsTab classes={classes} />
+            <CommentsTab classes={classes} data={{assignmentID}} />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            <GradeTab classes={classes} />
+            <GradeTab classes={classes} data={{assignmentID}} />
           </TabPanel>
       </Drawer>
     );
