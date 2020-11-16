@@ -119,19 +119,93 @@ function DisplaySearchResults(props) {
   }
 }
 
+function WorkingSearchResultDisplay(props) {
+  console.log(props.filter);
+  console.log(props.searchResults);
+
+  if (props.filter === 'Classes') {
+    return (
+      <table border="2" width="100%">
+        <tr>
+          <th>ID</th>
+          <th>Department</th>
+          <th>Number</th>
+          <th>Name</th>
+          <th>Term</th>
+        </tr>
+        {props.searchResults.map((result) => {
+          return (
+            <tr>
+              <td>{result.course_id}</td>
+              <td>{result.course_dept}</td>
+              <td>{result.course_number}</td>
+              <td>{result.course_name}</td>
+              <td>{result.term}</td>
+            </tr>
+            )
+          }
+        )}
+      </table>
+    );
+  }
+  else {
+    return(
+      <table border="2" width="100%">
+        <tr>
+          <th>ID</th>
+          <th>First</th>
+          <th>Last</th>
+          <th>Email</th>
+          <th>Role</th>
+        </tr>
+        {props.searchResults.map((result) => {
+          return (
+            <tr>
+              <td>{result.id}</td>
+              <td>{result.first_name}</td>
+              <td>{result.last_name}</td>
+              <td>{result.email}</td>
+              <td>{result.main_role}</td>
+            </tr>
+          );
+        })}
+      </table>
+    );
+  }
+}
+
 
 export default function Search() {
   const classes = useStyle();
   const [filter, setFilter] = React.useState("All Users");
-  const [value, setValue] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchResults, setSearchResults] = React.useState([]);
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   }
 
   const handleSearchChange = (event) => {
-    setValue(event.target.value);
-  }
+    setSearchQuery(event.target.value);
+    {/*if (searchQuery > 1) {*/}
+      if (filter === 'Classes') {
+        axios.get(`/search/courses/${event.target.value}`).then(res => {
+          setSearchResults(res.data);
+          console.log(searchResults);
+        }).catch(console.log);
+      }
+      else {
+        let role = filter;
+        if (role === "All Users") {
+          role = '';
+        }
+        axios.get(`/search/users/${event.target.value}/filter/${role}`).then(res => {
+          setSearchResults(res.data);
+          console.log(searchResults);
+        }).catch(console.log);
+      }
+    }
+
 
   return (
     <Grid height="100%" spacing={1}>
@@ -168,7 +242,7 @@ export default function Search() {
         <Typography className={classes.items}>{filter}</Typography>
       </Grid>
       <Grid item xs="12">
-        <DisplaySearchResults filter={filter} value={value} />
+        {/*<WorkingSearchResultDisplay filter={filter} searchResults={searchResults} />*/}
       </Grid>
     </Grid>
   );
