@@ -283,3 +283,34 @@ const top100Films = [
   { title: '3 Idiots', year: 2009 },
   { title: 'Monty Python and the Holy Grail', year: 1975 },
 ];
+
+/*
+  else if (props.filter === "Classes") {
+    return (
+      <table border="2" width="100%">
+        <tr>
+          <th>Classes</th>
+        </tr>
+        <tr>
+          <th>ID</th>
+          <th>Department</th>
+          <th>Number</th>
+          <th>Name</th>
+          <th>Term</th>
+          <th>title</th>
+          <th>year</th>
+        </tr>
+        {top100Films.map((option) => {
+          if (option.title.toLowerCase().includes(props.value.toLowerCase())) {
+            return (
+              <tr>
+                <td>{option.title}</td>
+                <td>{option.year}</td>
+              </tr>
+            )
+          }
+        })}
+      </table>
+    );
+  }
+  */
