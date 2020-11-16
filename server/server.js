@@ -93,15 +93,26 @@ app.post('/submissions/link', withDuoAuth, db.addLinkSubmission);
 app.post('/course_files', withDuoAuth, db.addCourseFile);
 app.post('/assignment_files', withDuoAuth, db.addAssignmentFile);
 app.post('/course_videos', withDuoAuth, db.addCourseVideo);
-app.get('/course_files/:courseID', withDuoAuth, db.getCourseFiles);
+app.get('/course_files/approved/:courseID', withDuoAuth, db.getApprovedCourseFiles);
 app.get('/assignment_files/:assignmentID', withDuoAuth, db.getAssignmentFiles);
+app.get('/assignment_files/approved/:assignmentID', withDuoAuth, db.getApprovedAssignmentFiles);
 app.get('/course_videos/:courseID', withDuoAuth, db.getCourseVideos);
+app.get('/course_videos/approved/:courseID', withDuoAuth, db.getApprovedCourseVideos);
+app.get('/course_files/unapproved/:courseID', withDuoAuth, db.getUnapprovedCourseFiles);
+app.get('/assignment_files/:assignmentID', withDuoAuth, db.getAssignmentFiles);
+app.get('/assignment_files/unapproved/:assignmentID', withDuoAuth, db.getUnapprovedAssignmentFiles);
+app.get('/course_videos/unapproved/:courseID', withDuoAuth, db.getUnapprovedCourseVideos);
 app.get('/courses/:courseID/students', withDuoAuth, db.getCourseStudents);
 app.get('/submissions/assignment/:assignmentID', withDuoAuth, db.getAssignmentSubmissions);
 app.get('/submissions/assignment/:assignmentID/student/:studentID', withDuoAuth, db.getAssignmentSubmissions);
 app.get('/grades/:assignmentID/:studentID', withDuoAuth, db.getStudentGrade);
 app.get('/grades/:assignmentID/', withDuoAuth, db.getGrade);
 app.post('/grades/', withDuoAuth, db.addGrade);
+app.put('/assignment_files', withDuoAuth, db.approveAssignmentFile);
+app.put('/course_files', withDuoAuth, db.approveCourseFile);
+app.put('/course_videos', withDuoAuth, db.approveCourseVideo);
+app.get('/search/users/:query/filter/:role', withDuoAuth, db.searchUsers);
+app.get('/search/courses/:query', withDuoAuth, db.searchCourses);
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));
