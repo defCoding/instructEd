@@ -24,17 +24,22 @@ function DisplaySearchResults(props) {
     return (
       <table border="2" width="100%">
         <tr>
-          <th>All Users</th>
-        </tr>
-        <tr>
           <th>ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
+          <th>Department</th>
+          <th>Number</th>
+          <th>Name</th>
+          <th>Term</th>
         </tr>
-        <tr>
-          <td><Typography>{props.value}</Typography></td>
-        </tr>
+        {top100Films.map((option) => {
+          if (option.title.toLowerCase().includes(props.value.toLowerCase()) && props.value.length > 1) {
+            return (
+              <tr>
+                <td>{option.title}</td>
+                <td>{option.year}</td>
+              </tr>
+            )
+          }
+        })}
       </table>
     );
   }
@@ -42,44 +47,28 @@ function DisplaySearchResults(props) {
     return (
       <table border="2" width="100%">
         <tr>
-          <th>Students</th>
-        </tr>
-        <tr>
           <th>ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
+          <th>Department</th>
+          <th>Number</th>
+          <th>Name</th>
+          <th>Term</th>
         </tr>
-        <tr>
-          <td><Typography>{props.value}</Typography></td>
-        </tr>
+        {top100Films.map((option) => {
+          if (option.title.toLowerCase().includes(props.value.toLowerCase()) && props.value.length > 1) {
+            return (
+              <tr>
+                <td>{option.title}</td>
+                <td>{option.year}</td>
+              </tr>
+            )
+          }
+        })}
       </table>
     );
   }
   else if (props.filter === "Instructors") {
     return (
       <table border="2" width="100%">
-        <tr>
-          <th>Instructors</th>
-        </tr>
-        <tr>
-          <th>ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Email</th>
-        </tr>
-        <tr>
-          <td><Typography>{props.value}</Typography></td>
-        </tr>
-      </table>
-    );
-  }
-  else if (props.filter === "Classes") {
-    return (
-      <table border="2" width="100%">
-        <tr>
-          <th>Classes</th>
-        </tr>
         <tr>
           <th>ID</th>
           <th>Department</th>
@@ -90,7 +79,32 @@ function DisplaySearchResults(props) {
           <th>year</th>
         </tr>
         {top100Films.map((option) => {
-          if (option.title.toLowerCase().includes(props.value.toLowerCase())) {
+          if (option.title.toLowerCase().includes(props.value.toLowerCase()) && props.value.length > 1) {
+            return (
+              <tr>
+                <td>{option.title}</td>
+                <td>{option.year}</td>
+              </tr>
+            )
+          }
+        })}
+      </table>
+    );
+  }
+  else if (props.filter === "Classes") {
+    return (
+      <table border="2" width="100%">
+        <tr>
+          <th>ID</th>
+          <th>Department</th>
+          <th>Number</th>
+          <th>Name</th>
+          <th>Term</th>
+          <th>title</th>
+          <th>year</th>
+        </tr>
+        {top100Films.map((option) => {
+          if (option.title.toLowerCase().includes(props.value.toLowerCase()) && props.value.length > 1) {
             return (
               <tr>
                 <td>{option.title}</td>
@@ -120,12 +134,10 @@ export default function Search() {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
-    console.log(event.target.value);
   }
 
   const handleSearchChange = (event) => {
       setValue(event.target.value);
-      console.log(event.target.value);
   }
 
   return (
@@ -160,7 +172,7 @@ export default function Search() {
         </FormControl>
       </Grid>
       <Grid item xs="12">
-        <Typography className={classes.items}>Search Results</Typography>
+        <Typography className={classes.items}>{filter}</Typography>
       </Grid>
       <Grid item xs="12">
         <DisplaySearchResults filter={filter} value={value} />
