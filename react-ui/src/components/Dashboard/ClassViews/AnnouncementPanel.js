@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItemText, Paper, ListItem, Typography } from '@material-ui/core';
+import { Grid, TextField, List, ListItemText, Paper, ListItem, Typography } from '@material-ui/core';
 import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
@@ -30,9 +30,12 @@ export default function AnnouncementPanel(props) {
 
   return (
     <Paper className={classes.dialog}>
+      <Grid container justify="flex-end">
+        <TextField label="Search" variant="outlined" color="secondary" />
+      </Grid>
       <Typography variant="h6">
         Announcements
-    </Typography>
+      </Typography>
       <List>
         {
           announcements.map(announcement => {
