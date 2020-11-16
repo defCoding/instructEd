@@ -3,13 +3,27 @@ import axios from 'axios';
 import { Button, List, ListItemText, ListItemSecondaryAction, ListItem, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@material-ui/core'
 
 export default function UnapprovedFiles(){
-    const [files, setFiles] = useState(["File"]); //Will be [] after testing
+    const [files, setFiles] = useState([]); //Will be [] after testing
     const [open, setOpen] = React.useState(false);
     const [file, setFile] = useState(null);
     const [fOpen, setFopen] = React.useState(false);
     const filesRef = useRef([]);
     useEffect(() => {
-        //Place for get request
+        //Get request for course files
+        axios.get(`/course_files/unapproved/${''}`)
+        .then(res => {getFilesFromResponse(res)})
+        .catch(console.log);
+
+        //Get request for assignment files
+        axios.get(`/assignment_files/unapproved/${''}`)
+        .then(res => {getFilesFromResponse(res)})
+        .catch(console.log);
+
+        //Get request for course videos
+        axios.get(`/course_videos/unapproved/${''}`)
+        .then(res => {getFilesFromResponse(res)})
+        .catch(console.log);
+
     });
 
     function getFilesFromResponse(res){
