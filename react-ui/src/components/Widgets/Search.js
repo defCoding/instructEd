@@ -25,10 +25,9 @@ function DisplaySearchResults(props) {
       <table border="2" width="100%">
         <tr>
           <th>ID</th>
-          <th>Department</th>
-          <th>Number</th>
-          <th>Name</th>
-          <th>Term</th>
+          <th>First</th>
+          <th>Last</th>
+          <th>Email</th>
         </tr>
         {top100Films.map((option) => {
           if (option.title.toLowerCase().includes(props.value.toLowerCase()) && props.value.length > 1) {
@@ -48,10 +47,9 @@ function DisplaySearchResults(props) {
       <table border="2" width="100%">
         <tr>
           <th>ID</th>
-          <th>Department</th>
-          <th>Number</th>
-          <th>Name</th>
-          <th>Term</th>
+          <th>First</th>
+          <th>Last</th>
+          <th>Email</th>
         </tr>
         {top100Films.map((option) => {
           if (option.title.toLowerCase().includes(props.value.toLowerCase()) && props.value.length > 1) {
@@ -71,12 +69,9 @@ function DisplaySearchResults(props) {
       <table border="2" width="100%">
         <tr>
           <th>ID</th>
-          <th>Department</th>
-          <th>Number</th>
-          <th>Name</th>
-          <th>Term</th>
-          <th>title</th>
-          <th>year</th>
+          <th>First</th>
+          <th>Last</th>
+          <th>Email</th>
         </tr>
         {top100Films.map((option) => {
           if (option.title.toLowerCase().includes(props.value.toLowerCase()) && props.value.length > 1) {
@@ -100,8 +95,6 @@ function DisplaySearchResults(props) {
           <th>Number</th>
           <th>Name</th>
           <th>Term</th>
-          <th>title</th>
-          <th>year</th>
         </tr>
         {top100Films.map((option) => {
           if (option.title.toLowerCase().includes(props.value.toLowerCase()) && props.value.length > 1) {
