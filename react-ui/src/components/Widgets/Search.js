@@ -197,11 +197,11 @@ export default function Search() {
       else {
         let role = filter;
         if (role === "All Users") {
-          role = '';
+          role = 'any';
         }
         axios.get(`/search/users/${event.target.value}/filter/${role}`).then(res => {
           setSearchResults(res.data);
-          console.log(searchResults);
+          console.log(res.data);
         }).catch(console.log);
       }
     }

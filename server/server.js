@@ -119,5 +119,5 @@ app.use(express.static(path.join(__dirname, '../react-ui/build')));
 app.get('*', serveIndex);
 
 
-app.listen(process.env.PORT || 5000);
-console.log(`Server started. Listening on port ${process.env.PORT || 5000}`);
+app.listen(process.env.PORT || 5433);
+console.log(`Server started. Listening on port ${process.env.PORT || 5433}`);

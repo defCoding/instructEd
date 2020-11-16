@@ -1353,9 +1353,11 @@ const approveAssignmentFile = (req, res) => {
 }
 
 const searchUsers = (req, res) => {
-  const query = req.params.query;
+  console.log("HERE");
+  let query = req.params.query;
+  query = `%${query}%`;
   const role = req.params.role.toLowerCase();
-  const sql = `SELECT id, main_role, first_name, last_name, email FROM Users WHERE CONCAT(first_name, ' ', last_name) ILIKE '%$1%' OR email ILIKE '%$1%' ${role != '' ? 'AND role=$2' : ''};`;
+  const sql = `SELECT id, main_role, first_name, last_name, email FROM Users WHERE CONCAT(first_name, ' ', last_name) ILIKE $1 OR email ILIKE $1 ${role != 'any' ? 'AND main_role=$2' : 'AND $2=$2'};`;
   const values = [query, role];
 
   client.query(sql, values, (err, result) => {
@@ -1369,8 +1371,9 @@ const searchUsers = (req, res) => {
 }
 
 const searchCourses = (req, res) => {
-  const query = req.params.query;
-  const sql = `SELECT * FROM Courses WHERE course_name ILIKE '%$1%';`;
+  let query = req.params.query;
+  query = `%${query}%`;
+  const sql = `SELECT * FROM Courses WHERE course_name ILIKE $1;`;
   const values = [query];
 
   client.query(sql, values, (err, result) => {
