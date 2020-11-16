@@ -1219,7 +1219,15 @@ const getAssignmentSubmissions = (req, res) => {
               let filename = file.Key.match(regex)[0].substring(1);
               let objectData = {file_name: filename, url: url, time_submitted: row.time_submitted};
               // Not the greatest, but not sure why I'm getting duplicates.
-              if (!data.includes(objectData)) {
+              let contains = false;
+              for (let i = 0; i < data.length; i++) {
+                if (data[i].filename == objectData.filename) {
+                  contains = true;
+                  break;
+                }
+              }
+
+              if (!contains) {
                 data.push(objectData);
               }
             }
