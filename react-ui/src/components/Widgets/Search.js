@@ -20,9 +20,6 @@ const useStyle = makeStyles(theme => ({
 }))
 
 function DisplaySearchResults(props) {
-  console.log(props.filter);
-  console.log(props.searchResults);
-
   if (props.filter === 'Classes') {
     return (
       <table border="2" width="100%">
@@ -87,24 +84,33 @@ export default function Search() {
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
-    {/*if (searchQuery > 1) {*/}
+    if (event.target.value.length > 1) {
       if (filter === 'Classes') {
         axios.get(`/search/courses/${event.target.value}`).then(res => {
           setSearchResults(res.data);
-          console.log(searchResults);
         }).catch(console.log);
       }
       else {
         let role = filter;
-        if (role === "All Users") {
-          role = 'any';
+        if (role == "All Users") {
+          role = "any";
         }
+        else if (role == "Instructors") {
+          role = "instructor";
+        }
+        else if (role == "Students") {
+          role = "student";
+        }
+        console.log(role);
         axios.get(`/search/users/${event.target.value}/filter/${role}`).then(res => {
           setSearchResults(res.data);
-          console.log(res.data);
         }).catch(console.log);
       }
     }
+    else {
+      setSearchResults([]);
+    }
+  }
 
 
   return (
@@ -139,10 +145,11 @@ export default function Search() {
         </FormControl>
       </Grid>
       <Grid item xs="12">
+        
         <Typography className={classes.items}>{filter}</Typography>
       </Grid>
       <Grid item xs="12">
-        {/*<DisplaySearchResults filter={filter} searchResults={searchResults} />*/}
+        <DisplaySearchResults filter={filter} searchResults={searchResults} />
       </Grid>
     </Grid>
   );

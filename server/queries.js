@@ -162,7 +162,7 @@ const forgotPassword = ((req, res) => {
       });
     } else {
       const id = result.rows[0]['id'];
-      token = await createPasswordResetToken(id);
+      var token = await createPasswordResetToken(id);
 
       if (token === -1) {
         res.status(400).send('Something went wrong.');
@@ -1353,11 +1353,10 @@ const approveAssignmentFile = (req, res) => {
 }
 
 const searchUsers = (req, res) => {
-  console.log("HERE");
   let query = req.params.query;
   query = `%${query}%`;
   const role = req.params.role.toLowerCase();
-  const sql = `SELECT id, main_role, first_name, last_name, email FROM Users WHERE CONCAT(first_name, ' ', last_name) ILIKE $1 OR email ILIKE $1 ${role != 'any' ? 'AND main_role=$2' : 'AND $2=$2'};`;
+  const sql = `SELECT id, main_role, first_name, last_name, email FROM Users WHERE (CONCAT(first_name, ' ', last_name) ILIKE $1 OR email ILIKE $1) ${role != 'any' ? 'AND main_role=$2' : 'AND $2=$2'};`;
   const values = [query, role];
 
   client.query(sql, values, (err, result) => {
