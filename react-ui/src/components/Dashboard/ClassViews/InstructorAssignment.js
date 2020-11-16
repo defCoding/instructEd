@@ -85,7 +85,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
     if(selectedStudent == null){
       //axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
       //.then(res => {addSubmissionsToList(res)}).catch(console.log);
-      setSubmissionsPerStudent([{file_name: 'google', url: 'google.com'}, {file_name: 'github', url: 'github.com'}]);
+      setSubmissionsPerStudent([{file_name: 'file1', url: 'file1'}, {file_name: 'file2', url: 'file2'}]);
       setSelectedStudent(student);
       console.log(submissionsPerStudent);
     }
@@ -98,7 +98,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
       else{
         //axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
         //.then(res => {addSubmissionsToList(res)}).catch(console.log);
-        setSubmissionsPerStudent([{file_name: 'google', url: 'google.com'}, {file_name: 'github', url: 'github.com'}]);
+        setSubmissionsPerStudent([{file_name: 'file1', url: 'file1'}, {file_name: 'file2', url: 'file2'}]);
         setSelectedStudent(student);
         console.log(submissionsPerStudent);
       }
