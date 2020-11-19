@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { InputLabel, FormControl, Select, Paper, TextField, Grid, MenuItem, Menu, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const ITEM_HEIGHT = 50;
 
