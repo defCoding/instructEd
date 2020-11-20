@@ -41,6 +41,11 @@ export default function Dashboard(props) {
   const [courses, setCourses] = useState([]);
   const coursesRef = useRef([]);
 
+  function getCoursesFromResponse(res) {
+    coursesRef.current = coursesRef.current.concat(res.data);
+    setCourses(coursesRef.current);
+  }
+
   useEffect(() => {
     axios.get('/roles')
       .then(res => {
@@ -74,11 +79,6 @@ export default function Dashboard(props) {
         }
       });
   }, []);
-
-  function getCoursesFromResponse(res) {
-    coursesRef.current = coursesRef.current.concat(res.data);
-    setCourses(coursesRef.current);
-  }
 
   return (
     <div className={classes.root}>

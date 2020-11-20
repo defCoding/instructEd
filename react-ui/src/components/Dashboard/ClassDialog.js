@@ -101,7 +101,7 @@ export default function ClassDialog({ selectedClass, open, setOpen }) {
           <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
             <CloseIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6"s>
             {selectedClass.name}
           </Typography>
         </Toolbar>
