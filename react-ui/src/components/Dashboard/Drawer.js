@@ -23,10 +23,6 @@ const useStyles = makeStyles(theme => ({
   },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
-  dialog: {
-    padding: theme.spacing(3),
-    height: "100vh",
-  }
 }));
 
 export default function CurrentDrawer(props) {

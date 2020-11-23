@@ -16,27 +16,6 @@ var notifications = [{"type": "File Upload", "body": "Upload approval"},
 
 const drawerWidth = 250;
 
-const StyledMenu = withStyles({
-  paper: {
-    border: '1px solid #d3d4d5',
-    width: 500,
-  },
-})((props) => (
-  <Menu
-    elevation={0}
-    getContentAnchorEl={null}
-    anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'center',
-    }}
-    transformOrigin={{
-      vertical: 'top',
-      horizontal: 'center',
-    }}
-    {...props}
-  />
-));
-
 const useStyles = makeStyles((theme) => ({
   appBar: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -119,7 +98,7 @@ function Navbar(props) {
   const [auth, setAuth] = React.useState(true);
   const [darkMode, setDarkMode] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [chatOpen, setChatOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
   
   const handleAccountClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -128,10 +107,6 @@ function Navbar(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const handleChatOpen = () => {
-    setChatOpen(true);
-  }
 
   const handleLogout = () => {
     axios.post('/logout')
@@ -153,10 +128,13 @@ function Navbar(props) {
           </Typography>
           <Switch
             checked={darkMode}
-            onChange={handleDarkModeChange} />
+            onChange={handleDarkModeChange}
+            className={classes.menuButton} />
           <IconButton
             color="secondary"
-            onClick={handleChatOpen} 
+            onClick={() => {
+              setOpen(true);
+            }}
             className={classes.menuButton} >
               <ChatIcon />
           </IconButton>
@@ -177,7 +155,7 @@ function Navbar(props) {
           </Menu>
         </Toolbar>
       </AppBar>
-      <Chat chatOpen={chatOpen} setChatOpen={setChatOpen} />
+      <Chat open={open} setOpen={setOpen} />
     </div>
   );
 }
