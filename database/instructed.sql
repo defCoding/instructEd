@@ -134,3 +134,25 @@ CREATE TABLE AssignmentFiles (
   PRIMARY KEY (assignment_id, file_name),
   FOREIGN KEY (assignment_id) REFERENCES Assignments (assignment_id)
 );
+
+CREATE TABLE Conversations (
+  conversation_id SERIAL,
+  PRIMARY KEY (conversation_id)
+);
+
+CREATE TABLE Messages (
+  conversation_id INTEGER NOT NULL,
+  message TEXT NOT NULL,
+  sender INTEGER NOT NULL,
+  send_date TIMESTAMP NOT NULL,
+  FOREIGN KEY (conversation_id) REFERENCES Conversations (conversation_id),
+  FOREIGN KEY (sender) REFERENCES Users (id)
+);
+
+CREATE TABLE UserConversations (
+  user_id INTEGER NOT NULL,
+  conversation_id INTEGER NOT NULL,
+  PRIMARY KEY (user_id, conversation_id),
+  FOREIGN KEY (conversation_id) REFERENCES Conversations (conversation_id),
+  FOREIGN KEY (conversation_id) REFERENCES Users (id)
+);

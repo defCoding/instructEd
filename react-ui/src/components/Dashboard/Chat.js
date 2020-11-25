@@ -3,6 +3,7 @@ import { List, Drawer, Dialog, AppBar, Toolbar, Typography, IconButton, ListItem
 import { makeStyles } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
 import { Form, InputGroup, Button } from 'react-bootstrap';
+import { SocketProvider } from './SocketProvider';
 
 const drawerWidth = 250;
 const senderid = "Contact 1";
@@ -101,71 +102,77 @@ export default function Chat({ open, setOpen }) {
     setOpen(false);
   }
 
+  const sendMessage = () => {
+    return
+  }
+
   function handleSubmit(e) {
     e.preventDefault();
   }
 
   return (
-    <Dialog fullScreen open={open} onClose={handleClose}>
-      <AppBar className={classes.appBar}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-            <CloseIcon />
-          </IconButton>
-          <Typography variant="h6"s>
-            Chat
+    <SocketProvider id={id}>
+      <Dialog fullScreen open={open} onClose={handleClose}>
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" s>
+              Chat
           </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-        anchor="left"
-      >
-        <List>
-          {conversations.map(conversation => (
-            <ListItem button onClick={() => {
-              setSelectedChat(conversation);
-            }}>
-              <Typography>{conversation.id.map(contact => {
-                if (contact === conversation.id[conversation.id.length - 1]) {
-                  return contact;
-                }
-                else return contact + ", ";
-              
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          className={classes.drawer}
+          variant="permanent"
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+          anchor="left"
+        >
+          <List>
+            {conversations.map(conversation => (
+              <ListItem button onClick={() => {
+                setSelectedChat(conversation);
+              }}>
+                <Typography>{conversation.id.map(contact => {
+                  if (contact === conversation.id[conversation.id.length - 1]) {
+                    return contact;
+                  }
+                  else return contact + ", ";
+
                 })}
-              </Typography>
-              <Typography>{conversation.messages[0].from + ": " + conversation.messages[0].message}</Typography>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-      <main className={classes.content}>
-        <div className="d-flex flex-column flex-grow-1" style={{ height: '90vh' }}>
-          <div className="flex-grow-1 overflow-auto">
-             <DisplayMessages conversation={selectedChat} />
+                </Typography>
+                <Typography>{conversation.messages[0].from + ": " + conversation.messages[0].message}</Typography>
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+        <main className={classes.content}>
+          <div className="d-flex flex-column flex-grow-1" style={{ height: '90vh' }}>
+            <div className="flex-grow-1 overflow-auto">
+              <DisplayMessages conversation={selectedChat} />
+            </div>
+            <Form onSubmit={handleSubmit}>
+              <Form.Group>
+                <InputGroup>
+                  <Form.Control
+                    as="textarea"
+                    required
+                    value={text}
+                    onChange={e => setText(e.target.value)}
+                    style={{ height: '75px', resize: 'none' }}
+                  />
+                  <InputGroup.Append>
+                    <Button type="submit">Send</Button>
+                  </InputGroup.Append>
+                </InputGroup>
+              </Form.Group>
+            </Form>
           </div>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group>
-              <InputGroup>
-                <Form.Control
-                  as="textarea"
-                  required
-                  value={text}
-                  onChange={e => setText(e.target.value)}
-                  style={{ height: '75px', resize: 'none' }}
-                />
-                <InputGroup.Append>
-                  <Button type="submit">Send</Button>
-                </InputGroup.Append>
-              </InputGroup>
-            </Form.Group>
-          </Form>
-        </div>
-      </main>
-    </Dialog>
+        </main>
+      </Dialog>
+    </SocketProvider>
   );
 }

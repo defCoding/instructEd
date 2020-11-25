@@ -25,7 +25,8 @@ const client = new Client({
 
 const client = new Client({
   host: 'localhost',
-  database: 'demo', user: 'demo', password: 'demo', port: '5433'
+  database: 'demo', user: 'demo',
+  //password: 'demo', port: '5433'
 });
 
 aws.config.update({
@@ -1385,6 +1386,105 @@ const searchCourses = (req, res) => {
   });
 }
 
+const getUserConversations = (req, res) => {
+  const id = req.userID;
+  let sql = `SELECT conversation_id FROM UserConversations WHERE user_id=$1;`
+  let values = [id];
+  
+  let rows;
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      rows = result.rows;
+    }
+  });
+  
+  if (rows) {
+    let hasError = false;
+    let conversations = [];
+    for (const row of rows) {
+      const conversationID = row.conversation_id;
+      sql = `SELECT user_id FROM UserConversations WHERE conversation_id=$1`;
+      values = [conversation_id];
+
+      client.query(sql, values, (err, result) => {
+        if (err) {
+          console.log(err)
+          res.status(400).send(err);
+          hasError = true;
+        } else {
+          let users = result.rows.map(obj => obj.user_id);
+          conversations.push({ conversationID, users });
+        }
+      });
+
+      if (hasError) {
+        break;
+      }
+    }
+  
+    if (!hasError) {
+      res.status(200).send(conversations);
+    }
+  }
+};
+
+const getConversationMessages = (req, res) => {
+  const conversationID = req.param.conversationID;
+  const sql = `SELECT * FROM Messages WHERE conversation_id=$1 ORDER BY send_date ASC;`
+  const values = [conversationID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send(result);
+    }
+  });
+};
+
+const addMessage = (req, res) => {
+  const info = req.body;
+  const sql = `INSERT INTO Messages VALUES ($1, $2, $3, $4)`;
+  const values = [info.conversationID, info.message, info.sender, info.send_date];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send();
+    }
+  });
+};
+
+const createConversation = (req, res) => {
+  const info = req.body;
+  let sql = 'INSERT INTO Conversations VALUES (default) RETURNING conversation_id;';
+  let values = [];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      const conversationID = result.rows[0].conversation_id;
+      const recipients = info.recipients;
+      
+      for (const recipient of recipients) {
+        sql = 'INSERT INTO UserConversations VALUES ($1, $2);';
+        values = [recipient, conversationID];
+
+        client.query(sql, values);
+      }
+      res.status(200).send(err);
+    }
+  });
+};
+
 
 module.exports = {
   createUser,
@@ -1433,5 +1533,9 @@ module.exports = {
   approveCourseFile,
   approveCourseVideo,
   searchUsers,
-  searchCourses
+  searchCourses,
+  getUserConversations,
+  getConversationMessages,
+  addMessage,
+  createConversation
 };
