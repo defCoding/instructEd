@@ -6,9 +6,13 @@ export function useConversations() {
     return useContext(ConversationsContext);
 }
 
-export default function ConversationsProvider({ children }) {
-    const [ conversations, setConversations ] = useState([]);
-    const [ selectedConversationIndex, setSelectedConversationIndex ] = 
+export default function ConversationsProvider({ id, children }) {
+    const [conversations, setConversations] = useState([]);
+    const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
+
+    const addMessageToConversation = useCallback(({recipients, text, sender})) {
+        setConversations()
+    }
     return (
         <div>
             
