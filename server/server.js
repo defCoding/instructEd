@@ -6,7 +6,8 @@ const path = require('path');
 const Duo = require('@duosecurity/duo_web');
 const app = express();
 const db = require('./queries');
-const io = require('socket.io')(process.env.PORT || 5000)
+const server = require('http').createServer(app);
+const io = require('socket.io')(server)
 const { withAuth, withDuoAuth } = require('./middleware');
 
 // Serve static file of index.html to allow Router to initialize.
@@ -114,6 +115,11 @@ app.put('/course_files', withDuoAuth, db.approveCourseFile);
 app.put('/course_videos', withDuoAuth, db.approveCourseVideo);
 app.get('/search/users/:query/filter/:role', withDuoAuth, db.searchUsers);
 app.get('/search/courses/:query', withDuoAuth, db.searchCourses);
+app.get('/userID', withDuoAuth, db.getUserID);
+app.get('/chat/conversations/:courseID', withDuoAuth, db.getUserConversations);
+app.get('/chat/messages/:conversationID', withDuoAuth, db.getConversationMessages);
+app.post('/chat/messages/', withDuoAuth, db.addMessage);
+app.post('/chat/conversations', withDuoAuth, db.createConversation);
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));

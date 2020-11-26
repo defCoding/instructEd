@@ -137,7 +137,9 @@ CREATE TABLE AssignmentFiles (
 
 CREATE TABLE Conversations (
   conversation_id SERIAL,
-  PRIMARY KEY (conversation_id)
+  course_id INTEGER NOT NULL,
+  PRIMARY KEY (conversation_id),
+  FOREIGN KEY (course_id) REFERENCES Courses (course_id)
 );
 
 CREATE TABLE Messages (

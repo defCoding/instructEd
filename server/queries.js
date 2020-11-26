@@ -1388,52 +1388,53 @@ const searchCourses = (req, res) => {
 
 const getUserConversations = (req, res) => {
   const id = req.userID;
-  let sql = `SELECT conversation_id FROM UserConversations WHERE user_id=$1;`
-  let values = [id];
+  const courseID = req.params.courseID;
+  let sql = `SELECT UserConversations.conversation_id FROM UserConversations INNER JOIN Conversations ON UserConversations.conversation_id=Conversations.conversation_id WHERE UserConversations.user_id=$1 AND Conversations.course_id=$2;`
+  let values = [id, courseID];
   
-  let rows;
-  client.query(sql, values, (err, result) => {
+  client.query(sql, values, async (err, result) => {
     if (err) {
       console.log(err);
       res.status(400).send(err);
     } else {
-      rows = result.rows;
-    }
-  });
-  
-  if (rows) {
-    let hasError = false;
-    let conversations = [];
-    for (const row of rows) {
-      const conversationID = row.conversation_id;
-      sql = `SELECT user_id FROM UserConversations WHERE conversation_id=$1`;
-      values = [conversation_id];
+      let rows = result.rows;
+      if (rows != undefined) {
+        let hasError = false;
+        let conversations = [];
+        for (const row of rows) {
+          const conversationID = row.conversation_id;
+          sql = `SELECT Users.id, Users.first_name, Users.last_name FROM Users INNER JOIN UserConversations ON Users.id=UserConversations.user_id WHERE UserConversations.conversation_id=$1`;
+          values = [conversationID];
+         
+          try {
+            result = await client.query(sql, values);
+            if (err) {
+              console.log(err)
+              res.status(400).send(err);
+              hasError = true;
+            } else {
+              let recipients = result.rows;
+              conversations.push({ conversationID, recipients });
+            }
 
-      client.query(sql, values, (err, result) => {
-        if (err) {
-          console.log(err)
-          res.status(400).send(err);
-          hasError = true;
-        } else {
-          let users = result.rows.map(obj => obj.user_id);
-          conversations.push({ conversationID, users });
+            if (hasError) {
+              break;
+            }
+          } catch (err) {
+            console.log(err);
+          }
         }
-      });
-
-      if (hasError) {
-        break;
+        if (!hasError) {
+          res.status(200).send(conversations);
+        }
       }
     }
-  
-    if (!hasError) {
-      res.status(200).send(conversations);
-    }
-  }
+  });
 };
 
 const getConversationMessages = (req, res) => {
   const conversationID = req.param.conversationID;
-  const sql = `SELECT * FROM Messages WHERE conversation_id=$1 ORDER BY send_date ASC;`
+  const sql = `SELECT Messages.*, Users.first_name, Users.last_name FROM Messages INNER JOIN Users on Messages.sender=Users.id WHERE conversation_id=$1 ORDER BY send_date ASC;`
   const values = [conversationID];
 
   client.query(sql, values, (err, result) => {
@@ -1441,7 +1442,7 @@ const getConversationMessages = (req, res) => {
       console.log(err);
       res.status(400).send(err);
     } else {
-      res.status(200).send(result);
+      res.status(200).send(result.rows);
     }
   });
 };
@@ -1463,8 +1464,8 @@ const addMessage = (req, res) => {
 
 const createConversation = (req, res) => {
   const info = req.body;
-  let sql = 'INSERT INTO Conversations VALUES (default) RETURNING conversation_id;';
-  let values = [];
+  let sql = 'INSERT INTO Conversations VALUES (default, $1) RETURNING conversation_id;';
+  let values = [info.courseID];
 
   client.query(sql, values, (err, result) => {
     if (err) {
@@ -1484,6 +1485,10 @@ const createConversation = (req, res) => {
     }
   });
 };
+
+const getUserID = (req, res) => {
+  res.status(200).send(`${req.userID}`);
+}
 
 
 module.exports = {
@@ -1537,5 +1542,6 @@ module.exports = {
   getUserConversations,
   getConversationMessages,
   addMessage,
-  createConversation
+  createConversation,
+  getUserID
 };
