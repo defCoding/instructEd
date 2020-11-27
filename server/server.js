@@ -105,6 +105,7 @@ app.get('/assignment_files/:assignmentID', withDuoAuth, db.getAssignmentFiles);
 app.get('/assignment_files/unapproved/:assignmentID', withDuoAuth, db.getUnapprovedAssignmentFiles);
 app.get('/course_videos/unapproved/:courseID', withDuoAuth, db.getUnapprovedCourseVideos);
 app.get('/courses/:courseID/students', withDuoAuth, db.getCourseStudents);
+app.get('/courses/:courseID/people', withDuoAuth, db.getCoursePeople);
 app.get('/submissions/assignment/:assignmentID', withDuoAuth, db.getAssignmentSubmissions);
 app.get('/submissions/assignment/:assignmentID/student/:studentID', withDuoAuth, db.getAssignmentSubmissions);
 app.get('/grades/:assignmentID/:studentID', withDuoAuth, db.getStudentGrade);

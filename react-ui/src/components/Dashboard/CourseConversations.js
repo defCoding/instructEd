@@ -21,7 +21,7 @@ export default function CourseConversations({ setSelectedCourseID }) {
                             onClick={() => selectConversationIndex(index)}
                             active={conversation.selected}
                         >
-                            {conversation.recipients.map(r => `${r.first_name} ${r.last_name}`).join(', ')}
+                            {conversation.recipients.map(r => r.name).join(', ')}
                         </ListGroup.Item>
                     );
                 })}

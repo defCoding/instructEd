@@ -658,9 +658,32 @@ const addCourse = (req, res) => {
       
       client.query(sql, values, (err, result) => {
         if (err) {
+          console.log(err);
           res.status(400).send('Something went wrong with adding the instructor to the course.');
         } else {
-          res.status(201).send('Course and instructor added.');
+          sql = `INSERT INTO Conversations VALUES (default, $1) RETURNING conversation_id;`;
+          values = [course_id];
+
+          client.query(sql, values, (err, result) => {
+            if (err) {
+              console.log(err);
+              res.status(400).send();
+            } else {
+              const conversation_id = result.rows[0].conversation_id;
+              sql = `INSERT INTO CourseChats VALUES ($1, $2);`
+              values = [course_id, conversation_id];
+
+              client.query(sql, values, (err, result) => {
+                if (err) {
+                  console.log(err);
+                  res.status(400).send();
+                } else {
+                  req.body = {...req.body, courseID: course_id, userID: info.instructorID};
+                  addPersonToCourseChat(req, res, "Course created.")
+                }
+              })
+            }
+          })
         }
       });
     }
@@ -682,7 +705,7 @@ const addInstructorToCourse = (req, res) => {
         res.status(400).send('Something went wrong.');
       }
     } else {
-      res.status(201).send('Instructor added to the course.');
+      addPersonToCourseChat(req, res, "Instructor added to course.");
     }
   });
 }
@@ -702,7 +725,32 @@ const addStudentToCourse = (req, res) => {
         res.status(400).send('Something went wrong.');
       }
     } else {
-      res.status(201).send('Student added to the course.');
+      addPersonToCourseChat(req, res, "Student added to course.");
+    }
+  });
+}
+
+const addPersonToCourseChat = (req, res, msg) => {
+  const info = req.body;
+  let sql = `SELECT conversation_id FROM CourseChats WHERE course_id=$1;`;
+  let values = [info.courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      const conversation_id = result.rows[0].conversation_id;
+      sql = `INSERT INTO UserConversations VALUES ($1, $2);`;
+      values = [info.userID, conversation_id];
+      client.query(sql, values, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(400).send(err);
+        } else {
+          res.status(201).send(msg);
+        }
+      });
     }
   });
 }
@@ -1129,6 +1177,35 @@ const getCourseStudents = (req, res) => {
   });
 }
 
+const getCoursePeople = (req, res) => {
+  const courseID = req.params.courseID;
+
+  let sql = `SELECT Users.id, Users.first_name, Users.last_name
+   FROM Enrollments INNER JOIN Users ON Enrollments.user_id=Users.id WHERE Enrollments.course_id=$1;`;
+  let values = [courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      let data = result.rows;
+      sql = `SELECT Users.id, Users.first_name, Users.last_name
+      FROM Instructing INNER JOIN Users ON Instructing.user_id=Users.id WHERE Instructing.course_id=$1;`;
+
+      client.query(sql, values, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(400).send(err);
+        } else {
+          data = [...data, ...result.rows];
+          res.status(200).send(data);
+        }
+      })
+    }
+  });
+}
+
 const getGrade = (req, res) => {
   const userID = req.userID;
   const assignmentID = req.param.assignmentID;
@@ -1442,6 +1519,7 @@ const getConversationMessages = (req, res) => {
       console.log(err);
       res.status(400).send(err);
     } else {
+      console.log(result.rows);
       res.status(200).send(result.rows);
     }
   });
@@ -1462,28 +1540,25 @@ const addMessage = (req, res) => {
   });
 };
 
-const createConversation = (req, res) => {
+const createConversation = async (req, res) => {
   const info = req.body;
   let sql = 'INSERT INTO Conversations VALUES (default, $1) RETURNING conversation_id;';
   let values = [info.courseID];
 
-  client.query(sql, values, (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(400).send(err);
-    } else {
-      const conversationID = result.rows[0].conversation_id;
-      const recipients = info.recipients;
-      
-      for (const recipient of recipients) {
-        sql = 'INSERT INTO UserConversations VALUES ($1, $2);';
-        values = [recipient, conversationID];
+  try {
+    let result = await client.query(sql, values)
+    const conversationID = result.rows[0].conversation_id;
+    for (const recipient of info.recipients) {
+      sql = 'INSERT INTO UserConversations VALUES ($1, $2);';
+      values = [recipient, conversationID];
 
-        client.query(sql, values);
-      }
-      res.status(200).send(err);
+      await client.query(sql, values);
     }
-  });
+    res.status(200).send();
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
 };
 
 const getUserID = (req, res) => {
@@ -1527,6 +1602,7 @@ module.exports = {
   getApprovedCourseFiles,
   getUnapprovedCourseFiles,
   getCourseStudents,
+  getCoursePeople,
   getAssignmentSubmissions,
   getAssignmentFiles,
   getApprovedAssignmentFiles,

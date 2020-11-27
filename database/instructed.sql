@@ -156,5 +156,13 @@ CREATE TABLE UserConversations (
   conversation_id INTEGER NOT NULL,
   PRIMARY KEY (user_id, conversation_id),
   FOREIGN KEY (conversation_id) REFERENCES Conversations (conversation_id),
-  FOREIGN KEY (conversation_id) REFERENCES Users (id)
+  FOREIGN KEY (user_id) REFERENCES Users (id)
+);
+
+CREATE TABLE CourseChats (
+  course_id INTEGER NOT NULL,
+  conversation_id INTEGER NOT NULL,
+  PRIMARY KEY (course_id, conversation_id),
+  FOREIGN KEY (course_id) REFERENCES Courses (course_id),
+  FOREIGN KEY (conversation_id) REFERENCES Conversations (conversation_id)
 );

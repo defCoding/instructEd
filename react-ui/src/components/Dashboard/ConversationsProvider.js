@@ -18,7 +18,21 @@ export default function ConversationsProvider({ id, courseID, children }) {
                 try {
                     let res = await axios.get(`/chat/conversations/${courseID}`)
                     let c = res.data;
-                    console.log(c);
+
+                    res = await axios.get(`/courses/${courseID}/people`);
+                    let people = res.data;
+                    if (people.length > c.length) {
+                        people = people.filter(p => p.id != id);
+
+                        const recipients = people.map(p => p.id);
+                        for (const recipient of recipients) {
+                            await axios.post('chat/conversations', { recipients: [recipient, id], courseID });
+                        }
+
+                        res = await axios.get(`/chat/conversations/${courseID}`)
+                        c = res.data;
+                    }
+
                     c = await Promise.all(c.map(async conversation => {
                         try {
                             res = await axios.get(`/chat/messages/${conversation.conversationID}`)
@@ -27,7 +41,8 @@ export default function ConversationsProvider({ id, courseID, children }) {
                             console.log(err);
                         }
                     }));
-                    console.log(c);
+
+
                     setConversations(c);
                 } catch (err) {
                     console.log(err);
@@ -61,21 +76,18 @@ export default function ConversationsProvider({ id, courseID, children }) {
         addMessageToConversation({ recipients, text, timestamp, sender: id })
     }
 
-    function createConversation() {
-
-    }
-
-    const formattedConversations = conversations.messages ? conversations.map((conversation, index) => {
-        const recipients = conversation.recipients.map(recipient => {
+    const formattedConversations = conversations.length != 0 ? conversations.map((conversation, index) => {
+        let recipients = conversation.recipients.filter(recipient => recipient.id != id);
+        recipients = recipients.map(recipient => {
             const name = `${recipient.first_name} ${recipient.last_name}`;
             return { id: recipient.user_id, name };
-        })
+        });
 
         const messages = conversation.messages.map(message => {
             const name = `${messages.first_name} ${messages.last_name}`;
             const fromMe = id === message.sender
             return { ...message, senderName: name, fromMe }
-        })
+        });
 
         const selected = index === selectedConversationIndex
         return { ...conversation, messages, recipients, selected }
@@ -86,7 +98,6 @@ export default function ConversationsProvider({ id, courseID, children }) {
         selectedConversation: formattedConversations[selectedConversationIndex],
         sendMessage,
         selectConversationIndex: setSelectedConversationIndex,
-        createConversation
     }
 
     return (
