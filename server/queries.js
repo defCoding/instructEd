@@ -6,7 +6,6 @@ const moment = require('moment');
 const aws = require('aws-sdk');
 const multiparty = require('multiparty');
 const fs = require('fs');
-const { url } = require('inspector');
 
 require('dotenv').config();
 
@@ -1354,7 +1353,6 @@ const getRoleInCourse = (req, res) => {
 
 const addAssignment = (req, res) => {
   const info = req.body;
-  console.log(info);
   const date = moment(info.date).format('YYYY-MM-DD HH:mm:ss');
   const name = info.assignmentName;
   const desc = info.description;
@@ -1510,7 +1508,7 @@ const getUserConversations = (req, res) => {
 };
 
 const getConversationMessages = (req, res) => {
-  const conversationID = req.param.conversationID;
+  const conversationID = req.params.conversationID;
   const sql = `SELECT Messages.*, Users.first_name, Users.last_name FROM Messages INNER JOIN Users on Messages.sender=Users.id WHERE conversation_id=$1 ORDER BY send_date ASC;`
   const values = [conversationID];
 
@@ -1519,7 +1517,6 @@ const getConversationMessages = (req, res) => {
       console.log(err);
       res.status(400).send(err);
     } else {
-      console.log(result.rows);
       res.status(200).send(result.rows);
     }
   });
@@ -1563,6 +1560,24 @@ const createConversation = async (req, res) => {
 
 const getUserID = (req, res) => {
   res.status(200).send(`${req.userID}`);
+}
+
+const getUserInfo = (req, res) => {
+  const sql = `SELECT first_name, last_name, id FROM Users WHERE id=$1;`;
+  const values = [req.userID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      if (result.rows) {
+        res.status(200).send(result.rows[0]);
+      } else {
+        res.status(400).send("No users with that ID.");
+      }
+    }
+  })
 }
 
 
@@ -1619,5 +1634,5 @@ module.exports = {
   getConversationMessages,
   addMessage,
   createConversation,
-  getUserID
+  getUserInfo
 };

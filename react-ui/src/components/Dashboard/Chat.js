@@ -6,6 +6,7 @@ import { Form, InputGroup, Button } from 'react-bootstrap';
 import { SocketProvider } from './SocketProvider';
 import ConversationsProvider from './ConversationsProvider';
 import ChatSidebar from './ChatSidebar';
+import OpenConversation from './OpenConversation';
 import axios from 'axios';
 
 const drawerWidth = 250;
@@ -34,15 +35,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Chat({ open, setOpen }) {
   const classes = useStyles();
-  const [selectedChat, setSelectedChat] = React.useState(null);
-  const [text, setText] = React.useState('');
-  const [userID, setUserID] = useState();
+  const [user, setUser] = useState({id: -1});
   const [selectedCourseID, setSelectedCourseID] = useState(-1);
 
   useEffect(() => {
-      axios.get('/userID')
+      axios.get('/userInfo')
           .then(res => {
-              setUserID(res.data);
+              setUser(res.data);
           })
           .catch(console.log);
   }, [])
@@ -50,14 +49,6 @@ export default function Chat({ open, setOpen }) {
 
   const handleClose = () => {
     setOpen(false);
-  }
-
-  const sendMessage = () => {
-    return
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
   }
 
   return (
@@ -73,29 +64,12 @@ export default function Chat({ open, setOpen }) {
         </Toolbar>
       </AppBar>
       <div className="d-flex" style={{height: '93vh'}}>
-        <ConversationsProvider courseID={selectedCourseID} id={userID}>
-          <ChatSidebar selectedCourseID={selectedCourseID} setSelectedCourseID={setSelectedCourseID}/>
-        </ConversationsProvider>
-        <div className="d-flex flex-column flex-grow-1" style={{ height: '93vh' }}>
-          <div className="flex-grow-1 overflow-auto">
-          </div>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group>
-              <InputGroup>
-                <Form.Control
-                  as="textarea"
-                  required
-                  value={text}
-                  onChange={e => setText(e.target.value)}
-                  style={{ height: '75px', resize: 'none' }}
-                />
-                <InputGroup.Append>
-                  <Button type="submit">Send</Button>
-                </InputGroup.Append>
-              </InputGroup>
-            </Form.Group>
-          </Form>
-        </div>
+        <SocketProvider id={user.id}>
+          <ConversationsProvider courseID={selectedCourseID} user={user}>
+            <ChatSidebar selectedCourseID={selectedCourseID} setSelectedCourseID={setSelectedCourseID}/>
+            <OpenConversation />
+          </ConversationsProvider>
+        </SocketProvider>
       </div>
     </Dialog>
   );

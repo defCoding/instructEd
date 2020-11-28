@@ -21,7 +21,13 @@ export default function CourseConversations({ setSelectedCourseID }) {
                             onClick={() => selectConversationIndex(index)}
                             active={conversation.selected}
                         >
-                            {conversation.recipients.map(r => r.name).join(', ')}
+                            {
+                                // This part is really ugly, but honestly I do not want to try to restructure the architecture of everything. 
+                                // May the lord forgive me for my sins.
+                                conversation.recipients.length !== 1 ?
+                                "Course Chat" :
+                                conversation.recipients[0].name
+                            }
                         </ListGroup.Item>
                     );
                 })}

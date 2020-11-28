@@ -7,7 +7,14 @@ const Duo = require('@duosecurity/duo_web');
 const app = express();
 const db = require('./queries');
 const server = require('http').createServer(app);
-const io = require('socket.io')(server)
+const io = require('socket.io')(server, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
+const axios = require('axios');
 const { withAuth, withDuoAuth } = require('./middleware');
 
 // Serve static file of index.html to allow Router to initialize.
@@ -116,7 +123,7 @@ app.put('/course_files', withDuoAuth, db.approveCourseFile);
 app.put('/course_videos', withDuoAuth, db.approveCourseVideo);
 app.get('/search/users/:query/filter/:role', withDuoAuth, db.searchUsers);
 app.get('/search/courses/:query', withDuoAuth, db.searchCourses);
-app.get('/userID', withDuoAuth, db.getUserID);
+app.get('/userInfo', withDuoAuth, db.getUserInfo);
 app.get('/chat/conversations/:courseID', withDuoAuth, db.getUserConversations);
 app.get('/chat/messages/:conversationID', withDuoAuth, db.getConversationMessages);
 app.post('/chat/messages/', withDuoAuth, db.addMessage);
@@ -126,23 +133,20 @@ app.post('/chat/conversations', withDuoAuth, db.createConversation);
 app.use(express.static(path.join(__dirname, '../react-ui/build')));
 app.get('*', serveIndex);
 
-
-app.listen(process.env.PORT || 5000);
+server.listen(process.env.PORT || 5000);
 console.log(`Server started. Listening on port ${process.env.PORT || 5000}`);
-
-
 
 // Chat
 io.on('connection', socket => {
   const id = socket.handshake.query.id;
   socket.join(id);
 
-  socket.on('send-message', ({ recipients, text}) => {
+  socket.on('send-message', ({ recipients, message, sender, send_date, conversationID, first_name, last_name }) => {
     recipients.forEach(recipient => {
-      const newRecipients = recipients.filter(r => r !== recipient);
-      newRecipients.push(id);
-      socket.broadcast.to(recipient).emit('receive-message', {
-        recipients: newRecipients, sender: id, text
+      const newRecipients = recipients.filter(r => r.id !== recipient);
+      newRecipients.push(sender);
+      socket.broadcast.to(`${recipient.id}`).emit('receive-message', {
+        recipients: newRecipients, sender, message, send_date, conversationID, first_name, last_name
       });
     });
   });

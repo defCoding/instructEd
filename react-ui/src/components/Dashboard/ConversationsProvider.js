@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react';
+import { useSocket } from './SocketProvider';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -8,9 +9,10 @@ export function useConversations() {
     return useContext(ConversationsContext);
 }
 
-export default function ConversationsProvider({ id, courseID, children }) {
+export default function ConversationsProvider({ user, courseID, children }) {
     const [conversations, setConversations] = useState([]);
     const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
+    const socket = useSocket();
 
     useEffect(() => {
         async function getConversations() {
@@ -22,11 +24,11 @@ export default function ConversationsProvider({ id, courseID, children }) {
                     res = await axios.get(`/courses/${courseID}/people`);
                     let people = res.data;
                     if (people.length > c.length) {
-                        people = people.filter(p => p.id != id);
+                        people = people.filter(p => p.id != user.id);
 
                         const recipients = people.map(p => p.id);
                         for (const recipient of recipients) {
-                            await axios.post('chat/conversations', { recipients: [recipient, id], courseID });
+                            await axios.post('chat/conversations', { recipients: [recipient, user.id], courseID });
                         }
 
                         res = await axios.get(`/chat/conversations/${courseID}`)
@@ -41,7 +43,7 @@ export default function ConversationsProvider({ id, courseID, children }) {
                             console.log(err);
                         }
                     }));
-
+                    console.log(c);
 
                     setConversations(c);
                 } catch (err) {
@@ -53,11 +55,11 @@ export default function ConversationsProvider({ id, courseID, children }) {
         getConversations();
     }, [courseID])
 
-    const addMessageToConversation = useCallback(({ recipients, text, timestamp, sender }) => {
+    const addMessageToConversation = useCallback(({ recipients, message, send_date, sender, conversationID, first_name, last_name }) => {
         setConversations(prevConversations => {
-            const newMessage = { sender, text, timestamp }
+            const newMessage = { sender, message, send_date, first_name, last_name }
             const newConversations = prevConversations.map(conversation => {
-                if (arrayEquality(conversation.recipients, recipients)) {
+                if (conversation.conversationID === conversationID) {
                     return {
                         ...conversation,
                         messages: [...conversation.messages, newMessage]
@@ -69,23 +71,54 @@ export default function ConversationsProvider({ id, courseID, children }) {
 
             return newConversations
         });
+
     }, [setConversations]);
 
-    function sendMessage(recipients, text) {
-        let timestamp = moment().local();
-        addMessageToConversation({ recipients, text, timestamp, sender: id })
+    useEffect(() => {
+        if (socket == null) return
+
+        socket.on('receive-message', addMessageToConversation);
+
+        return () => socket.off('receive-message')
+    }, [socket, addMessageToConversation])
+
+
+    function sendMessage(recipients, message, conversationID) {
+        let send_date = moment.utc().format('YYYY-MM-DD HH:mm:ss');
+        console.log(socket);
+        axios.post('/chat/messages', {
+            conversationID,
+            message,
+            sender: user.id,
+            send_date,
+        }).catch(err => {
+            console.log(err);
+        });
+
+        let data = {
+            recipients,
+            message,
+            sender: user.id,
+            send_date,
+            conversationID,
+            first_name: user.first_name,
+            last_name: user.last_name
+        }
+        socket.emit('send-message', data);
+        addMessageToConversation(data);
     }
 
     const formattedConversations = conversations.length != 0 ? conversations.map((conversation, index) => {
-        let recipients = conversation.recipients.filter(recipient => recipient.id != id);
+        let recipients = conversation.recipients.filter(recipient => recipient.id != user.id);
         recipients = recipients.map(recipient => {
             const name = `${recipient.first_name} ${recipient.last_name}`;
-            return { id: recipient.user_id, name };
+            return { id: recipient.id, name };
         });
 
+
         const messages = conversation.messages.map(message => {
-            const name = `${messages.first_name} ${messages.last_name}`;
-            const fromMe = id === message.sender
+            const name = `${message.first_name} ${message.last_name}`;
+            const fromMe = user.id === message.sender
             return { ...message, senderName: name, fromMe }
         });
 
