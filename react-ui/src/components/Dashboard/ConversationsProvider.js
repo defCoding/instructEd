@@ -43,8 +43,6 @@ export default function ConversationsProvider({ user, courseID, children }) {
                             console.log(err);
                         }
                     }));
-                    console.log(c);
-
                     setConversations(c);
                 } catch (err) {
                     console.log(err);
@@ -131,6 +129,7 @@ export default function ConversationsProvider({ user, courseID, children }) {
         selectedConversation: formattedConversations[selectedConversationIndex],
         sendMessage,
         selectConversationIndex: setSelectedConversationIndex,
+        user
     }
 
     return (

@@ -150,4 +150,10 @@ io.on('connection', socket => {
       });
     });
   });
+
+  socket.on('typing', ({ recipients, first_name, last_name, typing, conversationID }) => { 
+    recipients.forEach(recipient => {
+      socket.broadcast.to(`${recipient.id}`).emit(typing ? 'user-typing' : 'user-stopped-typing', { name: first_name + ' ' + last_name, conversationID });
+    });
+  });
 });

@@ -34,7 +34,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Chat({ open, setOpen }) {
-  const classes = useStyles();
   const [user, setUser] = useState({id: -1});
   const [selectedCourseID, setSelectedCourseID] = useState(-1);
 
