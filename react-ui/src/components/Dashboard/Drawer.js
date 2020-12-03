@@ -49,7 +49,7 @@ export default function CurrentDrawer(props) {
               setOpen(true);
               setSelectedClass({ name: course.course_name, id: course.course_id });
             }}>
-              <Typography color='primary'>{course.course_name}</Typography>
+              <Typography color='primary'><u>{course.course_name}</u></Typography>
             </ListItem>
           ))}
         </List>

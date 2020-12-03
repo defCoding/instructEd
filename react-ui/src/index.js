@@ -11,7 +11,7 @@ const theme = createMuiTheme({
       main: '#ADEFD1',
     },
     secondary: {
-      main: '#00203F',
+      main: '#394C5E',
     },
   }
 });
@@ -25,3 +25,5 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+394c5e
