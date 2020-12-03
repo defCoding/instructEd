@@ -20,11 +20,11 @@ const useStyles = makeStyles((theme) => ({
   },
   appbarTitle: {
     flexGrow: '1',
-    color: "#00203F",
+    color: "#fff",
     fontSize: '3rem',
   },
   icon: {
-    color: "#ADEFD1",
+    color: "#fff",
     fontSize: '2rem',
   },
   colorText: {
@@ -36,14 +36,16 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     fontSize: '4rem',
+    color: "#fff",
   },
   body: {
+    color: "#fff",
     fontSize: '2rem',
     width: '70%',
     margin: '0 auto',
   },
   goDown: {
-    color:'#00203F',
+    color:'#fff',
     fontSize:'4rem',
   },
   scrollRoot: {
