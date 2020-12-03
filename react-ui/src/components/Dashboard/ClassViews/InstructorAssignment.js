@@ -83,22 +83,23 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   const studentClicked = (student) => () =>{
     console.log(student);
     if(selectedStudent == null){
-      //axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
-      //.then(res => {addSubmissionsToList(res)}).catch(console.log);
-      setSubmissionsPerStudent([{file_name: 'file1', url: 'file1'}, {file_name: 'file2', url: 'file2'}]);
+      axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
+      .then(res => {addSubmissionsToList(res)}).catch(console.log);
+      //setSubmissionsPerStudent([{file_name: 'file1', url: 'file1'}, {file_name: 'file2', url: 'file2'}]);
       setSelectedStudent(student);
       console.log(submissionsPerStudent);
     }
     else if(selectedStudent != null){
       if(student.id == selectedStudent.id){
         setSubmissionsPerStudent([]);
+        submissionsRef.current = [];
         setSelectedStudent(null);
         console.log(submissionsPerStudent);
       }
       else{
-        //axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
-        //.then(res => {addSubmissionsToList(res)}).catch(console.log);
-        setSubmissionsPerStudent([{file_name: 'file1', url: 'file1'}, {file_name: 'file2', url: 'file2'}]);
+        axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
+        .then(res => {addSubmissionsToList(res)}).catch(console.log);
+        //setSubmissionsPerStudent([{file_name: 'file1', url: 'file1'}, {file_name: 'file2', url: 'file2'}]);
         setSelectedStudent(student);
         console.log(submissionsPerStudent);
       }

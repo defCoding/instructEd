@@ -20,7 +20,7 @@ export default function GradeTab(props) {
       setGrade('');
     }
     else{
-      setGrade(String(gradeList[0].grade));
+      setGrade(String(gradeList[0].grade) + " %");
     }
   }
 
