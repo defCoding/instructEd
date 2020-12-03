@@ -6,7 +6,7 @@ import ForgotPassword from './components/LoginAndRegistration/ForgotPassword';
 import ResetPassword from './components/LoginAndRegistration/ResetPassword';
 import DuoLogin from './components/LoginAndRegistration/DuoLogin';
 import Dashboard from './components/Dashboard/Dashboard';
-import LandingPage from './components/LoginAndRegistration/LandingPage';
+import LandingPage from './components/LoginAndRegistration/LandingPage/LandingPage';
 
 function App() {
   return (
