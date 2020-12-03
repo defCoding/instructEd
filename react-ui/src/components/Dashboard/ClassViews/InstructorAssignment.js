@@ -199,7 +199,9 @@ const setGradeClicked = (student) => () =>{
     if(res.status === 400){
       alert(res.statusText);
     }
+    alert('Grade Submitted');
     setNewGrade('');
+    setOpen(false);
   })
 }
 

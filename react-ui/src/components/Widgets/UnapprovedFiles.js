@@ -10,9 +10,10 @@ export default function UnapprovedFiles(){
     const filesRef = useRef([]);
     useEffect(() => {
         //Get request for course files
-        axios.get(`/course_files/unapproved/${''}`)
+        axios.get(`/course_files/unapproved/${9999}`) // ''
         .then(res => {getFilesFromResponse(res)})
         .catch(console.log);
+        console.log(files);
 
         //Get request for assignment files
         axios.get(`/assignment_files/unapproved/${''}`)
