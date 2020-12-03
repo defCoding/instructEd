@@ -1183,7 +1183,6 @@ const userID = req.body.userID;
 const getAssignmentSubmissions = (req, res) => {
   const assignmentID = req.params.assignmentID;
   let userID;
-  console.log(req.params);
   if (req.params.studentID) {  //userID
     userID = req.params.studentID; //userID
   } else {

@@ -72,6 +72,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   function addSubmissionsToList(res){
     submissionsRef.current = submissionsRef.current.concat(res.data);
     setSubmissionsPerStudent(submissionsRef.current);
+    console.log(submissionsRef.current);
   }
 
 
@@ -87,21 +88,18 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
       .then(res => {addSubmissionsToList(res)}).catch(console.log);
       //setSubmissionsPerStudent([{file_name: 'file1', url: 'file1'}, {file_name: 'file2', url: 'file2'}]);
       setSelectedStudent(student);
-      console.log(submissionsPerStudent);
     }
     else if(selectedStudent != null){
       if(student.id == selectedStudent.id){
         setSubmissionsPerStudent([]);
         submissionsRef.current = [];
         setSelectedStudent(null);
-        console.log(submissionsPerStudent);
       }
       else{
         axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
         .then(res => {addSubmissionsToList(res)}).catch(console.log);
         //setSubmissionsPerStudent([{file_name: 'file1', url: 'file1'}, {file_name: 'file2', url: 'file2'}]);
         setSelectedStudent(student);
-        console.log(submissionsPerStudent);
       }
     } 
   }
@@ -149,12 +147,17 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
                         <List className={innerClasses}>
                           {
                             submissionsPerStudent.map((submission) => {
-                            if(selectedStudent.id == student.id){ //Might need to be changed to submission.user_id == selectedStudent.user_id
+                            if(selectedStudent.id == student.id){
+                              let date = moment(submission.time_submitted).local();
+                              let dateString = date.format('[Time Submitted:] MM-DD-YY [at] h:mm A');
                             return(<>
                               <ListItem divider={true}>
-                              <a href={submission.url} target="_blank">
-                                <Typography color='secondary'>{submission.file_name}</Typography>
-                              </a>
+                                <ListItemText primary={
+                                  <a href={submission.url} target="_blank">
+                                    <Typography color='secondary'>{submission.file_name}</Typography>
+                                  </a>}
+                                  secondary={dateString}
+                                  ></ListItemText>
                               </ListItem>
                             </>);
                             }
