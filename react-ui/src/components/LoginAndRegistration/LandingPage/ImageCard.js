@@ -16,8 +16,11 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('md')]:{
       width: 600,
     },
+    [theme.breakpoints.down('sm')]:{
+      width: 500,
+    },
     [theme.breakpoints.down('xs')]:{
-      height: 400,
+      width: 400,
     },
   },
   media: {

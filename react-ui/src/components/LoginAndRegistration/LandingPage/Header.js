@@ -1,9 +1,10 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Collapse, Toolbar, AppBar, IconButton, Typography } from '@material-ui/core';
+import { Collapse, Toolbar, AppBar, IconButton, Typography, Menu, MenuItem,  } from '@material-ui/core';
 import SortIcon from '@material-ui/icons/Sort';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Link as Scroll } from 'react-scroll';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -57,9 +58,21 @@ const useStyles = makeStyles((theme) => ({
 export default function Header() {
   const classes = useStyles();
   const [checked, setChecked] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   React.useEffect(() => {
     setChecked(true);
-  },[])
+  },[]);
+
   return (
     <div className={classes.root} id="header">
       <AppBar className={classes.appbar} elevation={0}>
@@ -67,9 +80,25 @@ export default function Header() {
           <Typography variant="h1" className={classes.appbarTitle}>instruct
             <span className={classes.colorText}>ED</span>
           </Typography>
-          <IconButton>
+          <IconButton          
+            aria-label="menu"
+            onClick={handleClick}>
             <SortIcon className={classes.icon}/>
           </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            keepMounted
+            open={open}
+            onClose={handleClose}
+            PaperProps={{
+              style: {
+              }
+            }}>
+            <MenuItem component={Link} to="/login">Login</MenuItem>
+            <MenuItem component={Link} to="/registration">Create Account</MenuItem>
+            <MenuItem component={Link} to="/forgotpassword">Forgot Password</MenuItem>
+          </Menu>
+
         </Toolbar>
       </AppBar>
       <Collapse 
