@@ -8,14 +8,23 @@ import Typography from '@material-ui/core/Typography';
 import Collapse from '@material-ui/core/Collapse';
 import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: 375,
     background:'rgba(0,0,0,0.5)',
     margin: '20px',
+    [theme.breakpoints.down('md')]:{
+      width: 600,
+    },
+    [theme.breakpoints.down('xs')]:{
+      height: 400,
+    },
   },
   media: {
     height: 300,
+    [theme.breakpoints.down('md')]:{
+      height: 150,
+    }
   },
   title: {
     fontWeight: 'bold',
@@ -24,7 +33,7 @@ const useStyles = makeStyles({
   desc: {
     color: '#ddd',
   }
-});
+}));
 
 export default function ImageCard( props ) {
   const classes = useStyles();
@@ -41,7 +50,7 @@ export default function ImageCard( props ) {
           <CardMedia
             className={classes.media}
             image={imageURL}
-            title="Contemplative Reptile"
+            title={props.title}
           />
           <CardContent>
             <Typography 
