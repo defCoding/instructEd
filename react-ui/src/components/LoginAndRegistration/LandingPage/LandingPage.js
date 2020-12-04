@@ -2,10 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import Header from './Header';
-import LandingPic from './landing.jpg';
-import LandingDark from './landing_dark.jpg';
-
-
+import LandingDark from './assets/landing_dark.jpg';
+import LandingScroll from './LandingScroll';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +20,7 @@ export default function LandingPage() {
     <div className={classes.root}>
       <CssBaseline />
       <Header />
+      <LandingScroll />
     </div>
   );
 }

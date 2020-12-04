@@ -25,5 +25,8 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+<<<<<<< Updated upstream
 
 //394c5e
+=======
+>>>>>>> Stashed changes

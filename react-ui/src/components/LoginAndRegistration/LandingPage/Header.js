@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Collapse, Toolbar, AppBar, IconButton, Typography } from '@material-ui/core';
 import SortIcon from '@material-ui/icons/Sort';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Link as Scroll } from 'react-scroll';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,7 +61,7 @@ export default function Header() {
     setChecked(true);
   },[])
   return (
-    <div className={classes.root}>
+    <div className={classes.root} id="header">
       <AppBar className={classes.appbar} elevation={0}>
         <Toolbar className={classes.appbarWrapper}>
           <Typography variant="h1" className={classes.appbarTitle}>instruct
@@ -83,9 +84,11 @@ export default function Header() {
           <Typography variant="h2" className={classes.body}>
             An online solution for teachers and students to organize and augment the learning experience
           </Typography>
-          <IconButton>
-            <ExpandMoreIcon className={classes.goDown} />
-          </IconButton>
+          <Scroll to="click-options" smooth={true}>
+            <IconButton>
+              <ExpandMoreIcon className={classes.goDown} />
+            </IconButton>
+          </Scroll>
         </div>
       </Collapse>
     </div>
