@@ -134,7 +134,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
 
                     return (<>
                         <ListItem className={classes.items} divider={true} button={true} onClick={studentClicked(student)}>
-                            <ListItemText primary={name} secondary={id} />
+                            <ListItemText primary={name} secondary={"ID: " + id + ", Click to see Submissions"} />
                             <ListItemSecondaryAction>
 
                                   <Button size="small" className={classes.items} onClick={gradeClicked(student)} variant="contained" color="secondary">
@@ -144,7 +144,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
                               
                             </ListItemSecondaryAction>
                         </ListItem>
-                        <List className={innerClasses}>
+                        <List divider={true} className={innerClasses}>
                           {
                             submissionsPerStudent.map((submission) => {
                             if(selectedStudent.id == student.id){
@@ -175,11 +175,37 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
 
 function GradingDialog({selectedStudent, selectedAssignment, open, setOpen}){
   const [newGrade, setNewGrade] = useState('');
-  var studentName = "";
-  if(selectedStudent != null){
-    studentName = selectedStudent.first_name + " " + selectedStudent.last_name;
-  }
+  const [studentName, setStudentName] = useState('');
+  const [oldGrade, setOldGrade] = useState('');
+  useEffect (() => {
+    if(selectedStudent != null){
+      setStudentName(selectedStudent.first_name + " " + selectedStudent.last_name);
 
+      axios.get(`/grades/${selectedAssignment.assignment_id}/${selectedStudent.id}`)
+      .then(res => {
+        console.log(res.data);
+        if(res.data.length == 0){
+          setOldGrade("Assignment currently ungraded.");
+        }
+        else{
+          setOldGrade(String(res.data[0].grade) + " %");
+        }
+      }).catch(console.log)
+    }
+
+    
+  })
+/*
+  const checkGrade = (gradeList) => {
+    console.log(gradeList.data);
+    if(gradeList.data.length == 0){
+      setOldGrade("Assignment currently ungraded.");
+    }
+    else{
+      setOldGrade(String(gradeList.data[0].grade) + " %");
+    }
+  }
+*/
 const handleClose = () => {
   setNewGrade('');  
   setOpen(false);
@@ -220,7 +246,7 @@ return (
       <DialogTitle id="grade-dialog-title">{studentName}</DialogTitle>
       <DialogContent>
           <DialogContentText id="grade-dialog-assignment">
-              {selectedAssignment.assignment_name}
+              {oldGrade} 
           </DialogContentText>
           <TextField size="small" color="secondary" multiline="true" variant="standard" helperText="Given Points/Max Possible" label="Change Grade" value={newGrade} name="changegrade" onChange={handleGradeChange} />
       </DialogContent>

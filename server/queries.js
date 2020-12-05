@@ -1144,7 +1144,7 @@ const getGrade = (req, res) => {
 }
 
 const getStudentGrade = (req, res) => {
-  const userID = req.params.userID;
+  const userID = req.params.studentID;  //Was userID
   const assignmentID = req.params.assignmentID;
   const values = [userID, assignmentID];
   const sql = 'SELECT grade FROM Grades WHERE user_id=$1 AND assignment_id=$2;';
