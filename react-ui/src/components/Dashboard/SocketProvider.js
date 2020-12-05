@@ -11,8 +11,16 @@ export function SocketProvider({ id, children }) {
   const [socket, setSocket] = useState()
 
   useEffect(() => {
+    let url = `${window.location.hostname}`;
+    if (url.startsWith('localhost')) {
+      url += ':5000';
+      url = `http://${url}`;
+    } else {
+      url = `https://${url}`;
+    }
+    console.log(url);
     const newSocket = io(
-      `https://${window.location.hostname}`,
+      url,
       { query: { id } }
     )
     setSocket(newSocket)
