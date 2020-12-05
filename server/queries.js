@@ -13,20 +13,20 @@ require('dotenv').config();
 const resetExpirationAmount = 15;
 const resetExpirationUnit = 'minutes';
 
-/*
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
-*/
 
+/*
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo',
   //password: 'demo', port: '5433'
 });
+*/
 
 aws.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY,
