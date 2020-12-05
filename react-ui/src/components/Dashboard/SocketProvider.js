@@ -11,8 +11,9 @@ export function SocketProvider({ id, children }) {
   const [socket, setSocket] = useState()
 
   useEffect(() => {
+    console.log(`${window.location.hostname}:3000`);
     const newSocket = io(
-      'http://localhost:5000',
+      `${window.location.hostname}:3000`,
       { query: { id } }
     )
     setSocket(newSocket)
