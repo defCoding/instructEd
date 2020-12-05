@@ -45,6 +45,7 @@ export default function Dashboard(props) {
     coursesRef.current = coursesRef.current.concat(res.data);
     setCourses(coursesRef.current);
   }
+  
 
   useEffect(() => {
     axios.get('/roles')

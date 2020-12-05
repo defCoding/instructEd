@@ -79,7 +79,10 @@ export default function FilePanel({courseID}) {
 
   useEffect(() => {
     axios.get(`/course_files/approved/${courseID}`)
-      .then(res => setFileList(res.data))
+      .then(res => {
+        console.log(res.data);
+        setFileList(res.data)
+      })
       .catch(console.log);
 
     axios.get('/roles')

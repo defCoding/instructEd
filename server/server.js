@@ -105,6 +105,7 @@ app.get('/course_files/approved/:courseID', withDuoAuth, db.getApprovedCourseFil
 app.get('/assignment_files/:assignmentID', withDuoAuth, db.getAssignmentFiles);
 app.get('/assignment_files/approved/:assignmentID', withDuoAuth, db.getApprovedAssignmentFiles);
 app.get('/course_videos/:courseID', withDuoAuth, db.getCourseVideos);
+app.get('/course_files/:courseID', withDuoAuth, db.getCourseFiles);
 app.get('/course_videos/approved/:courseID', withDuoAuth, db.getApprovedCourseVideos);
 app.get('/course_files/unapproved/:courseID', withDuoAuth, db.getUnapprovedCourseFiles);
 app.get('/assignment_files/:assignmentID', withDuoAuth, db.getAssignmentFiles);
