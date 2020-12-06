@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Dialog, DialogContent } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import ReactPlayer from 'react-player';
 
 const useStyles = makeStyles(theme => ({
@@ -17,28 +17,16 @@ const useStyles = makeStyles(theme => ({
 
 export default function VideoPlayer(props) {
   const classes = useStyles();
-  const handleClose = () => {
-    props.setOpen(false);
-  };
 
   return(
     <>
-      <Dialog 
-        open={props.open} 
-        onClose={handleClose}
-        PaperProps ={{
-          classes: {
-           root: classes.paper
-          }
-        }}>
-        <DialogContent>
-          <ReactPlayer 
-            controls='true'
-            url={props.videoFile}
-            width="580px"
-          />
-        </DialogContent>
-      </Dialog>
+      <div>
+        <ReactPlayer 
+          controls={true}
+          url={props.videoFile ? props.videoFile.url : ''}
+          width="580px"
+        />
+      </div>
     </>
   );
 }
