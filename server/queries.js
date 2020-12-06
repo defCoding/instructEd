@@ -25,7 +25,7 @@ const client = new Client({
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo',
-  //password: 'demo', port: '5433'
+  password: 'demo', port: '5433'
 });
 
 aws.config.update({
