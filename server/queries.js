@@ -824,6 +824,7 @@ const addCourseVideo = (req, res) => {
   const form = new multiparty.Form();
   form.parse(req, async (err, fields, files) => {
     if (err) {
+      console.log(err);
       res.status(400).send(err);
     } else {
       const origName = files.file[0].originalFilename;
@@ -838,7 +839,8 @@ const addCourseVideo = (req, res) => {
 
       client.query(sql, values, async (err2, result) => {
         if (err2) {
-          res.status(400).send(err);
+          console.log(err2);
+          res.status(400).send(err2);
         } else {
           try {
             const data = await uploadFile(buffer, fileName);
@@ -854,9 +856,9 @@ const addCourseVideo = (req, res) => {
 };
 
 const getApprovedCourseVideos = (req, res) => {
-  const courseID = req.params.courseID;
+  const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseVideos WHERE '$1'='' OR course_id=$1 and approved;"
+  const sql = "SELECT * FROM CourseVideos WHERE $1=-1 OR course_id=$1 and approved;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -882,9 +884,9 @@ const getApprovedCourseVideos = (req, res) => {
 }
 
 const getCourseVideos = (req, res) => {
-  const courseID = req.params.courseID;
+  const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseVideos WHERE '$1'='' OR course_id=$1;"
+  const sql = "SELECT * FROM CourseVideos WHERE $1=-1 OR course_id=$1;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -910,9 +912,9 @@ const getCourseVideos = (req, res) => {
 }
 
 const getUnapprovedCourseVideos = (req, res) => {
-  const courseID = req.params.courseID;
+  const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseVideos WHERE '$1'='' OR course_id=$1 and not approved;"
+  const sql = "SELECT * FROM CourseVideos WHERE $1=-1 OR course_id=$1 and not approved;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -971,9 +973,9 @@ const addAssignmentFile = (req, res) => {
 };
 
 const getApprovedAssignmentFiles = (req, res) => {
-  const assignmentID = req.params.assignmentID;
+  const assignmentID = req.params.assignmentID ? req.params.assignmentID : -1;
 
-  const sql = "SELECT * FROM AssignmentFiles WHERE '$1'='' OR assignment_id=$1 and approved;"
+  const sql = "SELECT * FROM AssignmentFiles WHERE $1=-1 OR assignment_id=$1 and approved;"
   const values = [assignmentID];
 
   client.query(sql, values, (err, result) => {
@@ -999,9 +1001,9 @@ const getApprovedAssignmentFiles = (req, res) => {
 }
 
 const getAssignmentFiles = (req, res) => {
-  const assignmentID = req.params.assignmentID;
+  const assignmentID = req.params.assignmentID ? req.params.assignmentID : -1;
 
-  const sql = "SELECT * FROM AssignmentFiles WHERE '$1'='' OR assignment_id=$1;"
+  const sql = "SELECT * FROM AssignmentFiles WHERE $1=-1 OR assignment_id=$1;"
   const values = [assignmentID];
 
   client.query(sql, values, (err, result) => {
@@ -1027,9 +1029,9 @@ const getAssignmentFiles = (req, res) => {
 }
 
 const getUnapprovedAssignmentFiles = (req, res) => {
-  const assignmentID = req.params.assignmentID;
+  const assignmentID = req.params.assignmentID ? req.params.assignmentID : -1;
 
-  const sql = "SELECT * FROM AssignmentFiles WHERE '$1'='' OR assignment_id=$1 and not approved;"
+  const sql = "SELECT * FROM AssignmentFiles WHERE $1=-1 OR assignment_id=$1 and not approved;"
   const values = [assignmentID];
 
   client.query(sql, values, (err, result) => {
@@ -1089,9 +1091,9 @@ const addCourseFile = (req, res) => {
 };
 
 const getApprovedCourseFiles = (req, res) => {
-  const courseID = req.params.courseID;
+  const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseFiles WHERE '$1'='' OR course_id=$1 and approved;"
+  const sql = "SELECT * FROM CourseFiles WHERE $1=-1 OR course_id=$1 and approved;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -1117,9 +1119,9 @@ const getApprovedCourseFiles = (req, res) => {
 }
 
 const getCourseFiles = (req, res) => {
-  const courseID = req.params.courseID;
+  const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseFiles WHERE '$1'='' OR course_id=$1;"
+  const sql = "SELECT * FROM CourseFiles WHERE $1=-1 OR course_id=$1;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -1146,13 +1148,14 @@ const getCourseFiles = (req, res) => {
 }
 
 const getUnapprovedCourseFiles = (req, res) => {
-  const courseID = req.params.courseID;
+  const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseFiles WHERE '$1'='' OR course_id=$1 and not approved;"
+  const sql = "SELECT * FROM CourseFiles WHERE $1=-1 OR course_id=$1 and not approved;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
     if (err) {
+      console.log(err);
       res.status(400).send(err);
     } else {
       const rows = result.rows;

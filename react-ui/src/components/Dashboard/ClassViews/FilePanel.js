@@ -30,14 +30,11 @@ function GetFileList(props) {
     return (
       <List>
         {props.fileList.map((file) => (
-          <ListItem button key={file.file_name} onClick={() => {
-            props.setOpen(true);
-            props.setSelectedFile(file.file_name);
-          }}>
-            <a href={file.url} target="_blank">
+          <a href={file.url} target="_blank">
+          <ListItem button key={file.file_name}>
             <Typography color='secondary'>{file.file_name}</Typography>
-            </a>
           </ListItem>
+          </a>
         ))}
       </List>
     );
@@ -48,14 +45,11 @@ function GetFileList(props) {
         {props.fileList.map((file) => {
           if (file.file_name.toLowerCase().includes(props.searchValue.toLowerCase())) {
             return (
-              <ListItem button key={file.file_name} onClick={() => {
-                props.setOpen(true);
-                props.setSelectedFile(file.file_name);
-              }}>
-                <a href={file.url} target="_blank">
+              <a href={file.url} target="_blank">
+              <ListItem button key={file.file_name}>
                 <Typography color='secondary'>{file.file_name}</Typography>
-                </a>
               </ListItem>
+              </a>
             );
           }
         })}

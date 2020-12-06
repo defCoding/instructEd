@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button, Dialog, TextField, DialogActions, DialogContent, DialogTitle } from '@material-ui/core'
 
-export default function FileUpload({open, setOpen, endpoint, data}){
+export default function FileUpload({open, setOpen, endpoint, data, ext}){
   const [file, setFile] = useState(null);
 
   const handleClose = () => {  
@@ -11,7 +11,11 @@ export default function FileUpload({open, setOpen, endpoint, data}){
 
   const submitFile = () => {
     if (!file) {
-      throw new Error('Select a file first!');
+      alert('Select a file first!');
+      return;
+    } else if (ext && !ext.includes(file[0].name.split(".").slice(-1)[0])) {
+      alert('We do not support this file type.');
+      return;
     }
     const formData = new FormData();
     formData.append('file', file[0]);

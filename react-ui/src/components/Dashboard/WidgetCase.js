@@ -94,12 +94,9 @@ function WidgetDialog ({currentWidget, openDialog, setOpenDialog}) {
 
 export default function WidgetCase(props) {
   var optionPosn = props.widgetPosn;
-  console.log(optionPosn);
 
   var options = props.displayWidgets;
-  console.log(options);
 
-  console.log(options[optionPosn]);
 
   var currentOption = options[optionPosn];
 
