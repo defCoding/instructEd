@@ -1,10 +1,28 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { Button, List, ListItemText, ListItemSecondaryAction, ListItem, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@material-ui/core'
+import { Button, List, ListItemText, Select, InputLabel, FormControl, Grid, MenuItem, ListItemSecondaryAction, ListItem, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyle = makeStyles(theme => ({
+    items: {
+      margin: theme.spacing(1)
+    },
+    root: {
+      '& .MuiFormControl-root': {
+        width: '75%',
+        margin: theme.spacing(1),
+        display: 'flex'
+      }
+    },
+  }))
 
 export default function UnapprovedFiles(){
+    const classes = useStyle();
     const [files, setFiles] = useState([]); //Will be [] after testing
+    const [videos, setVideos] = useState([]);
+    const [assignmentFiles, setAssignmentFiles] = useState([]);
     const [open, setOpen] = React.useState(false);
+    const [filter, setFilter] = React.useState("Course Files");
     const [file, setFile] = useState(null);
     const [fOpen, setFopen] = React.useState(false);
     const filesRef = useRef([]);
@@ -26,6 +44,10 @@ export default function UnapprovedFiles(){
         .catch(console.log);
     });
 
+    const handleFilterChange = (event) => {
+        setFilter(event.target.value);
+    }
+
     function getFilesFromResponse(res){
         filesRef.current = filesRef.current.concat(res.data);
         setFiles(filesRef.current);
@@ -43,7 +65,26 @@ export default function UnapprovedFiles(){
     //}
 
     return (
+        
         <div>
+        <Grid item xs="12">
+        <FormControl color="secondary" variant="outlined" className={classes.items}>
+          <InputLabel>Filter</InputLabel>
+          <Select
+              color="secondary"
+              style={{ width: 250 }}
+              onChange={handleFilterChange}
+              value={filter}
+              label="Filter"
+              name="filter"
+              required
+            >
+              <MenuItem value='Course Files'>Course Files</MenuItem>
+              <MenuItem value='Course Videos'>Course Videos</MenuItem>
+              <MenuItem value='Assignment Files'>Assignment Files</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
             <List>
                 {files.map((file) =>
                     <>
