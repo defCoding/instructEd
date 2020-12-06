@@ -3,7 +3,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Typography, Switch, Menu, MenuItem, IconButton } from '@material-ui/core';
-import { fade, makeStyles, withStyles} from '@material-ui/core/styles';
+import { fade, makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import axios from 'axios';
 import ChatIcon from '@material-ui/icons/Chat';
@@ -95,10 +95,16 @@ const useStyles = makeStyles((theme) => ({
 
 function Navbar(props) {
   const classes = useStyles();
-  const [auth, setAuth] = React.useState(true);
   const [darkMode, setDarkMode] = React.useState(false);
+  const paletteType = darkMode ? "dark" : "light";
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
+
+  const darkTheme = createMuiTheme({
+    palette: {
+      type: paletteType,
+    },
+  });
   
   const handleAccountClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -114,10 +120,9 @@ function Navbar(props) {
       .catch(console.log);
   }
 
-  const handleDarkModeChange = (event) => {
-    setAuth(event.target.checked);
+  function handleDarkModeChange() {
     setDarkMode(!darkMode);
-  };
+  }
 
   return (
     <div>
@@ -126,10 +131,12 @@ function Navbar(props) {
           <Typography color="secondary" align="left" variant="h6" className={classes.title}>
             instructED
           </Typography>
-          <Switch
-            checked={darkMode}
-            onChange={handleDarkModeChange}
-            className={classes.menuButton} />
+          <ThemeProvider theme={darkTheme}>
+            <Switch
+              checked={darkMode}
+              onChange={handleDarkModeChange}
+              className={classes.menuButton} />
+          </ThemeProvider>
           <IconButton
             color="secondary"
             onClick={() => {
