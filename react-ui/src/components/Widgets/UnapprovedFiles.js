@@ -24,7 +24,6 @@ export default function UnapprovedFiles(){
     const [open, setOpen] = React.useState(false);
     const [filter, setFilter] = React.useState('Course Files');
     const [file, setFile] = useState(null);
-    const [fOpen, setFopen] = React.useState(false);
     const filesRef = useRef([]);
     useEffect(() => {
         //Get request for course files
