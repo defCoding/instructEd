@@ -22,30 +22,44 @@ export default function UnapprovedFiles(){
     const [videos, setVideos] = useState([]);
     const [assignmentFiles, setAssignmentFiles] = useState([]);
     const [open, setOpen] = React.useState(false);
-    const [filter, setFilter] = React.useState("Course Files");
+    const [filter, setFilter] = React.useState('Course Files');
     const [file, setFile] = useState(null);
     const [fOpen, setFopen] = React.useState(false);
     const filesRef = useRef([]);
     useEffect(() => {
         //Get request for course files
-        axios.get(`/course_files/unapproved/${9999}`) // ''
-        .then(res => {getFilesFromResponse(res)})
-        .catch(console.log);
-        console.log(files);
-
-        //Get request for assignment files
-        axios.get(`/assignment_files/unapproved/${''}`)
-        .then(res => {getFilesFromResponse(res)})
-        .catch(console.log);
-
-        //Get request for course videos
-        axios.get(`/course_videos/unapproved/${''}`)
-        .then(res => {getFilesFromResponse(res)})
-        .catch(console.log);
+        if(filter == 'Course Files'){
+            axios.get(`/course_files/unapproved/${''}`) // ''
+            .then(res => {getFilesFromResponse(res)})
+            .catch(console.log);
+            console.log(files);
+        }
+        else if(filter == 'Assignment Files'){
+            //Get request for assignment files
+            axios.get(`/assignment_files/unapproved/${''}`)
+            .then(res => {getFilesFromResponse(res)})
+            .catch(console.log);
+        }
+        else if(filter == 'Course Videos'){
+            //Get request for course videos
+            axios.get(`/course_videos/unapproved/${''}`)
+            .then(res => {getFilesFromResponse(res)})
+            .catch(console.log);
+        }
     });
 
     const handleFilterChange = (event) => {
         setFilter(event.target.value);
+
+        if(filter == 'Course Files'){
+            console.log("Course Files");
+        }
+        else if(filter == 'Course Videos'){
+            console.log("Course Videos");
+        }
+        else if(filter == 'Assignment Files'){
+            console.log("Assignment Files");
+        }
     }
 
     function getFilesFromResponse(res){
