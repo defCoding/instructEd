@@ -17,8 +17,12 @@
     "@duosecurity/duo_web": "^1.0.5",
     "@types/whatwg-fetch": "0.0.33",
     "aws-sdk": "^2.781.0",
+<<<<<<< HEAD
     "axios": "^0.21.0",
+||||||| e099de4
+=======
     "bootstrap": "^4.5.3",
+>>>>>>> frontend
     "cookie-parser": "^1.4.5",
     "crypto-random-string": "^3.3.0",
     "dotenv": "^8.2.0",
@@ -35,8 +39,12 @@
     "react-bootstrap": "^1.4.0",
     "react-facebook-login": "^4.1.1",
     "react-player": "^2.6.2",
+<<<<<<< HEAD
     "socket.io": "^3.0.3",
+||||||| e099de4
+=======
     "react-scroll": "^1.8.1",
+>>>>>>> frontend
     "whatwg-fetch": "^3.4.1"
   }
 }
