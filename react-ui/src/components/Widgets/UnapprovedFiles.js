@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Button, List, ListItemText, Select, InputLabel, FormControl, Grid, MenuItem, ListItemSecondaryAction, ListItem, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@material-ui/core'
+import { spacing } from '@material-ui/system';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyle = makeStyles(theme => ({
     items: {
-      margin: theme.spacing(1)
+      margin: theme.spacing(1),
+      paddingRight: theme.spacing(2)
     },
     root: {
       '& .MuiFormControl-root': {
@@ -22,7 +24,7 @@ export default function UnapprovedFiles(){
     //const [videos, setVideos] = useState([]);
     //const [assignmentFiles, setAssignmentFiles] = useState([]);
     const [file, setFile] = useState(null);
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const [filter, setFilter] = React.useState('Course Files');
     const filesRef = useRef([]);
     const videosRef = useRef([]);
@@ -103,11 +105,10 @@ export default function UnapprovedFiles(){
         
         <div>
         <Grid item xs="12">
-        <FormControl color="secondary" variant="outlined" className={classes.items}>
+        <FormControl color="secondary" variant="outlined" className={classes.items} fullWidth>
           <InputLabel>Filter</InputLabel>
           <Select
               color="secondary"
-              style={{ width: 250 }}
               onChange={handleFilterChange}
               value={filter}
               label="Filter"
@@ -128,13 +129,12 @@ export default function UnapprovedFiles(){
                                 <Typography color='secondary'>{file.file_name}</Typography>
                             </a>
                             <ListItemSecondaryAction>
-                                <Button onClick={viewBtnClicked} variant="contained" color="secondary" size="small">
+                                <Button onClick={viewBtnClicked(file)} variant="contained" color="secondary" size="small">
                                     Approve/Disapprove
                                 </Button>
                             </ListItemSecondaryAction>
 
                         </ListItem>
-                        <Divider />
                     </>
                 )}
             </List>
@@ -145,10 +145,15 @@ export default function UnapprovedFiles(){
 
 function ApprovalDialog({selectedFile, open, setOpen}){
     var approved = null;
-
+    var fileName = '';
+    if(selectedFile == null){
+        setOpen(false);
+    }
+    else{
+        fileName = selectedFile.file_name;
+    }
     useEffect(() => {
         //check if selected file is null
-        if(selectedFile == null){}
     });
 
   const handleClose = () => {  
@@ -177,17 +182,17 @@ function ApprovalDialog({selectedFile, open, setOpen}){
         <DialogTitle id="approve-dialog-title">{"Approve/Disapprove"}</DialogTitle>
         <DialogContent>
             <DialogContentText id="approve-dialog-filename">
-                FileName
+                {fileName}
             </DialogContentText>
         </DialogContent>
         <DialogActions>
-            <Button onClick={approveClicked} color="primary">
+            <Button onClick={approveClicked} color="secondary">
                 Approve
             </Button>
-            <Button onClick={disapproveClicked} color="primary">
+            <Button onClick={disapproveClicked} color="secondary">
                 Disapprove
             </Button>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={handleClose} color="secondary">
                 Cancel
             </Button>
         </DialogActions>
