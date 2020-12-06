@@ -19,17 +19,23 @@ const useStyle = makeStyles(theme => ({
 export default function UnapprovedFiles(){
     const classes = useStyle();
     const [files, setFiles] = useState([]); //Will be [] after testing
-    const [videos, setVideos] = useState([]);
-    const [assignmentFiles, setAssignmentFiles] = useState([]);
+    //const [videos, setVideos] = useState([]);
+    //const [assignmentFiles, setAssignmentFiles] = useState([]);
     const [open, setOpen] = React.useState(false);
     const [filter, setFilter] = React.useState('Course Files');
     const [file, setFile] = useState(null);
     const filesRef = useRef([]);
+    const videosRef = useRef([]);
+    const assignmentFilesRef = useRef([]);
+    const courseFilesRef = useRef([]);
     useEffect(() => {
+        videosRef.current = [];
+        assignmentFilesRef.current = [];
+        courseFilesRef.current = [];
         //Get request for course files
         if(filter == 'Course Files'){
             axios.get(`/course_files/unapproved/${''}`) // ''
-            .then(res => {getFilesFromResponse(res)})
+            .then(res => {getCourseFilesFromResponse(res)})
             .catch(console.log);
             console.log(files);
         }
@@ -61,9 +67,19 @@ export default function UnapprovedFiles(){
         }
     }
 
-    function getFilesFromResponse(res){
-        filesRef.current = filesRef.current.concat(res.data);
-        setFiles(filesRef.current);
+    function getCourseFilesFromResponse(res){
+        courseFilesRef.current = courseFilesRef.current.concat(res.data);
+        //setFiles(courseFilesRef.current);
+    }
+
+    function getVideosFromResponse(res){
+        videosRef.current = videosRef.current.concat(res.data);
+        //setFiles(filesRef.current);
+    }
+
+    function getAssignmentFilesFromResponse(res){
+        assignmentFilesRef.current = assignmentFilesRef.current.concat(res.data);
+        //setFiles(filesRef.current);
     }
 
     const viewBtnClicked =(filelistitem) => () => {
