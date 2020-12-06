@@ -24,7 +24,6 @@ export default function UnapprovedFiles(){
         axios.get(`/course_videos/unapproved/${''}`)
         .then(res => {getFilesFromResponse(res)})
         .catch(console.log);
-
     });
 
     function getFilesFromResponse(res){
@@ -48,10 +47,7 @@ export default function UnapprovedFiles(){
             <List>
                 {files.map((file) =>
                     <>
-                        <ListItem onClick={() => {
-                        setFopen(true);
-                        setFile(file.file_name);
-                        }} button={true}>
+                        <ListItem divider={true}>
                             <a href={file.url} target="_blank">
                                 <Typography color='secondary'>{file.file_name}</Typography>
                             </a>
