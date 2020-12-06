@@ -34,55 +34,58 @@ export default function UnapprovedFiles(){
         courseFilesRef.current = [];
         filesRef.current = [];
         //Get request for course files
-        if(filter == 'Course Files'){
+        if(filter === 'Course Files'){
             axios.get(`/course_files/unapproved/${9999}`) // ''
             .then(res => {getCourseFilesFromResponse(res)})
             .catch(console.log);   
         }
-        else if(filter == 'Assignment Files'){
+        else if(filter === 'Assignment Files'){
             //Get request for assignment files
             axios.get(`/assignment_files/unapproved/${1000}`)
             .then(res => {getAssignmentFilesFromResponse(res)})
             .catch(console.log); 
         }
-        else if(filter == 'Course Videos'){
+        else if(filter === 'Course Videos'){
             //Get request for course videos
             axios.get(`/course_videos/unapproved/${9999}`)
             .then(res => {getVideosFromResponse(res)})
             .catch(console.log);   
         }
-    });
+    }, [filter]);
 
     const handleFilterChange = (event) => {
         setFilter(event.target.value);
         if(filter == 'Course Files'){
             console.log("Course Files");
+            filesRef.current = courseFilesRef.current;
         }
-        else if(filter == 'Course Videos'){
+        else if(filter === 'Course Videos'){
             console.log("Course Videos");
+            filesRef.current = videosRef.current;
         }
-        else if(filter == 'Assignment Files'){
+        else if(filter === 'Assignment Files'){
             console.log("Assignment Files");
+            filesRef.current = assignmentFilesRef.current;
         }
     }
 
     function getCourseFilesFromResponse(res){
         courseFilesRef.current = courseFilesRef.current.concat(res.data);
         console.log(courseFilesRef.current);
-        filesRef.current = courseFilesRef.current;
-        //setFiles(courseFilesRef.current);
+        //filesRef.current = courseFilesRef.current;
+        setFiles(courseFilesRef.current);
     }
 
     function getVideosFromResponse(res){
         videosRef.current = videosRef.current.concat(res.data);
-        filesRef.current = videosRef.current;
-        //setFiles(videosRef.current);
+        //filesRef.current = videosRef.current;
+        setFiles(videosRef.current);
     }
 
     function getAssignmentFilesFromResponse(res){
         assignmentFilesRef.current = assignmentFilesRef.current.concat(res.data);
-        filesRef.current = assignmentFilesRef.current;
-        //setFiles(assignmentFilesRef.current);
+        //filesRef.current = assignmentFilesRef.current;
+        setFiles(assignmentFilesRef.current);
     }
 
     const viewBtnClicked =(filelistitem) => () => {
@@ -118,14 +121,14 @@ export default function UnapprovedFiles(){
         </FormControl>
       </Grid>
             <List>
-                {filesRef.current.map((file) => //filesRef.current
+                {files.map((file) => //filesRef.current
                     <>
                         <ListItem divider={true}>
                             <a href={file.url} target="_blank">
                                 <Typography color='secondary'>{file.file_name}</Typography>
                             </a>
                             <ListItemSecondaryAction>
-                                <Button onClick={viewBtnClicked} variant="contained" color="primary">
+                                <Button onClick={viewBtnClicked} variant="contained" color="secondary" size="small">
                                     Approve/Disapprove
                                 </Button>
                             </ListItemSecondaryAction>
