@@ -37,19 +37,19 @@ export default function UnapprovedFiles(){
         filesRef.current = [];
         //Get request for course files
         if(filter === 'Course Files'){
-            axios.get(`/course_files/unapproved/${9999}`) // ''
+            axios.get(`/course_files/unapproved`) // ''
             .then(res => {getCourseFilesFromResponse(res)})
             .catch(console.log);   
         }
         else if(filter === 'Assignment Files'){
             //Get request for assignment files
-            axios.get(`/assignment_files/unapproved/${1000}`)
+            axios.get(`/assignment_files/unapproved`)
             .then(res => {getAssignmentFilesFromResponse(res)})
             .catch(console.log); 
         }
         else if(filter === 'Course Videos'){
             //Get request for course videos
-            axios.get(`/course_videos/unapproved/${9999}`)
+            axios.get(`/course_videos/unapproved`)
             .then(res => {getVideosFromResponse(res)})
             .catch(console.log);   
         }
@@ -57,7 +57,7 @@ export default function UnapprovedFiles(){
 
     const handleFilterChange = (event) => {
         setFilter(event.target.value);
-        if(filter == 'Course Files'){
+        if(filter === 'Course Files'){
             console.log("Course Files");
             filesRef.current = courseFilesRef.current;
         }
@@ -138,14 +138,15 @@ export default function UnapprovedFiles(){
                     </>
                 )}
             </List>
-            <ApprovalDialog selectedFile={file} open={open} setOpen={setOpen}/>
+            <ApprovalDialog selectedFile={file} open={open} setOpen={setOpen} currentFilter={filter}/>
         </div>
     );
 }
 
-function ApprovalDialog({selectedFile, open, setOpen}){
+function ApprovalDialog({selectedFile, open, setOpen, currentFilter}){
     var approved = null;
     var fileName = '';
+    var filterString = currentFilter.substring(0, currentFilter.length - 1);
     if(selectedFile == null){
         setOpen(false);
     }
@@ -161,14 +162,28 @@ function ApprovalDialog({selectedFile, open, setOpen}){
   };
 
   function approveClicked(){
-      approved = true;
-      //handle approval of file upload then close
+    if(currentFilter === 'Course Files'){
+
+    }
+    else if(currentFilter === 'Course Videos'){
+ 
+    }
+    else if(currentFilter === 'Assignment Files'){
+
+    }
       handleClose();
 
   }
   function disapproveClicked(){
-      approved = false;
-      //handle disapproval of file upload then close
+    if(currentFilter === 'Course Files'){
+
+    }
+    else if(currentFilter === 'Course Videos'){
+ 
+    }
+    else if(currentFilter === 'Assignment Files'){
+
+    }
       handleClose();
   }
 
@@ -179,10 +194,10 @@ function ApprovalDialog({selectedFile, open, setOpen}){
         aria-labelledby="approve-dialog-title"
         aria-describedby="approve-dialog-filename" //will be filled by actual filename variable
     >
-        <DialogTitle id="approve-dialog-title">{"Approve/Disapprove"}</DialogTitle>
+        <DialogTitle id="approve-dialog-title">{"Approve/Disapprove:"}</DialogTitle>
         <DialogContent>
             <DialogContentText id="approve-dialog-filename">
-                {fileName}
+                {filterString + ": " + fileName}
             </DialogContentText>
         </DialogContent>
         <DialogActions>
