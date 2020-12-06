@@ -15,23 +15,23 @@ const useStyles = makeStyles((theme) => ({
 
 export default function WidgetView(props) {
   const classes = useStyles();
-  const displayWidgets = props.displayWidgets;
-
+  const currentWidgets = props.displayWidgets;
+  
   return(
     <main className={classes.content}>
       <div className={classes.toolbar} />
       <Grid container height="100%" spacing={1}>
         <Grid item sm={12} md={6} maxHeight={300}>
-          <WidgetCase displayWidgets={displayWidgets} />
+          <WidgetCase displayWidgets={currentWidgets} widgetPosn={0}/>
         </Grid>
         <Grid item sm={12} md={6} maxHeight={300}>
-          <WidgetCase displayWidgets={displayWidgets} />
+          <WidgetCase displayWidgets={currentWidgets} widgetPosn={1}/>
         </Grid>
         <Grid item sm={12} md={6} maxHeight={300}>
-          <WidgetCase displayWidgets={displayWidgets} />
+          <WidgetCase displayWidgets={currentWidgets} widgetPosn={2}/>
         </Grid>
         <Grid item sm={12} md={6} maxHeight={300}>
-          <WidgetCase displayWidgets={displayWidgets} />
+          <WidgetCase displayWidgets={currentWidgets} widgetPosn={3}/>
         </Grid>
       </Grid>
     </main>

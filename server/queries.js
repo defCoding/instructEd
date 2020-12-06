@@ -13,20 +13,20 @@ require('dotenv').config();
 const resetExpirationAmount = 15;
 const resetExpirationUnit = 'minutes';
 
+/*
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
+*/
 
-/*
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo',
   //password: 'demo', port: '5433'
 });
-*/
 
 aws.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY,
@@ -47,6 +47,18 @@ const uploadFile = (buffer, name) => {
 
   return s3.upload(params).promise();
 };
+
+const deleteFile = (name) => { 
+  const params = {
+    ACL: 'public-read',
+    Bucket: process.env.S3_BUCKET,
+    Key: `${name}`
+  };
+
+  return s3.deleteObject(params, (err, data) => {
+    if (err) console.log(err);
+  });
+}
 
 client.connect((err) => {
   if (err) {
@@ -1209,7 +1221,7 @@ const getCoursePeople = (req, res) => {
 
 const getGrade = (req, res) => {
   const userID = req.userID;
-  const assignmentID = req.param.assignmentID;
+  const assignmentID = req.params.assignmentID;
   const values = [userID, assignmentID];
   const sql = 'SELECT grade FROM Grades WHERE user_id=$1 AND assignment_id=$2;';
 
@@ -1223,8 +1235,8 @@ const getGrade = (req, res) => {
 }
 
 const getStudentGrade = (req, res) => {
-  const userID = req.param.userID;
-  const assignmentID = req.param.assignmentID;
+  const userID = req.params.studentID;  //Was userID
+  const assignmentID = req.params.assignmentID;
   const values = [userID, assignmentID];
   const sql = 'SELECT grade FROM Grades WHERE user_id=$1 AND assignment_id=$2;';
 
@@ -1238,7 +1250,7 @@ const getStudentGrade = (req, res) => {
 }
 
 const addGrade = (req, res) => {
-const userID = req.body.userID;
+  const userID = req.body.userID;
   const assignmentID = req.body.assignmentID;
   const grade = req.body.grade;
   const values = [assignmentID, userID, grade];
@@ -1259,12 +1271,33 @@ const userID = req.body.userID;
   });
 }
 
+const updateGrade = (req, res) => {
+  const userID = req.body.userID;
+  const assignmentID = req.body.assignmentID;
+  const grade = req.body.grade;
+  const sql = 'UPDATE Grades SET grade=$1 WHERE assignment_id=$2 AND user_id=$3;';
+  const values = [grade, assignmentID, userID];
+
+  client.query(sql, values, (err) => {
+    if (err) {
+      if (err.constraint.includes('assignment')) {
+        res.status(400).send('Assignment ID does not exist.');
+      } else if (err.constraint.includes('user')) {
+        res.status(400).send('User ID does not exist.');
+      } else {
+        res.status(400).send('Something went wrong.');
+      }
+    } else {
+      res.status(201).send('Grade updated.');
+    }
+  });
+}
+
 const getAssignmentSubmissions = (req, res) => {
   const assignmentID = req.params.assignmentID;
   let userID;
-
-  if (req.params.userID) {
-    userID = req.params.userID;
+  if (req.params.studentID) {  //userID
+    userID = req.params.studentID; //userID
   } else {
     userID = req.userID;
   }
@@ -1564,6 +1597,102 @@ const getUserID = (req, res) => {
   res.status(200).send(`${req.userID}`);
 }
 
+const setCourseFileApproval = (req, res) => {
+  const approved = req.body.approved; 
+  const courseID = req.body.courseID;
+  let filename = req.body.filename;
+  const values = [courseID, filename];
+
+  if (approved) {
+    const sql = 'UPDATE CourseFiles SET approved=true WHERE course_id=$1 AND file_name=$2;';
+
+    client.query(sql, values, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        res.status(200).send();
+      }
+    });
+  } else {
+    const sql = 'DELETE FROM CourseFiles WHERE course_id=$1 AND file_name=$2;';
+    client.query(sql, values, async (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        filename = `courses/${courseID}/files/${filename}`;
+        await deleteFile(filename);
+        res.status(200).send();
+      }
+    });
+  }
+}
+
+const setCourseVideoApproval = (req, res) => {
+  const approved = req.body.approved; 
+  const courseID = req.body.courseID;
+  let filename = req.body.filename;
+  const values = [courseID, filename];
+
+  if (approved) {
+    const sql = 'UPDATE CourseVideos SET approved=true WHERE course_id=$1 AND file_name=$2;';
+
+    client.query(sql, values, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        res.status(200).send();
+      }
+    });
+  } else {
+    const sql = 'DELETE FROM CourseVideos WHERE course_id=$1 AND file_name=$2;';
+    client.query(sql, values, async (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        filename = `courses/${courseID}/videos/${filename}`;
+        await deleteFile(filename);
+        res.status(200).send();
+      }
+    });
+  }
+}
+
+const setAssignmentFileApproval = (req, res) => {
+  const approved = req.body.approved; 
+  const assignmentID = req.body.assignmentID;
+  let filename = req.body.filename;
+  const values = [courseID, filename];
+
+  if (approved) {
+    const sql = 'UPDATE AssignmentFiles SET approved=true WHERE assignment_id=$1 AND file_name=$2;';
+
+    client.query(sql, values, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        res.status(200).send();
+      }
+    });
+  } else {
+    const sql = 'DELETE FROM AssignmentFiles WHERE assignment_id=$1 AND file_name=$2;';
+    client.query(sql, values, async (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        filename = `assignments/${assignmentID}/${filename}`;
+        await deleteFile(filename);
+        res.status(200).send();
+      }
+    });
+  }
+}
+
 const getUserInfo = (req, res) => {
   const sql = `SELECT first_name, last_name, id FROM Users WHERE id=$1;`;
   const values = [req.userID];
@@ -1627,9 +1756,13 @@ module.exports = {
   getStudentGrade,
   getGrade,
   addGrade,
+  updateGrade,
   approveAssignmentFile,
   approveCourseFile,
   approveCourseVideo,
+  setCourseFileApproval,
+  setCourseVideoApproval,
+  setAssignmentFileApproval,
   searchUsers,
   searchCourses,
   getUserConversations,

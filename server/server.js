@@ -128,6 +128,10 @@ app.get('/chat/conversations/:courseID', withDuoAuth, db.getUserConversations);
 app.get('/chat/messages/:conversationID', withDuoAuth, db.getConversationMessages);
 app.post('/chat/messages/', withDuoAuth, db.addMessage);
 app.post('/chat/conversations', withDuoAuth, db.createConversation);
+app.put('/grades/', withDuoAuth, db.updateGrade);
+app.put('/assignment_files/approval', withDuoAuth, db.setAssignmentFileApproval);
+app.put('/course_files/approval', withDuoAuth, db.setCourseFileApproval);
+app.put('/course_videos/approval', withDuoAuth, db.setCourseVideoApproval);
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));
