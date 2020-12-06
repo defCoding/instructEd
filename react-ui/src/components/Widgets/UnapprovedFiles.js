@@ -19,8 +19,9 @@ const useStyle = makeStyles(theme => ({
   }))
 
 export default function UnapprovedFiles(){
+    let  [,setState]=useState();
     const classes = useStyle();
-    const [files, setFiles] = useState([]); //Will be [] after testing
+    const [files, setFiles] = useState([]);
     //const [videos, setVideos] = useState([]);
     //const [assignmentFiles, setAssignmentFiles] = useState([]);
     const [file, setFile] = useState(null);
@@ -37,7 +38,7 @@ export default function UnapprovedFiles(){
         filesRef.current = [];
         //Get request for course files
         if(filter === 'Course Files'){
-            axios.get(`/course_files/unapproved`) // ''
+            axios.get(`/course_files/unapproved`)
             .then(res => {getCourseFilesFromResponse(res)})
             .catch(console.log);   
         }
@@ -53,7 +54,7 @@ export default function UnapprovedFiles(){
             .then(res => {getVideosFromResponse(res)})
             .catch(console.log);   
         }
-    }, [filter]);
+    }, [filter, open]);
 
     const handleFilterChange = (event) => {
         setFilter(event.target.value);
@@ -93,6 +94,8 @@ export default function UnapprovedFiles(){
     const viewBtnClicked =(filelistitem) => () => {
         setOpen(true);
         setFile(filelistitem);
+        var currentFilter = filter;
+        //Reset the list
     }
 
     //function fileListItemClicked(filelistitem){
@@ -138,12 +141,12 @@ export default function UnapprovedFiles(){
                     </>
                 )}
             </List>
-            <ApprovalDialog selectedFile={file} open={open} setOpen={setOpen} currentFilter={filter}/>
+            <ApprovalDialog selectedFile={file} open={open} setOpen={setOpen} currentFilter={filter} fileList={files}/>
         </div>
     );
 }
 
-function ApprovalDialog({selectedFile, open, setOpen, currentFilter}){
+function ApprovalDialog({selectedFile, open, setOpen, currentFilter, fileList}){
     var approved = null;
     var fileName = '';
     var filterString = currentFilter.substring(0, currentFilter.length - 1);
@@ -163,26 +166,88 @@ function ApprovalDialog({selectedFile, open, setOpen, currentFilter}){
 
   function approveClicked(){
     if(currentFilter === 'Course Files'){
-
+        axios.put(`/course_files`,{
+                courseID: selectedFile.course_id,
+                fileName: selectedFile.file_name,
+                isApproved: true
+            }
+        ).then(res =>{
+            if(res.status === 400){
+              alert(res.statusText);
+            }
+            alert('File Approved');
+          }).catch(console.log);
+          fileList = fileList.filter(data => (data.file_name != selectedFile.file_name && data.course_id != selectedFile.course_id));
     }
     else if(currentFilter === 'Course Videos'){
- 
+        axios.put(`/course_videos`,{
+            courseID: selectedFile.course_id,
+            fileName: selectedFile.file_name,
+            isApproved: true
+        }
+    ).then(res =>{
+        if(res.status === 400){
+          alert(res.statusText);
+        }
+        alert('Video Approved');
+      }).catch(console.log);
     }
     else if(currentFilter === 'Assignment Files'){
-
+        axios.put(`/assignment_files`,{
+            assignmentID: selectedFile.assignment_id,
+            fileName: selectedFile.file_name,
+            isApproved: true
+        }
+    ).then(res =>{
+        if(res.status === 400){
+          alert(res.statusText);
+        }
+        alert('Assignment File Approved');
+      }).catch(console.log);
     }
       handleClose();
 
   }
   function disapproveClicked(){
-    if(currentFilter === 'Course Files'){
 
+    if(currentFilter === 'Course Files'){
+        axios.put(`/course_files`,{
+            courseID: selectedFile.course_id,
+            fileName: selectedFile.file_name,
+            isApproved: false
+        }
+    ).then(res =>{
+        if(res.status === 400){
+          alert(res.statusText);
+        }
+        alert('File Disapproved');
+      }).catch(console.log);
     }
     else if(currentFilter === 'Course Videos'){
- 
+        axios.put(`/course_videos`,{
+            courseID: selectedFile.course_id,
+            fileName: selectedFile.file_name,
+            isApproved: false
+        }
+    ).then(res =>{
+        if(res.status === 400){
+          alert(res.statusText);
+        }
+        alert('Video Disapproved');
+      }).catch(console.log);
     }
     else if(currentFilter === 'Assignment Files'){
-
+        axios.put(`/assignment_files`,{
+            assignmentID: selectedFile.assignment_id,
+            fileName: selectedFile.file_name,
+            isApproved: false
+        }
+    ).then(res =>{
+        if(res.status === 400){
+          alert(res.statusText);
+        }
+        alert('Assignment File Disapproved');
+      }).catch(console.log);
     }
       handleClose();
   }
