@@ -85,7 +85,7 @@ export default function AddToClass() {
             </Select>
           </FormControl>
           <Grid item xs="12">
-            <Button variant="contained" color="secondary" className={classes.items} onClick={onClick}>Add Course</Button>
+            <Button variant="contained" color="secondary" className={classes.items} onClick={onClick}>Add to Class</Button>
           </Grid>
         </Grid>
       </form>
