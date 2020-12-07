@@ -20,7 +20,6 @@ const useStyle = makeStyles(theme => ({
   }))
 
 export default function UnapprovedFiles(){
-    let  [,setState]=useState();
     const classes = useStyle();
     const [files, setFiles] = useState([]);
     //const [videos, setVideos] = useState([]);
@@ -154,13 +153,13 @@ export default function UnapprovedFiles(){
 
 function ApprovalDialog({selectedFile, open, setOpen, currentFilter, fileList}){
     var approved = null;
-    var fileName = '';
+    var filename = '';
     var filterString = currentFilter.substring(0, currentFilter.length - 1);
     if(selectedFile == null){
         setOpen(false);
     }
     else{
-        fileName = selectedFile.file_name;
+        filename = selectedFile.file_name;
     }
     useEffect(() => {
         //check if selected file is null
@@ -172,10 +171,10 @@ function ApprovalDialog({selectedFile, open, setOpen, currentFilter, fileList}){
 
   function approveClicked(){
     if(currentFilter === 'Course Files'){
-        axios.put(`/course_files`,{
+        axios.put(`/course_files/approval`,{
                 courseID: selectedFile.course_id,
-                fileName: selectedFile.file_name,
-                isApproved: true
+                filename: selectedFile.file_name,
+                approved: true
             }
         ).then(res =>{
             if(res.status === 400){
@@ -186,10 +185,10 @@ function ApprovalDialog({selectedFile, open, setOpen, currentFilter, fileList}){
           fileList = fileList.filter(data => (data.file_name != selectedFile.file_name && data.course_id != selectedFile.course_id));
     }
     else if(currentFilter === 'Course Videos'){
-        axios.put(`/course_videos`,{
+        axios.put(`/course_videos/approval`,{
             courseID: selectedFile.course_id,
-            fileName: selectedFile.file_name,
-            isApproved: true
+            filename: selectedFile.file_name,
+            approved: true
         }
     ).then(res =>{
         if(res.status === 400){
@@ -199,10 +198,10 @@ function ApprovalDialog({selectedFile, open, setOpen, currentFilter, fileList}){
       }).catch(console.log);
     }
     else if(currentFilter === 'Assignment Files'){
-        axios.put(`/assignment_files`,{
+        axios.put(`/assignment_files/approval`,{
             assignmentID: selectedFile.assignment_id,
-            fileName: selectedFile.file_name,
-            isApproved: true
+            filename: selectedFile.file_name,
+            approved: true
         }
     ).then(res =>{
         if(res.status === 400){
@@ -217,10 +216,10 @@ function ApprovalDialog({selectedFile, open, setOpen, currentFilter, fileList}){
   function disapproveClicked(){
 
     if(currentFilter === 'Course Files'){
-        axios.put(`/course_files`,{
+        axios.put(`/course_files/approval`,{
             courseID: selectedFile.course_id,
-            fileName: selectedFile.file_name,
-            isApproved: false
+            filename: selectedFile.file_name,
+            approved: false
         }
     ).then(res =>{
         if(res.status === 400){
@@ -230,10 +229,10 @@ function ApprovalDialog({selectedFile, open, setOpen, currentFilter, fileList}){
       }).catch(console.log);
     }
     else if(currentFilter === 'Course Videos'){
-        axios.put(`/course_videos`,{
+        axios.put(`/course_videos/approval`,{
             courseID: selectedFile.course_id,
-            fileName: selectedFile.file_name,
-            isApproved: false
+            filename: selectedFile.file_name,
+            approved: false
         }
     ).then(res =>{
         if(res.status === 400){
@@ -243,10 +242,10 @@ function ApprovalDialog({selectedFile, open, setOpen, currentFilter, fileList}){
       }).catch(console.log);
     }
     else if(currentFilter === 'Assignment Files'){
-        axios.put(`/assignment_files`,{
+        axios.put(`/assignment_files/approval`,{
             assignmentID: selectedFile.assignment_id,
-            fileName: selectedFile.file_name,
-            isApproved: false
+            filename: selectedFile.file_name,
+            approved: false
         }
     ).then(res =>{
         if(res.status === 400){
@@ -268,7 +267,7 @@ function ApprovalDialog({selectedFile, open, setOpen, currentFilter, fileList}){
         <DialogTitle id="approve-dialog-title">{"Approve/Disapprove:"}</DialogTitle>
         <DialogContent>
             <DialogContentText id="approve-dialog-filename">
-                {filterString + ": " + fileName}
+                {filterString + ": " + filename}
             </DialogContentText>
         </DialogContent>
         <DialogActions>

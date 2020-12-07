@@ -25,7 +25,7 @@ const client = new Client({
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo',
-  password: 'demo', port: '5433'
+  //password: 'demo', port: '5433'
 });
 
 aws.config.update({
@@ -50,7 +50,6 @@ const uploadFile = (buffer, name) => {
 
 const deleteFile = (name) => { 
   const params = {
-    ACL: 'public-read',
     Bucket: process.env.S3_BUCKET,
     Key: `${name}`
   };
@@ -1409,64 +1408,6 @@ const addAssignment = (req, res) => {
   });
 }
 
-const approveCourseFile = (req, res) => {
-  console.log(req.body);
-  const info = req.body;
-  const courseID = info.courseID;
-  const fileName = info.fileName;
-  const isApproved = info.isApproved;
-
-  const sql = `UPDATE CourseFiles SET approved=$1 WHERE course_id=$2 AND file_name=$3;`;
-  const values = [isApproved, courseID, fileName];
-
-  client.query(sql, values, (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(400).send(err);
-    } else {
-      res.status(200).send();
-    }
-  });
-}
-
-const approveCourseVideo = (req, res) => {
-  console.log(req.body);
-  const info = req.body;
-  const courseID = info.courseID;
-  const fileName = info.fileName;
-  const isApproved = info.isApproved;
-
-  const sql = `UPDATE CourseVideos SET approved=$1 WHERE course_id=$2 AND file_name=$3;`;
-  const values = [isApproved, courseID, fileName];
-
-  client.query(sql, values, (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(400).send(err);
-    } else {
-      res.status(200).send();
-    }
-  });
-}
-
-const approveAssignmentFile = (req, res) => {
-  const info = req.body;
-  const assignmentID = info.assignmentID;
-  const fileName = info.fileName;
-  const isApproved = info.isApproved;
-
-  const sql = `UPDATE AssignmentFiles SET approved=$1 WHERE assignment_id=$2 AND file_name=$3;`;
-  const values = [isApproved, assignmentID, fileName];
-
-  client.query(sql, values, (err, result) => {
-    if (err) {
-      console.log(err);
-      res.status(400).send(err);
-    } else {
-      res.status(200).send();
-    }
-  });
-}
 
 const searchUsers = (req, res) => {
   let query = req.params.query;
@@ -1627,6 +1568,7 @@ const setCourseFileApproval = (req, res) => {
         res.status(400).send(err);
       } else {
         filename = `courses/${courseID}/files/${filename}`;
+        console.log(filename);
         await deleteFile(filename);
         res.status(200).send();
       }
@@ -1810,9 +1752,6 @@ module.exports = {
   getGrade,
   addGrade,
   updateGrade,
-  approveAssignmentFile,
-  approveCourseFile,
-  approveCourseVideo,
   setCourseFileApproval,
   setCourseVideoApproval,
   setAssignmentFileApproval,

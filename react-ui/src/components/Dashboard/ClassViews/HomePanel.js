@@ -28,7 +28,7 @@ export default function GeneralPanel(props) {
   const classes = useStyles();
   const courseData = props.courseData;
   return (
-    <Paper className={classes.dialog}>
+    <Paper className={classes.dialog} style={{ overflow: 'auto'}}>
       <Typography variant="h5">
         Course Information
       </Typography>
