@@ -1324,7 +1324,8 @@ const getAssignmentSubmissions = (req, res) => {
         };
 
         await s3.listObjects(params, (err, files) => {
-          if (!err) {
+          if (!err && typeof files.Contents !== "undefined") { //added after &&
+            console.log(files.Contents);
             for (const file of files.Contents) {
               let p = {
                 Bucket: "instructed",
