@@ -43,25 +43,27 @@ export default function ForgotPassword(props) {
 
   return(
     <>
-      <Navbar />
-      <Paper className={classes.paperContent}>
-        <form className={classes.root}>
-          <Grid container justify="center">
-            <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Forgot Password</Typography>
-          </Grid>
-          <Grid container justify="center">
-            <TextField color="secondary" variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
-          </Grid>
-          <Grid container justify="center">
-            <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Get Link</Button>
-          </Grid>
-          <Grid container justify="center">
-            <MuiLink component={Link} to="/login" color="secondary" variant="body1" className={classes.extraItemsForm}>Already have an account?</MuiLink>
-          </Grid>
-          <Grid container justify="center">
-            <MuiLink component={Link} to="/registration" color="secondary" variant="body1" className={classes.extraItemsForm}>Sign up for an account</MuiLink>
-          </Grid>
-        </form>
+      <Paper className={classes.paperRoot}>
+        <Navbar />
+        <Paper className={classes.paperContent}>
+          <form className={classes.root}>
+            <Grid container justify="center">
+              <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Forgot Password</Typography>
+            </Grid>
+            <Grid container justify="center">
+              <TextField color="secondary" variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
+            </Grid>
+            <Grid container justify="center">
+              <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Get Link</Button>
+            </Grid>
+            <Grid container justify="center">
+              <MuiLink component={Link} to="/login" color="secondary" variant="body1" className={classes.links}>Already have an account?</MuiLink>
+            </Grid>
+            <Grid container justify="center">
+              <MuiLink component={Link} to="/registration" color="secondary" variant="body1" className={classes.links}>Sign up for an account</MuiLink>
+            </Grid>
+          </form>
+        </Paper>
       </Paper>
     </>
   )

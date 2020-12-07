@@ -82,29 +82,31 @@ export default function Login(props) {
 
   return (
     <>
-      <Navbar />
-      <Paper className={classes.paperContent}>
-        <form className={classes.root}>
-          <Grid container justify="center">
-            <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Sign in to your account</Typography>
-          </Grid>
-          <Grid container justify="center">
-            <TextField color="secondary" variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
-            <TextField color="secondary" variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
-          </Grid>
-          <Grid container justify="center">
-            <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Login</Button>
-          </Grid>
-          <Grid container justify="center">
-            <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email,picture" callback={responseFacebook} className={classes.facebookButton} />
-          </Grid>
-          <Grid container justify="center">
-            <MuiLink component={Link} to="/registration" variant="body1" color="secondary" className={classes.links}>Sign up for an account</MuiLink>
-          </Grid>
-          <Grid container justify="center">
-            <MuiLink component={Link} to="/forgotpassword" variant="body1" color="secondary" className={classes.links}>Forgot password?</MuiLink>
-          </Grid>
-        </form>
+      <Paper className={classes.paperRoot}>
+        <Navbar />
+        <Paper className={classes.paperContent}>
+          <form className={classes.root}>
+            <Grid container justify="center">
+              <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Sign in to your account</Typography>
+            </Grid>
+            <Grid container justify="center">
+              <TextField color="secondary" variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
+              <TextField color="secondary" variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
+            </Grid>
+            <Grid container justify="center">
+              <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Login</Button>
+            </Grid>
+            <Grid container justify="center">
+              <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email,picture" callback={responseFacebook} className={classes.facebookButton} />
+            </Grid>
+            <Grid container justify="center">
+              <MuiLink component={Link} to="/registration" variant="body1" color="secondary" className={classes.links}>Sign up for an account</MuiLink>
+            </Grid>
+            <Grid container justify="center">
+              <MuiLink component={Link} to="/forgotpassword" variant="body1" color="secondary" className={classes.links}>Forgot password?</MuiLink>
+            </Grid>
+          </form>
+        </Paper>
       </Paper>
     </>
   );

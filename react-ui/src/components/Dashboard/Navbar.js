@@ -108,8 +108,11 @@ function Navbar(props) {
 
   const handleLogout = () => {
     axios.post('/logout')
-      .then(res => props.history.push('/login'))
+      .then(res => props.history.push('/'))
       .catch(console.log);
+    if (props.darkState == true) {
+      props.handleThemeChange();
+    }
   }
 
   return (

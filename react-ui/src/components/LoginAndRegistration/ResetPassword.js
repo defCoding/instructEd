@@ -59,20 +59,22 @@ export default function ResetPassword(props) {
     console.log('SENDING GOOD TOKEN PAGE');
     return (
       <>
-        <Navbar />
-        <Paper className={classes.paperContent}>
-          <form className={classes.root}>
-            <Grid container justify="center">
-              <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Create New Password</Typography>
-            </Grid>
-            <Grid container justify="center">
-              <TextField color="secondary" variant="outlined" label="New Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
-              <TextField color="secondary" variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
-            </Grid>
-            <Grid container justify="center">
-              <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Reset Password</Button>
-            </Grid>
-          </form>
+        <Paper className={classes.paperRoot}>
+          <Navbar />
+          <Paper className={classes.paperContent}>
+            <form className={classes.root}>
+              <Grid container justify="center">
+                <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Create New Password</Typography>
+              </Grid>
+              <Grid container justify="center">
+                <TextField color="secondary" variant="outlined" label="New Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
+                <TextField color="secondary" variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
+              </Grid>
+              <Grid container justify="center">
+                <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Reset Password</Button>
+              </Grid>
+            </form>
+          </Paper>
         </Paper>
       </>
     );
@@ -80,9 +82,11 @@ export default function ResetPassword(props) {
     console.log('SENDING BAD TOKEN PAGE');
     return (
       <>
-        <Navbar />
-        <Paper className={classes.paperContent}>
-          <h1>INVALID TOKEN.</h1>
+        <Paper className={classes.paperRoot}>
+          <Navbar />
+          <Paper className={classes.paperContent}>
+            <h1>INVALID TOKEN.</h1>
+          </Paper>
         </Paper>
       </>
     );
