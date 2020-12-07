@@ -67,10 +67,12 @@ export default function Dashboard(props) {
             break;
           case 'student':
             setCurrentRoleWidgets(studentWidgets);
-            axios.get('/courses/instructor').then(getCoursesFromResponse);
-            if (coursesRef.current.length !== 0) {
-              setCurrentRoleWidgets(instructorWidgets);
-            }
+            axios.get('/courses/instructor').then(res => {
+              if (res.data.length != 0) {
+                setCurrentRoleWidgets(instructorWidgets);
+              }
+              getCoursesFromResponse(res);
+            });
             axios.get('/courses/student').then(getCoursesFromResponse);
             break;
           default:
