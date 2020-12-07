@@ -26,7 +26,8 @@ export default function Registration(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const emailRegex = /\/[^\/]+\.?.+/g
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
     if (Object.values(values).includes('')) {
       window.alert("All fields must be filled out.");
     } else if (!emailRegex.test(values.email)) {
