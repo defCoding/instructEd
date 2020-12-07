@@ -57,17 +57,17 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   const submissionsRef = useRef([]);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [gOpen, setGopen] = React.useState(false);
-  const [fOpen, setFopen] =  React.useState(false);
   const [submissionsPerStudent, setSubmissionsPerStudent] = useState([]);
 
   useEffect(() => {
+    studentsRef.current = [];
     //Place for get request to retrieve all users who are students of this class
     axios.get(`/courses/${courseID}/students`)
       .then(res => {
         addStudentsToList(res);
       })
       .catch(console.log);
-  }, []);
+  }, [gOpen]);
   
   function addSubmissionsToList(res){
     submissionsRef.current = submissionsRef.current.concat(res.data);
@@ -106,6 +106,10 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
 
   const gradeClicked = (student) => () => {
     console.log(student);
+    if(student.id != selectedStudent.id){
+      submissionsRef.current = [];
+      setSubmissionsPerStudent(submissionsRef.current);
+    }
     setSelectedStudent(student);
     setGopen(true);
   }
