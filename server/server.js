@@ -140,6 +140,9 @@ app.put('/grades/', withDuoAuth, db.updateGrade);
 app.put('/assignment_files/approval', withDuoAuth, db.setAssignmentFileApproval);
 app.put('/course_files/approval', withDuoAuth, db.setCourseFileApproval);
 app.put('/course_videos/approval', withDuoAuth, db.setCourseVideoApproval);
+app.get('/syllabus/:courseID', withDuoAuth, db.getSyllabus);
+app.put('/syllabus/', withDuoAuth, db.updateSyllabus);
+app.get('/online_users/:userID', withDuoAuth, db.checkOnlineStatus);
 
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));
@@ -168,4 +171,28 @@ io.on('connection', socket => {
       socket.broadcast.to(`${recipient.id}`).emit(typing ? 'user-typing' : 'user-stopped-typing', { name: first_name + ' ' + last_name, conversationID });
     });
   });
+
+  socket.on('disconnect', () => {
+    const sql = 'DELETE FROM OnlineUsers WHERE user_id=$1;';
+    const values = [id];
+
+    db.client.query(sql, values, (err, result) => {
+      if (err) {
+        console.log(err);
+      }
+    });
+
+    socket.broadcast.emit('user-connection');
+  });
+
+  const sql = 'INSERT INTO OnlineUsers VALUES ($1);';
+  const values = [id];
+
+  db.client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+    }
+  });
+
+  socket.broadcast.emit('user-connection');
 });

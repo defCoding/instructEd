@@ -1,6 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItemText, Paper, ListItem, Typography } from '@material-ui/core';
+import SyllabusViewer from './SyllabusViewer';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -48,6 +49,7 @@ export default function GeneralPanel(props) {
           }
         </List>
       </Typography>
+      <SyllabusViewer courseID={courseData.course_id} />
     </Paper>
   );
 }

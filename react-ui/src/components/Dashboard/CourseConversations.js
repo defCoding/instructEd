@@ -26,7 +26,9 @@ export default function CourseConversations({ setSelectedCourseID }) {
                                 // May the lord forgive me for my sins.
                                 conversation.recipients.length !== 1 ?
                                 "Course Chat" :
-                                conversation.recipients[0].name
+                                conversation.recipients[0].online ? <><b style={{ color: 'green' }}>•</b> {conversation.recipients[0].name}</>
+                                :
+                                <>{conversation.recipients[0].name}</>
                             }
                         </ListGroup.Item>
                     );

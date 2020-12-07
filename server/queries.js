@@ -1714,8 +1714,56 @@ const getUserInfo = (req, res) => {
   })
 }
 
+const getSyllabus = (req, res) => {
+  const courseID = req.params.courseID;
+  const sql = 'SELECT syllabus FROM Syllabuses WHERE course_id=$1;';
+  const values = [courseID];
+
+  client.query(sql, values, (err, result) => { 
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      if (result.rows) {
+        res.status(200).send(result.rows[0].syllabus);
+      } else {
+        res.status(400).send();
+      }
+    }
+  });
+}
+
+const updateSyllabus = (req, res) => {
+  const info = req.body;
+  const sql = 'UPDATE Syllabuses SET syllabus=$1 WHERE course_id=$2;';
+  const values = [info.syllabus, info.courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send();
+    }
+  });
+}
+
+const checkOnlineStatus = (req, res) => {
+  const userID = req.params.userID;
+  const sql = 'SELECT * FROM OnlineUsers WHERE user_id=$1;';
+  const values = [userID];
+
+  client.query(sql, values, (err, result) => {
+    if (err || !result.rows.length) {
+      res.status(200).send(false);
+    } else {
+      res.status(200).send(true);
+    }
+  })
+}
 
 module.exports = {
+  client,
   createUser,
   loginUser,
   loginFacebook,
@@ -1772,5 +1820,8 @@ module.exports = {
   getConversationMessages,
   addMessage,
   createConversation,
-  getUserInfo
+  getUserInfo,
+  getSyllabus,
+  updateSyllabus,
+  checkOnlineStatus
 };

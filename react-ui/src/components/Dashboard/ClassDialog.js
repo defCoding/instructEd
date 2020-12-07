@@ -60,7 +60,7 @@ function TabPanel(props) {
 export default function ClassDialog({ selectedClass, open, setOpen }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  const [courseData, setCourseData] = React.useState({instructors: []});
+  const [courseData, setCourseData] = React.useState({instructors: [], course_id: -1});
   const [announcements, setAnnouncements] = useState([]);
   const [assignments, setAssignments] = useState([]);
 

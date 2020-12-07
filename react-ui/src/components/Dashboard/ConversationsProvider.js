@@ -12,6 +12,7 @@ export function useConversations() {
 export default function ConversationsProvider({ user, courseID, children }) {
     const [conversations, setConversations] = useState([]);
     const [selectedConversationIndex, setSelectedConversationIndex] = useState(0);
+    const [refresh, setRefresh] = useState(0);
     const socket = useSocket();
 
     useEffect(() => {
@@ -35,6 +36,23 @@ export default function ConversationsProvider({ user, courseID, children }) {
                         c = res.data;
                     }
 
+                    // Set online status
+                    c = await Promise.all(c.map(async conversation => {
+                        let recipients = await Promise.all(conversation.recipients.map(async r => {
+                            try {
+                                res = await axios.get(`/online_users/${r.id}`); 
+                                console.log(res.data);
+                                return {...r, online: res.data};
+                            } catch (err) {
+                                console.log(err);
+                                return {...r, online: false};
+                            }
+                        }));
+
+                        conversation.recipients = recipients;
+                        return conversation;
+                    }));
+
                     c = await Promise.all(c.map(async conversation => {
                         try {
                             res = await axios.get(`/chat/messages/${conversation.conversationID}`)
@@ -43,6 +61,7 @@ export default function ConversationsProvider({ user, courseID, children }) {
                             console.log(err);
                         }
                     }));
+                    console.log(c);
                     setConversations(c);
                 } catch (err) {
                     console.log(err);
@@ -51,7 +70,7 @@ export default function ConversationsProvider({ user, courseID, children }) {
         }
 
         getConversations();
-    }, [courseID])
+    }, [courseID, refresh])
 
     const addMessageToConversation = useCallback(({ recipients, message, send_date, sender, conversationID, first_name, last_name }) => {
         setConversations(prevConversations => {
@@ -76,6 +95,9 @@ export default function ConversationsProvider({ user, courseID, children }) {
         if (socket == null) return
 
         socket.on('receive-message', addMessageToConversation);
+        socket.on('user-connection', () => {
+            setRefresh(old => 1 - old)
+        });
 
         return () => socket.off('receive-message')
     }, [socket, addMessageToConversation])
@@ -83,7 +105,6 @@ export default function ConversationsProvider({ user, courseID, children }) {
 
     function sendMessage(recipients, message, conversationID) {
         let send_date = moment.utc().format('YYYY-MM-DD HH:mm:ss');
-        console.log(socket);
         axios.post('/chat/messages', {
             conversationID,
             message,
@@ -110,7 +131,7 @@ export default function ConversationsProvider({ user, courseID, children }) {
         let recipients = conversation.recipients.filter(recipient => recipient.id != user.id);
         recipients = recipients.map(recipient => {
             const name = `${recipient.first_name} ${recipient.last_name}`;
-            return { id: recipient.id, name };
+            return { id: recipient.id, name, online: recipient.online };
         });
 
 
