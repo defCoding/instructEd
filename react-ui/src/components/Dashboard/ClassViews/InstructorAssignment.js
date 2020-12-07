@@ -72,10 +72,6 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
         .catch(console.log);
 
       await gotStudents;
-
-      //students.map(async (student) => {
-        //console.log(student.id);
-      //})
     }
 
     getStudentsAndSetGrades();
