@@ -931,7 +931,7 @@ const getUnapprovedCourseVideos = (req, res) => {
         };
 
         let url = s3.getSignedUrl('getObject', params);
-        data.push({file_name: row.file_name, url: url, course_id: row.course_id, approved: row.approved});
+        data.push({file_name: row.file_name, url: url, course_id: row.course_id, approved: row.approved, upload_date: row.upload_date});
       }
 
       res.status(200).send(data);
@@ -1048,7 +1048,7 @@ const getUnapprovedAssignmentFiles = (req, res) => {
         };
 
         let url = s3.getSignedUrl('getObject', params);
-        data.push({file_name: row.file_name, url: url, assignment_id: row.assignment_id, approved: row.approved});
+        data.push({file_name: row.file_name, url: url, assignment_id: row.assignment_id, approved: row.approved, upload_date: row.upload_date});
       }
 
       res.status(200).send(data);
@@ -1168,7 +1168,7 @@ const getUnapprovedCourseFiles = (req, res) => {
         };
 
         let url = s3.getSignedUrl('getObject', params);
-        data.push({file_name: row.file_name, url: url, course_id: row.course_id, approved: row.approved});
+        data.push({file_name: row.file_name, url: url, course_id: row.course_id, approved: row.approved, upload_date: row.upload_date});
       }
 
       res.status(200).send(data);

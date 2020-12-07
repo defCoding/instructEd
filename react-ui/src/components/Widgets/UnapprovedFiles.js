@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Button, List, ListItemText, Select, InputLabel, FormControl, Grid, MenuItem, ListItemSecondaryAction, ListItem, Divider, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@material-ui/core'
 import { spacing } from '@material-ui/system';
 import { makeStyles } from '@material-ui/core/styles';
+import moment from 'moment';
 
 const useStyle = makeStyles(theme => ({
     items: {
@@ -125,12 +126,16 @@ export default function UnapprovedFiles(){
         </FormControl>
       </Grid>
             <List>
-                {files.map((file) => //filesRef.current
-                    <>
-                        <ListItem divider={true}>
+                {files.map((file) => {//filesRef.current
+                        let date = moment(file.upload_date).local();
+                        let dateString = date.format('[Uploaded On:] MM-DD-YY [at] h:mm A');
+                        return(
+                        <ListItem divider={true}> 
+                        <ListItemText primary={
                             <a href={file.url} target="_blank">
                                 <Typography color='secondary'>{file.file_name}</Typography>
-                            </a>
+                            </a>}
+                            secondary={dateString}></ListItemText>
                             <ListItemSecondaryAction>
                                 <Button onClick={viewBtnClicked(file)} variant="contained" color="secondary" size="small">
                                     Approve/Disapprove
@@ -138,7 +143,8 @@ export default function UnapprovedFiles(){
                             </ListItemSecondaryAction>
 
                         </ListItem>
-                    </>
+                        );
+                }
                 )}
             </List>
             <ApprovalDialog selectedFile={file} open={open} setOpen={setOpen} currentFilter={filter} fileList={files}/>
