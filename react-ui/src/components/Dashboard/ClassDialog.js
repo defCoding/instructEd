@@ -60,7 +60,7 @@ function TabPanel(props) {
 export default function ClassDialog({ selectedClass, open, setOpen }) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  const [courseData, setCourseData] = React.useState({instructors: []});
+  const [courseData, setCourseData] = React.useState({instructors: [], course_id: -1});
   const [announcements, setAnnouncements] = useState([]);
   const [assignments, setAssignments] = useState([]);
 
@@ -101,7 +101,7 @@ export default function ClassDialog({ selectedClass, open, setOpen }) {
           <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
             <CloseIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6"s>
             {selectedClass.name}
           </Typography>
         </Toolbar>
@@ -128,7 +128,7 @@ export default function ClassDialog({ selectedClass, open, setOpen }) {
         <FilePanel courseID={selectedClass.id}/>
       </TabPanel>
       <TabPanel value={value} index={4}>
-        <LecturePanel />
+        <LecturePanel courseID={selectedClass.id}/>
       </TabPanel>
     </Dialog>
   );

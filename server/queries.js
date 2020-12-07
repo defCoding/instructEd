@@ -6,7 +6,6 @@ const moment = require('moment');
 const aws = require('aws-sdk');
 const multiparty = require('multiparty');
 const fs = require('fs');
-const { url } = require('inspector');
 
 require('dotenv').config();
 
@@ -24,7 +23,8 @@ const client = new Client({
 /*
 const client = new Client({
   host: 'localhost',
-  database: 'demo', user: 'demo', password: 'demo', port: '5433'
+  database: 'demo', user: 'demo',
+  //password: 'demo', port: '5433'
 });
 */
 
@@ -47,6 +47,18 @@ const uploadFile = (buffer, name) => {
 
   return s3.upload(params).promise();
 };
+
+const deleteFile = (name) => { 
+  const params = {
+    ACL: 'public-read',
+    Bucket: process.env.S3_BUCKET,
+    Key: `${name}`
+  };
+
+  return s3.deleteObject(params, (err, data) => {
+    if (err) console.log(err);
+  });
+}
 
 client.connect((err) => {
   if (err) {
@@ -657,9 +669,32 @@ const addCourse = (req, res) => {
       
       client.query(sql, values, (err, result) => {
         if (err) {
+          console.log(err);
           res.status(400).send('Something went wrong with adding the instructor to the course.');
         } else {
-          res.status(201).send('Course and instructor added.');
+          sql = `INSERT INTO Conversations VALUES (default, $1) RETURNING conversation_id;`;
+          values = [course_id];
+
+          client.query(sql, values, (err, result) => {
+            if (err) {
+              console.log(err);
+              res.status(400).send();
+            } else {
+              const conversation_id = result.rows[0].conversation_id;
+              sql = `INSERT INTO CourseChats VALUES ($1, $2);`
+              values = [course_id, conversation_id];
+
+              client.query(sql, values, (err, result) => {
+                if (err) {
+                  console.log(err);
+                  res.status(400).send();
+                } else {
+                  req.body = {...req.body, courseID: course_id, userID: info.instructorID};
+                  addPersonToCourseChat(req, res, "Course created.")
+                }
+              })
+            }
+          })
         }
       });
     }
@@ -681,7 +716,7 @@ const addInstructorToCourse = (req, res) => {
         res.status(400).send('Something went wrong.');
       }
     } else {
-      res.status(201).send('Instructor added to the course.');
+      addPersonToCourseChat(req, res, "Instructor added to course.");
     }
   });
 }
@@ -701,7 +736,32 @@ const addStudentToCourse = (req, res) => {
         res.status(400).send('Something went wrong.');
       }
     } else {
-      res.status(201).send('Student added to the course.');
+      addPersonToCourseChat(req, res, "Student added to course.");
+    }
+  });
+}
+
+const addPersonToCourseChat = (req, res, msg) => {
+  const info = req.body;
+  let sql = `SELECT conversation_id FROM CourseChats WHERE course_id=$1;`;
+  let values = [info.courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      const conversation_id = result.rows[0].conversation_id;
+      sql = `INSERT INTO UserConversations VALUES ($1, $2);`;
+      values = [info.userID, conversation_id];
+      client.query(sql, values, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(400).send(err);
+        } else {
+          res.status(201).send(msg);
+        }
+      });
     }
   });
 }
@@ -764,6 +824,7 @@ const addCourseVideo = (req, res) => {
   const form = new multiparty.Form();
   form.parse(req, async (err, fields, files) => {
     if (err) {
+      console.log(err);
       res.status(400).send(err);
     } else {
       const origName = files.file[0].originalFilename;
@@ -778,7 +839,8 @@ const addCourseVideo = (req, res) => {
 
       client.query(sql, values, async (err2, result) => {
         if (err2) {
-          res.status(400).send(err);
+          console.log(err2);
+          res.status(400).send(err2);
         } else {
           try {
             const data = await uploadFile(buffer, fileName);
@@ -794,9 +856,9 @@ const addCourseVideo = (req, res) => {
 };
 
 const getApprovedCourseVideos = (req, res) => {
-  const courseID = req.params.courseID;
+  const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseVideos WHERE $1='' OR course_id=$1 and approved;"
+  const sql = "SELECT * FROM CourseVideos WHERE $1=-1 OR course_id=$1 and approved;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -822,9 +884,9 @@ const getApprovedCourseVideos = (req, res) => {
 }
 
 const getCourseVideos = (req, res) => {
-  const courseID = req.params.courseID;
+  const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseVideos WHERE $1='' OR course_id=$1;"
+  const sql = "SELECT * FROM CourseVideos WHERE $1=-1 OR course_id=$1;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -850,9 +912,9 @@ const getCourseVideos = (req, res) => {
 }
 
 const getUnapprovedCourseVideos = (req, res) => {
-  const courseID = req.params.courseID;
+  const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseVideos WHERE $1='' OR course_id=$1 and not approved;"
+  const sql = "SELECT * FROM CourseVideos WHERE $1=-1 OR course_id=$1 and not approved;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -911,9 +973,9 @@ const addAssignmentFile = (req, res) => {
 };
 
 const getApprovedAssignmentFiles = (req, res) => {
-  const assignmentID = req.params.assignmentID;
+  const assignmentID = req.params.assignmentID ? req.params.assignmentID : -1;
 
-  const sql = "SELECT * FROM AssignmentFiles WHERE $1='' OR assignment_id=$1 and approved;"
+  const sql = "SELECT * FROM AssignmentFiles WHERE $1=-1 OR assignment_id=$1 and approved;"
   const values = [assignmentID];
 
   client.query(sql, values, (err, result) => {
@@ -939,9 +1001,9 @@ const getApprovedAssignmentFiles = (req, res) => {
 }
 
 const getAssignmentFiles = (req, res) => {
-  const assignmentID = req.params.assignmentID;
+  const assignmentID = req.params.assignmentID ? req.params.assignmentID : -1;
 
-  const sql = "SELECT * FROM AssignmentFiles WHERE $1='' OR assignment_id=$1;"
+  const sql = "SELECT * FROM AssignmentFiles WHERE $1=-1 OR assignment_id=$1;"
   const values = [assignmentID];
 
   client.query(sql, values, (err, result) => {
@@ -967,9 +1029,9 @@ const getAssignmentFiles = (req, res) => {
 }
 
 const getUnapprovedAssignmentFiles = (req, res) => {
-  const assignmentID = req.params.assignmentID;
+  const assignmentID = req.params.assignmentID ? req.params.assignmentID : -1;
 
-  const sql = "SELECT * FROM AssignmentFiles WHERE $1='' OR assignment_id=$1 and not approved;"
+  const sql = "SELECT * FROM AssignmentFiles WHERE $1=-1 OR assignment_id=$1 and not approved;"
   const values = [assignmentID];
 
   client.query(sql, values, (err, result) => {
@@ -1012,6 +1074,7 @@ const addCourseFile = (req, res) => {
 
       client.query(sql, values, async (err2, result) => {
         if (err2) {
+          console.log(err);
           res.status(400).send(err);
         } else {
           try {
@@ -1028,9 +1091,9 @@ const addCourseFile = (req, res) => {
 };
 
 const getApprovedCourseFiles = (req, res) => {
-  const courseID = req.params.courseID;
+  const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseFiles WHERE $1='' OR course_id=$1 and approved;"
+  const sql = "SELECT * FROM CourseFiles WHERE $1=-1 OR course_id=$1 and approved;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -1056,13 +1119,14 @@ const getApprovedCourseFiles = (req, res) => {
 }
 
 const getCourseFiles = (req, res) => {
-  const courseID = req.params.courseID;
+  const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseFiles WHERE $1='' OR course_id=$1;"
+  const sql = "SELECT * FROM CourseFiles WHERE $1=-1 OR course_id=$1;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
     if (err) {
+      console.log(err);
       res.status(400).send(err);
     } else {
       const rows = result.rows;
@@ -1084,13 +1148,14 @@ const getCourseFiles = (req, res) => {
 }
 
 const getUnapprovedCourseFiles = (req, res) => {
-  const courseID = req.params.courseID;
+  const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseFiles WHERE $1='' OR course_id=$1 and not approved;"
+  const sql = "SELECT * FROM CourseFiles WHERE $1=-1 OR course_id=$1 and not approved;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
     if (err) {
+      console.log(err);
       res.status(400).send(err);
     } else {
       const rows = result.rows;
@@ -1128,9 +1193,38 @@ const getCourseStudents = (req, res) => {
   });
 }
 
+const getCoursePeople = (req, res) => {
+  const courseID = req.params.courseID;
+
+  let sql = `SELECT Users.id, Users.first_name, Users.last_name
+   FROM Enrollments INNER JOIN Users ON Enrollments.user_id=Users.id WHERE Enrollments.course_id=$1;`;
+  let values = [courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      let data = result.rows;
+      sql = `SELECT Users.id, Users.first_name, Users.last_name
+      FROM Instructing INNER JOIN Users ON Instructing.user_id=Users.id WHERE Instructing.course_id=$1;`;
+
+      client.query(sql, values, (err, result) => {
+        if (err) {
+          console.log(err);
+          res.status(400).send(err);
+        } else {
+          data = [...data, ...result.rows];
+          res.status(200).send(data);
+        }
+      })
+    }
+  });
+}
+
 const getGrade = (req, res) => {
   const userID = req.userID;
-  const assignmentID = req.param.assignmentID;
+  const assignmentID = req.params.assignmentID;
   const values = [userID, assignmentID];
   const sql = 'SELECT grade FROM Grades WHERE user_id=$1 AND assignment_id=$2;';
 
@@ -1144,8 +1238,8 @@ const getGrade = (req, res) => {
 }
 
 const getStudentGrade = (req, res) => {
-  const userID = req.param.userID;
-  const assignmentID = req.param.assignmentID;
+  const userID = req.params.studentID;  //Was userID
+  const assignmentID = req.params.assignmentID;
   const values = [userID, assignmentID];
   const sql = 'SELECT grade FROM Grades WHERE user_id=$1 AND assignment_id=$2;';
 
@@ -1159,7 +1253,7 @@ const getStudentGrade = (req, res) => {
 }
 
 const addGrade = (req, res) => {
-const userID = req.body.userID;
+  const userID = req.body.userID;
   const assignmentID = req.body.assignmentID;
   const grade = req.body.grade;
   const values = [assignmentID, userID, grade];
@@ -1180,12 +1274,33 @@ const userID = req.body.userID;
   });
 }
 
+const updateGrade = (req, res) => {
+  const userID = req.body.userID;
+  const assignmentID = req.body.assignmentID;
+  const grade = req.body.grade;
+  const sql = 'UPDATE Grades SET grade=$1 WHERE assignment_id=$2 AND user_id=$3;';
+  const values = [grade, assignmentID, userID];
+
+  client.query(sql, values, (err) => {
+    if (err) {
+      if (err.constraint.includes('assignment')) {
+        res.status(400).send('Assignment ID does not exist.');
+      } else if (err.constraint.includes('user')) {
+        res.status(400).send('User ID does not exist.');
+      } else {
+        res.status(400).send('Something went wrong.');
+      }
+    } else {
+      res.status(201).send('Grade updated.');
+    }
+  });
+}
+
 const getAssignmentSubmissions = (req, res) => {
   const assignmentID = req.params.assignmentID;
   let userID;
-
-  if (req.params.userID) {
-    userID = req.params.userID;
+  if (req.params.studentID) {  //userID
+    userID = req.params.studentID; //userID
   } else {
     userID = req.userID;
   }
@@ -1276,7 +1391,6 @@ const getRoleInCourse = (req, res) => {
 
 const addAssignment = (req, res) => {
   const info = req.body;
-  console.log(info);
   const date = moment(info.date).format('YYYY-MM-DD HH:mm:ss');
   const name = info.assignmentName;
   const desc = info.description;
@@ -1385,8 +1499,271 @@ const searchCourses = (req, res) => {
   });
 }
 
+const getUserConversations = (req, res) => {
+  const id = req.userID;
+  const courseID = req.params.courseID;
+  let sql = `SELECT UserConversations.conversation_id FROM UserConversations INNER JOIN Conversations ON UserConversations.conversation_id=Conversations.conversation_id WHERE UserConversations.user_id=$1 AND Conversations.course_id=$2;`
+  let values = [id, courseID];
+  
+  client.query(sql, values, async (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      let rows = result.rows;
+      if (rows != undefined) {
+        let hasError = false;
+        let conversations = [];
+        for (const row of rows) {
+          const conversationID = row.conversation_id;
+          sql = `SELECT Users.id, Users.first_name, Users.last_name FROM Users INNER JOIN UserConversations ON Users.id=UserConversations.user_id WHERE UserConversations.conversation_id=$1`;
+          values = [conversationID];
+         
+          try {
+            result = await client.query(sql, values);
+            if (err) {
+              console.log(err)
+              res.status(400).send(err);
+              hasError = true;
+            } else {
+              let recipients = result.rows;
+              conversations.push({ conversationID, recipients });
+            }
+
+            if (hasError) {
+              break;
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        }
+        if (!hasError) {
+          res.status(200).send(conversations);
+        }
+      }
+    }
+  });
+};
+
+const getConversationMessages = (req, res) => {
+  const conversationID = req.params.conversationID;
+  const sql = `SELECT Messages.*, Users.first_name, Users.last_name FROM Messages INNER JOIN Users on Messages.sender=Users.id WHERE conversation_id=$1 ORDER BY send_date ASC;`
+  const values = [conversationID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send(result.rows);
+    }
+  });
+};
+
+const addMessage = (req, res) => {
+  const info = req.body;
+  const sql = `INSERT INTO Messages VALUES ($1, $2, $3, $4)`;
+  const values = [info.conversationID, info.message, info.sender, info.send_date];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send();
+    }
+  });
+};
+
+const createConversation = async (req, res) => {
+  const info = req.body;
+  let sql = 'INSERT INTO Conversations VALUES (default, $1) RETURNING conversation_id;';
+  let values = [info.courseID];
+
+  try {
+    let result = await client.query(sql, values)
+    const conversationID = result.rows[0].conversation_id;
+    for (const recipient of info.recipients) {
+      sql = 'INSERT INTO UserConversations VALUES ($1, $2);';
+      values = [recipient, conversationID];
+
+      await client.query(sql, values);
+    }
+    res.status(200).send();
+  } catch (err) {
+    console.log(err);
+    res.status(400).send(err);
+  }
+};
+
+const getUserID = (req, res) => {
+  res.status(200).send(`${req.userID}`);
+}
+
+const setCourseFileApproval = (req, res) => {
+  const approved = req.body.approved; 
+  const courseID = req.body.courseID;
+  let filename = req.body.filename;
+  const values = [courseID, filename];
+
+  if (approved) {
+    const sql = 'UPDATE CourseFiles SET approved=true WHERE course_id=$1 AND file_name=$2;';
+
+    client.query(sql, values, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        res.status(200).send();
+      }
+    });
+  } else {
+    const sql = 'DELETE FROM CourseFiles WHERE course_id=$1 AND file_name=$2;';
+    client.query(sql, values, async (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        filename = `courses/${courseID}/files/${filename}`;
+        await deleteFile(filename);
+        res.status(200).send();
+      }
+    });
+  }
+}
+
+const setCourseVideoApproval = (req, res) => {
+  const approved = req.body.approved; 
+  const courseID = req.body.courseID;
+  let filename = req.body.filename;
+  const values = [courseID, filename];
+
+  if (approved) {
+    const sql = 'UPDATE CourseVideos SET approved=true WHERE course_id=$1 AND file_name=$2;';
+
+    client.query(sql, values, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        res.status(200).send();
+      }
+    });
+  } else {
+    const sql = 'DELETE FROM CourseVideos WHERE course_id=$1 AND file_name=$2;';
+    client.query(sql, values, async (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        filename = `courses/${courseID}/videos/${filename}`;
+        await deleteFile(filename);
+        res.status(200).send();
+      }
+    });
+  }
+}
+
+const setAssignmentFileApproval = (req, res) => {
+  const approved = req.body.approved; 
+  const assignmentID = req.body.assignmentID;
+  let filename = req.body.filename;
+  const values = [courseID, filename];
+
+  if (approved) {
+    const sql = 'UPDATE AssignmentFiles SET approved=true WHERE assignment_id=$1 AND file_name=$2;';
+
+    client.query(sql, values, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        res.status(200).send();
+      }
+    });
+  } else {
+    const sql = 'DELETE FROM AssignmentFiles WHERE assignment_id=$1 AND file_name=$2;';
+    client.query(sql, values, async (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send(err);
+      } else {
+        filename = `assignments/${assignmentID}/${filename}`;
+        await deleteFile(filename);
+        res.status(200).send();
+      }
+    });
+  }
+}
+
+const getUserInfo = (req, res) => {
+  const sql = `SELECT first_name, last_name, id FROM Users WHERE id=$1;`;
+  const values = [req.userID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      if (result.rows) {
+        res.status(200).send(result.rows[0]);
+      } else {
+        res.status(400).send("No users with that ID.");
+      }
+    }
+  })
+}
+
+const getSyllabus = (req, res) => {
+  const courseID = req.params.courseID;
+  const sql = 'SELECT syllabus FROM Syllabuses WHERE course_id=$1;';
+  const values = [courseID];
+
+  client.query(sql, values, (err, result) => { 
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      if (result.rows) {
+        res.status(200).send(result.rows[0].syllabus);
+      } else {
+        res.status(400).send();
+      }
+    }
+  });
+}
+
+const updateSyllabus = (req, res) => {
+  const info = req.body;
+  const sql = 'UPDATE Syllabuses SET syllabus=$1 WHERE course_id=$2;';
+  const values = [info.syllabus, info.courseID];
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send(err);
+    } else {
+      res.status(200).send();
+    }
+  });
+}
+
+const checkOnlineStatus = (req, res) => {
+  const userID = req.params.userID;
+  const sql = 'SELECT * FROM OnlineUsers WHERE user_id=$1;';
+  const values = [userID];
+
+  client.query(sql, values, (err, result) => {
+    if (err || !result.rows.length) {
+      res.status(200).send(false);
+    } else {
+      res.status(200).send(true);
+    }
+  })
+}
 
 module.exports = {
+  client,
   createUser,
   loginUser,
   loginFacebook,
@@ -1422,6 +1799,7 @@ module.exports = {
   getApprovedCourseFiles,
   getUnapprovedCourseFiles,
   getCourseStudents,
+  getCoursePeople,
   getAssignmentSubmissions,
   getAssignmentFiles,
   getApprovedAssignmentFiles,
@@ -1429,9 +1807,21 @@ module.exports = {
   getStudentGrade,
   getGrade,
   addGrade,
+  updateGrade,
   approveAssignmentFile,
   approveCourseFile,
   approveCourseVideo,
+  setCourseFileApproval,
+  setCourseVideoApproval,
+  setAssignmentFileApproval,
   searchUsers,
-  searchCourses
+  searchCourses,
+  getUserConversations,
+  getConversationMessages,
+  addMessage,
+  createConversation,
+  getUserInfo,
+  getSyllabus,
+  updateSyllabus,
+  checkOnlineStatus
 };

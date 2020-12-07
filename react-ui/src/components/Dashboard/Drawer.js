@@ -23,10 +23,6 @@ const useStyles = makeStyles(theme => ({
   },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
-  dialog: {
-    padding: theme.spacing(3),
-    height: "100vh",
-  }
 }));
 
 export default function CurrentDrawer(props) {
@@ -53,7 +49,7 @@ export default function CurrentDrawer(props) {
               setOpen(true);
               setSelectedClass({ name: course.course_name, id: course.course_id });
             }}>
-              <Typography color='primary'>{course.course_name}</Typography>
+              <Typography color='primary'><span class="underline-on-hover">{course.course_name}</span></Typography>
             </ListItem>
           ))}
         </List>

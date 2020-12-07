@@ -8,8 +8,8 @@ import axios from 'axios';
 const drawerWidth = 250;
 
 const adminWidgets = ['Add Course', 'Add User to Class', 'Set Role', 'Unapproved Files', 'Search'];
-const studentWidgets = ['Announcements', 'Assignments', 'Calendar'];
-const instructorWidgets = studentWidgets.concat(['Create Announcement', 'Create Assignment']);
+const studentWidgets = ['Announcements', 'Assignments', 'Calendar', 'None'];
+const instructorWidgets = ['Announcements', 'Assignments', 'Calendar', 'Create Announcement', 'Create Assignment'];
 let currentRoleWidgets = [];
 
 const useStyles = makeStyles((theme) => ({
@@ -40,6 +40,19 @@ export default function Dashboard(props) {
   const classes = useStyles();
   const [courses, setCourses] = useState([]);
   const coursesRef = useRef([]);
+
+  function getCoursesFromResponse(res) {
+    coursesRef.current = coursesRef.current.concat(res.data);
+    setCourses(coursesRef.current);
+  }
+
+  useEffect(() => {
+    axios.get('/course_files/')
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(console.log)
+  }, []);
 
   useEffect(() => {
     axios.get('/roles')
@@ -75,17 +88,12 @@ export default function Dashboard(props) {
       });
   }, []);
 
-  function getCoursesFromResponse(res) {
-    coursesRef.current = coursesRef.current.concat(res.data);
-    setCourses(coursesRef.current);
-  }
-
   return (
     <div className={classes.root}>
       <Navbar />
       <div className={classes.toolbar} />
       <UserDrawer courses={courses}/>
-      <WidgetView displayWidgets={currentRoleWidgets}/>
+      <WidgetView displayWidgets={currentRoleWidgets} />
     </div>
   );
 }

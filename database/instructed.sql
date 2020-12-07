@@ -134,3 +134,62 @@ CREATE TABLE AssignmentFiles (
   PRIMARY KEY (assignment_id, file_name),
   FOREIGN KEY (assignment_id) REFERENCES Assignments (assignment_id)
 );
+
+CREATE TABLE Conversations (
+  conversation_id SERIAL,
+  course_id INTEGER NOT NULL,
+  PRIMARY KEY (conversation_id),
+  FOREIGN KEY (course_id) REFERENCES Courses (course_id)
+);
+
+CREATE TABLE Messages (
+  conversation_id INTEGER NOT NULL,
+  message TEXT NOT NULL,
+  sender INTEGER NOT NULL,
+  send_date TIMESTAMP NOT NULL,
+  FOREIGN KEY (conversation_id) REFERENCES Conversations (conversation_id),
+  FOREIGN KEY (sender) REFERENCES Users (id)
+);
+
+CREATE TABLE UserConversations (
+  user_id INTEGER NOT NULL,
+  conversation_id INTEGER NOT NULL,
+  PRIMARY KEY (user_id, conversation_id),
+  FOREIGN KEY (conversation_id) REFERENCES Conversations (conversation_id),
+  FOREIGN KEY (user_id) REFERENCES Users (id)
+);
+
+CREATE TABLE CourseChats (
+  course_id INTEGER NOT NULL,
+  conversation_id INTEGER NOT NULL,
+  PRIMARY KEY (course_id, conversation_id),
+  FOREIGN KEY (course_id) REFERENCES Courses (course_id),
+  FOREIGN KEY (conversation_id) REFERENCES Conversations (conversation_id)
+);
+
+CREATE TABLE OnlineUsers (
+  user_id INTEGER NOT NULL,
+  PRIMARY KEY (user_id),
+  FOREIGN KEY (user_id) REFERENCES Users (id)
+);
+
+CREATE TABLE Syllabuses (
+  course_id INTEGER NOT NULL,
+  syllabus TEXT NOT NULL DEFAULT '',
+  PRIMARY KEY (course_id),
+  FOREIGN KEY (course_id) REFERENCES Courses (course_id)
+);
+
+CREATE OR REPLACE FUNCTION create_syllabus()
+RETURNS TRIGGER AS
+$$
+begin
+  INSERT INTO Syllabuses VALUES (new.course_id, default);
+  return null;
+end;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER NEW_COURSE
+AFTER INSERT ON Courses
+FOR EACH ROW
+EXECUTE PROCEDURE create_syllabus();

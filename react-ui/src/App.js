@@ -6,13 +6,14 @@ import ForgotPassword from './components/LoginAndRegistration/ForgotPassword';
 import ResetPassword from './components/LoginAndRegistration/ResetPassword';
 import DuoLogin from './components/LoginAndRegistration/DuoLogin';
 import Dashboard from './components/Dashboard/Dashboard';
+import LandingPage from './components/LoginAndRegistration/LandingPage/LandingPage';
 
 function App() {
   return (
     <>
       <Router>
           <Switch>
-            <Route path="/" exact component={Login} />
+            <Route path="/" exact component={LandingPage} />
             <Route path="/login" exact component={Login} />
             <Route path='/registration' component={Registration} />
             <Route path='/forgotpassword' component={ForgotPassword} />
