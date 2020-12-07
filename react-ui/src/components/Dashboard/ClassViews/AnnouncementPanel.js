@@ -25,47 +25,39 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function GetAnnouncementList(props) {
-  if (props.searchValue === '') {
-    return (
-      <List>
-        {props.announcementList.map(announcement => {
-            let date = moment(announcement.date_created).local();
-            date = date.format('MM-DD-YY [at] h:mm A');
+  const [selectedAnnouncement, setSelectedAnnouncement] = React.useState(null);
 
-            return (
-              <ListItem>
-                <ListItemText primary={announcement.announcement_name} secondary={
-                  `${announcement.first_name} ${announcement.last_name} on ${date}`
-                } />
-              </ListItem>
-            );
-          })
+  return (
+    <List>
+      {props.announcementList.map(announcement => {
+        let date = moment(announcement.date_created).local();
+        date = date.format('MM-DD-YY [at] h:mm A');
+        if (announcement.announcement_name.toLowerCase().includes(props.searchValue.toLowerCase()) ||
+              announcement.first_name.toLowerCase().includes(props.searchValue.toLowerCase()) ||
+              announcement.last_name.toLowerCase().includes(props.searchValue.toLowerCase()) ||
+              date.toLowerCase().includes(props.searchValue.toLowerCase())) {
+                return (
+                  <ListItem button style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginBottom: '1em' }}
+                  onClick={() => setSelectedAnnouncement(announcement)}>
+                    <ListItemText disableTypography primary={<Typography variant='h7' style={{ fontWeight: 'bold' }}>
+                      {announcement.announcement_name}
+                      </Typography>}
+                      secondary={
+                        <Typography style={{ color: 'grey' }}>
+                          {`${announcement.first_name} ${announcement.last_name} on ${date}`}
+                        </Typography>
+                    } />
+                    <ListItemText primary={
+                      selectedAnnouncement && selectedAnnouncement === announcement ? 
+                      (announcement.announcement_description) :
+                      (announcement.announcement_description.slice(0, 80) + (announcement.announcement_description.length > 80 ? '...' : '')) 
+                    } />
+                  </ListItem>
+                );
         }
-      </List>
-    );
-  }
-  else {
-    return (
-      <List>
-        {props.announcementList.map(announcement => {
-          let date = moment(announcement.date_created).local();
-          date = date.format('MM-DD-YY [at] h:mm A');
-          if (announcement.announcement_name.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-                announcement.first_name.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-                announcement.last_name.toLowerCase().includes(props.searchValue.toLowerCase()) ||
-                date.toLowerCase().includes(props.searchValue.toLowerCase())) {
-                  return (
-                    <ListItem>
-                      <ListItemText primary={announcement.announcement_name} secondary={
-                        `${announcement.first_name} ${announcement.last_name} on ${date}`
-                      } />
-                    </ListItem>
-                  );
-          }
-        })}
-      </List>
-    );
-  }
+      })}
+    </List>
+  );
 }
 
 export default function AnnouncementPanel(props) {
