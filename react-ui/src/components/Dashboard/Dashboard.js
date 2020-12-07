@@ -11,7 +11,6 @@ const drawerWidth = 250;
 const adminWidgets = ['Add Course', 'Add User to Class', 'Set Role', 'Unapproved Files', 'Search'];
 const studentWidgets = ['Announcements', 'Assignments', 'Calendar', 'None'];
 const instructorWidgets = ['Announcements', 'Assignments', 'Calendar', 'Create Announcement', 'Create Assignment'];
-let currentRoleWidgets = [];
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Dashboard(props) {
   const classes = useStyles();
   const [courses, setCourses] = useState([]);
+  const [currentRoleWidgets, setCurrentRoleWidgets] = useState(studentWidgets);
   const coursesRef = useRef([]);
 
   function getCoursesFromResponse(res) {
@@ -50,9 +50,6 @@ export default function Dashboard(props) {
 
   useEffect(() => {
     axios.get('/course_files/')
-      .then(res => {
-        console.log(res.data);
-      })
       .catch(console.log)
   }, []);
 
@@ -61,18 +58,18 @@ export default function Dashboard(props) {
       .then(res => {
         switch (res.data) {
           case 'admin':
-            currentRoleWidgets = adminWidgets;
+            setCurrentRoleWidgets(adminWidgets);
             axios.get('/courses').then(getCoursesFromResponse);
             break;
           case 'instructor':
-            currentRoleWidgets = instructorWidgets;
+            setCurrentRoleWidgets(instructorWidgets);
             axios.get('/courses/instructor').then(getCoursesFromResponse);
             break;
           case 'student':
-            currentRoleWidgets = studentWidgets;
+            setCurrentRoleWidgets(studentWidgets);
             axios.get('/courses/instructor').then(getCoursesFromResponse);
-            if (!coursesRef.current.empty) {
-              currentRoleWidgets = instructorWidgets;
+            if (coursesRef.current.length !== 0) {
+              setCurrentRoleWidgets(instructorWidgets);
             }
             axios.get('/courses/student').then(getCoursesFromResponse);
             break;
