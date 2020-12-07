@@ -37,6 +37,10 @@ export default function useForm(initialValues) {
     },
     links: {
       margin:theme.spacing(1)
+    },
+    facebookButton: {
+      margin: theme.spacing(2),
+      width: '75%',
     }
   }))
 

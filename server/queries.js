@@ -22,11 +22,13 @@ const client = new Client({
 });
 */
 
+
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo',
-  //password: 'demo', port: '5433'
+  password: 'demo', port: '5433'
 });
+
 
 aws.config.update({
   accessKeyId: process.env.S3_ACCESS_KEY,
@@ -1322,7 +1324,8 @@ const getAssignmentSubmissions = (req, res) => {
         };
 
         await s3.listObjects(params, (err, files) => {
-          if (!err) {
+          if (!err && typeof files.Contents !== "undefined") { //added after &&
+            console.log(files.Contents);
             for (const file of files.Contents) {
               let p = {
                 Bucket: "instructed",

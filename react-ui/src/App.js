@@ -10,10 +10,12 @@ import LandingPage from './components/LoginAndRegistration/LandingPage/LandingPa
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 function App() {
+  const [darkState, setDarkState] = React.useState(false);
+  const paletteType = darkState ? "dark" : "light";
+  const mainPrimaryColor = darkState ? '#70a090' : '#ADEFD1';
+  const mainSecondaryColor = darkState ? '#091530' : '#394C5E';
 
-  const paletteType = "light";
-  const mainPrimaryColor = '#ADEFD1';
-  const mainSecondaryColor = '#394C5E';
+  console.log(darkState);
 
   const theme = createMuiTheme({
     palette: {
@@ -26,6 +28,11 @@ function App() {
       type: paletteType,
     },
   });
+
+  const handleThemeChange = () => {
+    setDarkState(!darkState);
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Router>
@@ -35,7 +42,9 @@ function App() {
             <Route path='/registration' component={Registration} />
             <Route path='/forgotpassword' component={ForgotPassword} />
             <Route path='/resetpassword/:token' component={ResetPassword} />
-            <Route path='/dashboard' component={Dashboard} />
+            <Route 
+              path='/dashboard' 
+              render={() => (<Dashboard darkState={darkState} handleThemeChange={handleThemeChange} />)}/>
             <Route path='/duologin' component={DuoLogin} />
           </Switch>
         </Router>

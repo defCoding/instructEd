@@ -53,22 +53,30 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   const classes = useStyles();
   const innerClasses = useInnerStyles();
   const [students, setStudents] = useState([]);
+  const [averageGrade, setAverageGrade] = useState('');
   const studentsRef = useRef([]);
   const submissionsRef = useRef([]);
-  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState({id: -1, first_name: '', last_name: ''});
   const [gOpen, setGopen] = React.useState(false);
-  const [fOpen, setFopen] =  React.useState(false);
   const [submissionsPerStudent, setSubmissionsPerStudent] = useState([]);
 
   useEffect(() => {
-    //Place for get request to retrieve all users who are students of this class
-    axios.get(`/courses/${courseID}/students`)
-      .then(res => {
-        addStudentsToList(res);
-      })
-      .catch(console.log);
-  }, []);
-  
+
+    async function getStudentsAndSetGrades() {
+      studentsRef.current = [];
+      //Place for get request to retrieve all users who are students of this class
+      const gotStudents = axios.get(`/courses/${courseID}/students`)
+        .then(res => {
+          addStudentsToList(res);
+        })
+        .catch(console.log);
+
+      await gotStudents;
+    }
+
+    getStudentsAndSetGrades();
+  }, [gOpen]);
+
   function addSubmissionsToList(res){
     submissionsRef.current = submissionsRef.current.concat(res.data);
     setSubmissionsPerStudent(submissionsRef.current);
@@ -107,6 +115,10 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   const gradeClicked = (student) => () => {
     console.log(student);
     setSelectedStudent(student);
+    if(student.id != selectedStudent.id){
+      submissionsRef.current = [];
+      setSubmissionsPerStudent(submissionsRef.current);
+    }
     setGopen(true);
   }
 
