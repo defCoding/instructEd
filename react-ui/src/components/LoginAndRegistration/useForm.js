@@ -19,6 +19,9 @@ export default function useForm(initialValues) {
         display:'flex'
       }
     },
+    paperRoot: {
+      minHeight: '100vh',
+    },
     paperContent: {
       margin: theme.spacing(4),
       padding: theme.spacing(2)

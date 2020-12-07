@@ -38,6 +38,7 @@ function App() {
       <Router>
           <Switch>
             <Route path="/" exact component={LandingPage} />
+            <Route path="/" exact component={LandingPage} />
             <Route path="/login" exact component={Login} />
             <Route path='/registration' component={Registration} />
             <Route path='/forgotpassword' component={ForgotPassword} />
