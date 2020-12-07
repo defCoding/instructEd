@@ -13,7 +13,7 @@ function App() {
   const [darkState, setDarkState] = React.useState(false);
   const paletteType = darkState ? "dark" : "light";
   const mainPrimaryColor = darkState ? '#70a090' : '#ADEFD1';
-  const mainSecondaryColor = darkState ? '#102535' : '#394C5E';
+  const mainSecondaryColor = darkState ? '#091530' : '#394C5E';
 
   console.log(darkState);
 

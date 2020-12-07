@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import axios from 'axios'; 
 import { Link as MuiLink, Button, Typography, Grid, TextField, Paper } from '@material-ui/core';
 import useForm from './useForm';
@@ -96,7 +96,7 @@ export default function Login(props) {
             <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Login</Button>
           </Grid>
           <Grid container justify="center">
-            <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email,picture" callback={responseFacebook} className={classes.extraItemsForm} />
+            <FacebookLogin appId="350577486197278" autoLoad={false} fields="name,email,picture" callback={responseFacebook} className={classes.facebookButton} />
           </Grid>
           <Grid container justify="center">
             <MuiLink component={Link} to="/registration" variant="body1" color="secondary" className={classes.links}>Sign up for an account</MuiLink>

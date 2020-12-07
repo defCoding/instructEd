@@ -93,14 +93,11 @@ function WidgetDialog ({currentWidget, openDialog, setOpenDialog}) {
 }
 
 export default function WidgetCase(props) {
-  var optionPosn = props.widgetPosn;
+  const options = props.displayWidgets;
 
-  var options = props.displayWidgets;
+  console.log(options[props.widgetPosn]);
 
-
-  var currentOption = options[optionPosn];
-
-  const [currentWidget, setCurrentWidget] = React.useState(currentOption);
+  const [currentWidget, setCurrentWidget] = React.useState(options[props.widgetPosn]);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const open = Boolean(anchorEl);
