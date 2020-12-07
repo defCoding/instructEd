@@ -12,8 +12,8 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 function App() {
   const [darkState, setDarkState] = React.useState(true);
   const paletteType = darkState ? "dark" : "light";
-  const mainPrimaryColor = '#ADEFD1';
-  const mainSecondaryColor = '#394C5E';
+  const mainPrimaryColor = darkState ? '#70a090' : '#ADEFD1';
+  const mainSecondaryColor = darkState ? '#102535' : '#394C5E';
 
   console.log(darkState);
 
@@ -44,7 +44,7 @@ function App() {
             <Route path='/resetpassword/:token' component={ResetPassword} />
             <Route 
               path='/dashboard' 
-              render={props => (<Dashboard {...props} /> )}/>
+              render={() => (<Dashboard darkState={darkState} handleThemeChange={handleThemeChange} />)}/>
             <Route path='/duologin' component={DuoLogin} />
           </Switch>
         </Router>

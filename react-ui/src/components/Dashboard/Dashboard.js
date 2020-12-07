@@ -42,7 +42,6 @@ export default function Dashboard(props) {
   const classes = useStyles();
   const [courses, setCourses] = useState([]);
   const coursesRef = useRef([]);
-  console.log(props);
 
   function getCoursesFromResponse(res) {
     coursesRef.current = coursesRef.current.concat(res.data);
@@ -93,7 +92,7 @@ export default function Dashboard(props) {
 
   return (
     <Paper className={classes.root}>
-      <Navbar />
+      <Navbar darkState={props.darkState} handleThemeChange={props.handleThemeChange} />
       <div className={classes.toolbar} />
       <UserDrawer courses={courses}/>
       <WidgetView displayWidgets={currentRoleWidgets} />

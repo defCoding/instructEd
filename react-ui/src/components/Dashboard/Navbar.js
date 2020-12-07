@@ -95,8 +95,6 @@ const useStyles = makeStyles((theme) => ({
 
 function Navbar(props) {
   const classes = useStyles();
-  const [auth, setAuth] = React.useState(true);
-  const [darkMode, setDarkMode] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
   
@@ -114,11 +112,6 @@ function Navbar(props) {
       .catch(console.log);
   }
 
-  const handleDarkModeChange = (event) => {
-    setAuth(event.target.checked);
-    setDarkMode(!darkMode);
-  };
-
   return (
     <div>
       <AppBar position="fixed" className={classes.appBar} color="primary">
@@ -127,8 +120,8 @@ function Navbar(props) {
             instructED
           </Typography>
           <Switch
-            checked={darkMode}
-            onChange={handleDarkModeChange}
+            checked={props.darkState}
+            onChange={props.handleThemeChange}
             className={classes.menuButton} />
           <IconButton
             color="secondary"
