@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { Paper } from '@material-ui/core';
 import UserDrawer from './Drawer';
 import Navbar from './Navbar';
 import WidgetView from './WidgetView';
@@ -15,6 +16,7 @@ let currentRoleWidgets = [];
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    minHeight: '100vh',
   },
   appBar: {
     width: `calc(100% - ${drawerWidth}px)`,
@@ -40,6 +42,7 @@ export default function Dashboard(props) {
   const classes = useStyles();
   const [courses, setCourses] = useState([]);
   const coursesRef = useRef([]);
+  console.log(props);
 
   function getCoursesFromResponse(res) {
     coursesRef.current = coursesRef.current.concat(res.data);
@@ -89,11 +92,11 @@ export default function Dashboard(props) {
   }, []);
 
   return (
-    <div className={classes.root}>
+    <Paper className={classes.root}>
       <Navbar />
       <div className={classes.toolbar} />
       <UserDrawer courses={courses}/>
       <WidgetView displayWidgets={currentRoleWidgets} />
-    </div>
+    </Paper>
   );
 }
