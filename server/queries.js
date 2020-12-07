@@ -26,7 +26,7 @@ const client = new Client({
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo',
-  password: 'demo', port: '5433'
+  //password: 'demo', port: '5433'
 });
 
 
@@ -795,8 +795,13 @@ const addSubmission = (req, res) => {
         } else {
           const submission_id = result.rows[0].submission_id;
           const fileName = `submissions/${submission_id}/${origName}`;
-          const data = await uploadFile(buffer, fileName);
-          res.status(201).send(data);
+          try {
+            const data = await uploadFile(buffer, fileName);
+            res.status(201).send(data);
+          } catch (error) { 
+            console.log(error);
+            res.status(400).send(error);
+          }
         }
       });
     }
@@ -1332,7 +1337,7 @@ const getAssignmentSubmissions = (req, res) => {
                 Key: file.Key
               }
               let url = s3.getSignedUrl('getObject', p);
-              let regex = /\/[^\/]+\..+/g
+              let regex = /\/[^\/]+\.?.+/g
               let filename = file.Key.match(regex)[0].substring(1);
               let objectData = {file_name: filename, url: url, time_submitted: row.time_submitted};
               // Not the greatest, but not sure why I'm getting duplicates.

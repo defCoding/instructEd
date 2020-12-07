@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Paper, IconButton, Menu, MenuItem, AppBar, Toolbar, Typography, Dialog } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { makeStyles } from '@material-ui/core/styles';
@@ -94,14 +94,15 @@ function WidgetDialog ({currentWidget, openDialog, setOpenDialog}) {
 
 export default function WidgetCase(props) {
   const options = props.displayWidgets;
-
-  console.log(options[props.widgetPosn]);
-
-  const [currentWidget, setCurrentWidget] = React.useState(options[props.widgetPosn]);
+  const [currentWidget, setCurrentWidget] = React.useState(undefined);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const open = Boolean(anchorEl);
   const classes = useStyles();
+  
+  useEffect(() => {
+    setCurrentWidget(props.displayWidgets[props.widgetPosn]);
+  }, [props]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
