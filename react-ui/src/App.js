@@ -7,10 +7,27 @@ import ResetPassword from './components/LoginAndRegistration/ResetPassword';
 import DuoLogin from './components/LoginAndRegistration/DuoLogin';
 import Dashboard from './components/Dashboard/Dashboard';
 import LandingPage from './components/LoginAndRegistration/LandingPage/LandingPage';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 function App() {
+
+  const paletteType = "light";
+  const mainPrimaryColor = '#ADEFD1';
+  const mainSecondaryColor = '#394C5E';
+
+  const theme = createMuiTheme({
+    palette: {
+      primary: {
+        main: mainPrimaryColor,
+      },
+      secondary: {
+        main: mainSecondaryColor,
+      },
+      type: paletteType,
+    },
+  });
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <Router>
           <Switch>
             <Route path="/" exact component={LandingPage} />
@@ -22,7 +39,7 @@ function App() {
             <Route path='/duologin' component={DuoLogin} />
           </Switch>
         </Router>
-    </>
+    </ThemeProvider>
   );
 }
 

@@ -25,7 +25,7 @@ const client = new Client({
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo',
-  //password: 'demo', port: '5433'
+  password: 'demo', port: '5433'
 });
 
 aws.config.update({
@@ -914,7 +914,7 @@ const getCourseVideos = (req, res) => {
 const getUnapprovedCourseVideos = (req, res) => {
   const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseVideos WHERE $1=-1 OR course_id=$1 and not approved;"
+  const sql = "SELECT * FROM CourseVideos WHERE ($1=-1 OR course_id=$1) and not approved;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -931,7 +931,7 @@ const getUnapprovedCourseVideos = (req, res) => {
         };
 
         let url = s3.getSignedUrl('getObject', params);
-        data.push({file_name: row.file_name, url: url});
+        data.push({file_name: row.file_name, url: url, course_id: row.course_id, approved: row.approved, upload_date: row.upload_date});
       }
 
       res.status(200).send(data);
@@ -992,7 +992,7 @@ const getApprovedAssignmentFiles = (req, res) => {
         };
 
         let url = s3.getSignedUrl('getObject', params);
-        data.push({file_name: row.file_name, url: url});
+        data.push({file_name: row.file_name, url: url, assignment_id: row.assignment_id});
       }
 
       res.status(200).send(data);
@@ -1031,7 +1031,7 @@ const getAssignmentFiles = (req, res) => {
 const getUnapprovedAssignmentFiles = (req, res) => {
   const assignmentID = req.params.assignmentID ? req.params.assignmentID : -1;
 
-  const sql = "SELECT * FROM AssignmentFiles WHERE $1=-1 OR assignment_id=$1 and not approved;"
+  const sql = "SELECT * FROM AssignmentFiles WHERE ($1=-1 OR assignment_id=$1) and not approved;" //not approved
   const values = [assignmentID];
 
   client.query(sql, values, (err, result) => {
@@ -1048,7 +1048,7 @@ const getUnapprovedAssignmentFiles = (req, res) => {
         };
 
         let url = s3.getSignedUrl('getObject', params);
-        data.push({file_name: row.file_name, url: url});
+        data.push({file_name: row.file_name, url: url, assignment_id: row.assignment_id, approved: row.approved, upload_date: row.upload_date});
       }
 
       res.status(200).send(data);
@@ -1139,7 +1139,7 @@ const getCourseFiles = (req, res) => {
         };
 
         let url = s3.getSignedUrl('getObject', params);
-        data.push({file_name: row.file_name, url: url});
+        data.push({file_name: row.file_name, url: url, course_id: row.course_id});
       }
 
       res.status(200).send(data);
@@ -1150,7 +1150,7 @@ const getCourseFiles = (req, res) => {
 const getUnapprovedCourseFiles = (req, res) => {
   const courseID = req.params.courseID ? req.params.courseID : -1;
 
-  const sql = "SELECT * FROM CourseFiles WHERE $1=-1 OR course_id=$1 and not approved;"
+  const sql = "SELECT * FROM CourseFiles WHERE ($1=-1 OR course_id=$1) and not approved;"
   const values = [courseID];
 
   client.query(sql, values, (err, result) => {
@@ -1168,7 +1168,7 @@ const getUnapprovedCourseFiles = (req, res) => {
         };
 
         let url = s3.getSignedUrl('getObject', params);
-        data.push({file_name: row.file_name, url: url});
+        data.push({file_name: row.file_name, url: url, course_id: row.course_id, approved: row.approved, upload_date: row.upload_date});
       }
 
       res.status(200).send(data);
@@ -1410,6 +1410,7 @@ const addAssignment = (req, res) => {
 }
 
 const approveCourseFile = (req, res) => {
+  console.log(req.body);
   const info = req.body;
   const courseID = info.courseID;
   const fileName = info.fileName;
@@ -1429,6 +1430,7 @@ const approveCourseFile = (req, res) => {
 }
 
 const approveCourseVideo = (req, res) => {
+  console.log(req.body);
   const info = req.body;
   const courseID = info.courseID;
   const fileName = info.fileName;
