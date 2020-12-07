@@ -126,9 +126,6 @@ app.get('/submissions/assignment/:assignmentID/student/:studentID', withDuoAuth,
 app.get('/grades/:assignmentID/:studentID', withDuoAuth, db.getStudentGrade);
 app.get('/grades/:assignmentID/', withDuoAuth, db.getGrade);
 app.post('/grades/', withDuoAuth, db.addGrade);
-app.put('/assignment_files', withDuoAuth, db.approveAssignmentFile);
-app.put('/course_files', withDuoAuth, db.approveCourseFile);
-app.put('/course_videos', withDuoAuth, db.approveCourseVideo);
 app.get('/search/users/:query/filter/:role', withDuoAuth, db.searchUsers);
 app.get('/search/courses/:query', withDuoAuth, db.searchCourses);
 app.get('/userInfo', withDuoAuth, db.getUserInfo);
