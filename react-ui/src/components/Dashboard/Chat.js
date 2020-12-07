@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Chat({ open, setOpen }) {
+export default function Chat({ open, setOpen, darkState }) {
   const [user, setUser] = useState({id: -1});
   const [selectedCourseID, setSelectedCourseID] = useState(-1);
 
@@ -65,8 +65,8 @@ export default function Chat({ open, setOpen }) {
       <div className="d-flex" style={{height: '93vh'}}>
         <SocketProvider id={user.id}>
           <ConversationsProvider courseID={selectedCourseID} user={user}>
-            <ChatSidebar selectedCourseID={selectedCourseID} setSelectedCourseID={setSelectedCourseID}/>
-            <OpenConversation />
+            <ChatSidebar selectedCourseID={selectedCourseID} setSelectedCourseID={setSelectedCourseID} darkState={darkState} />
+            <OpenConversation darkState={darkState} />
           </ConversationsProvider>
         </SocketProvider>
       </div>

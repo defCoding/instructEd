@@ -4,7 +4,7 @@ import { useConversations } from './ConversationsProvider';
 import { useSocket } from './SocketProvider';
 import moment from 'moment';
 
-export default function OpenConversation() {
+export default function OpenConversation({ darkState }) {
     const [text, setText] = useState('');
     const [typingUsers, setTypingUsers] = useState([]);
     const [typingTimeout, setTypingTimeout] = useState(undefined);
@@ -83,6 +83,7 @@ export default function OpenConversation() {
         }
     }
 
+    const size = { height: '75px', resize: 'none' };
     return (
         <div className="d-flex flex-column flex-grow-1">
             <div className="flex-grow-1 overflow-auto">
@@ -117,6 +118,7 @@ export default function OpenConversation() {
                 <Form.Group className="m-2">
                     <InputGroup>
                         <Form.Control
+                            style={ darkState ? { ...size, color: 'white', backgroundColor: '#828282' } : size} 
                             as="textarea"
                             required
                             value={text}
@@ -124,7 +126,6 @@ export default function OpenConversation() {
                                 startTyping();
                                 setText(e.target.value)
                             }}
-                            style={{ height: '75px', resize: 'none' }}
                         />
                         <InputGroup.Append>
                             <Button type="submit">Send</Button>

@@ -13,21 +13,21 @@ require('dotenv').config();
 const resetExpirationAmount = 15;
 const resetExpirationUnit = 'minutes';
 
-/*
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   }
 });
-*/
 
 
+/*
 const client = new Client({
   host: 'localhost',
   database: 'demo', user: 'demo',
   //password: 'demo', port: '5433'
 });
+*/
 
 
 aws.config.update({
@@ -187,6 +187,8 @@ const forgotPassword = ((req, res) => {
             pass: `${process.env.EMAIL_PASSWORD}`
           }
         });
+        console.log(process.env.EMAIL_ADDRESS);
+        console.log(process.env.EMAIL_PASSWORD);
 
         const mailOptions = {
           from: `${process.env.EMAIL_ADDRESS}`,
@@ -201,6 +203,7 @@ const forgotPassword = ((req, res) => {
 
         transporter.sendMail(mailOptions, (error, response) => {
           if (error) {
+            console.log(error);
             res.status(500).send('Something went wrong with sending the email.');
           } else {
             res.status(200).send('Recovery email sent.');

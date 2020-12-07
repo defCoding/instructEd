@@ -108,11 +108,13 @@ function Navbar(props) {
 
   const handleLogout = () => {
     axios.post('/logout')
-      .then(res => props.history.push('/'))
+      .then(res => {
+        props.history.push('/')
+        if (props.darkState == true) {
+          props.handleThemeChange();
+        }
+      })
       .catch(console.log);
-    if (props.darkState == true) {
-      props.handleThemeChange();
-    }
   }
 
   return (
@@ -151,7 +153,7 @@ function Navbar(props) {
           </Menu>
         </Toolbar>
       </AppBar>
-      <Chat open={open} setOpen={setOpen} />
+      <Chat darkState={props.darkState} open={open} setOpen={setOpen} />
     </div>
   );
 }

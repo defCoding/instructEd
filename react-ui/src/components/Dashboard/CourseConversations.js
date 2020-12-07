@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ListGroup } from 'react-bootstrap'
 import { Button, Typography } from '@material-ui/core'
 
-export default function CourseConversations({ setSelectedCourseID }) {
+export default function CourseConversations({ setSelectedCourseID, darkState }) {
     const { conversations, selectConversationIndex } = useConversations();
 
     return (
@@ -16,9 +16,14 @@ export default function CourseConversations({ setSelectedCourseID }) {
                 {conversations.map((conversation, index) => {
                     return (
                         <ListGroup.Item
+                            style={conversation.selected ? (darkState ? { color: 'white', backgroundColor: '#212121' } : {}) :
+                        (darkState ? { color: 'white', backgroundColor: '#424242' } : {})}
                             key={index}
                             action
-                            onClick={() => selectConversationIndex(index)}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                selectConversationIndex(index)
+                            }}
                             active={conversation.selected}
                         >
                             {

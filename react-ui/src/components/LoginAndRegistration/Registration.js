@@ -26,9 +26,15 @@ export default function Registration(props) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (values.password !== values.confirmPassword) {
+    const emailRegex = /\/[^\/]+\.?.+/g
+    if (Object.values(values).includes('')) {
+      window.alert("All fields must be filled out.");
+    } else if (!emailRegex.test(values.email)) {
+      window.alert("Invalid email.");
+    }
+    else if (values.password !== values.confirmPassword) {
       window.alert("Password is not the same");
-    } 
+    }
     else {
       //Attempts to insert the given values into the database
       axios.post('/users', values)
@@ -80,11 +86,11 @@ export default function Registration(props) {
               <Typography variant="h2" color="secondary" className={classes.extraItemsForm}>Create Account</Typography>
             </Grid>
             <Grid container justify="center">
-              <TextField color="secondary" variant="outlined" label="First Name" name="firstName" value={values.firstName} onChange={handleInputChange} className={classes.textFieldForm}/>
-              <TextField color="secondary" variant="outlined" label="Last Name" name="lastName" value={values.lastName} onChange={handleInputChange} className={classes.textFieldForm}/>
-              <TextField color="secondary" variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
-              <TextField color="secondary" variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
-              <TextField color="secondary" variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
+              <TextField color="secondary" required variant="outlined" label="First Name" name="firstName" value={values.firstName} onChange={handleInputChange} className={classes.textFieldForm}/>
+              <TextField color="secondary" required variant="outlined" label="Last Name" name="lastName" value={values.lastName} onChange={handleInputChange} className={classes.textFieldForm}/>
+              <TextField color="secondary" required variant="outlined" label="Email" name="email" value={values.email} onChange={handleInputChange} className={classes.textFieldForm} />
+              <TextField color="secondary" required variant="outlined" label="Password" name="password" type="password" value={values.password} onChange={handleInputChange} className={classes.textFieldForm} />
+              <TextField color="secondary" required variant="outlined" label="Confirm Password" name="confirmPassword" type="password" value={values.confirmPassword} onChange={handleInputChange} className={classes.textFieldForm} />
             </Grid>
             <Grid container justify="center">
               <Button color="primary" variant="contained" size="large" onClick={onSubmit} className={classes.extraItemsForm}>Register</Button>

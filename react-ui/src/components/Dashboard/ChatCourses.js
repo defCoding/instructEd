@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react'
 import { ListGroup } from 'react-bootstrap'
 import axios from 'axios';
 
-export default function ChatCourses({setSelectedCourseID}) {
+export default function ChatCourses({setSelectedCourseID, darkState}) {
   const [courses, setCourses] = useState([]);
   const [selectedCourseIndex, setSelectedCourseIndex] = useState(-1);
   const coursesRef = useRef([]);
@@ -37,6 +37,8 @@ export default function ChatCourses({setSelectedCourseID}) {
     <ListGroup variant="flush">
       {courses.map((course, index) => (
         <ListGroup.Item
+          style={index === selectedCourseIndex ? (darkState ? { color: 'white', backgroundColor: '#212121' } : {}) :
+            (darkState ? { color: 'white', backgroundColor: '#424242' } : {})}
           key={index}
           action
           onClick={() => {
