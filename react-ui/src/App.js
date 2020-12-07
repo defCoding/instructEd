@@ -10,7 +10,7 @@ import LandingPage from './components/LoginAndRegistration/LandingPage/LandingPa
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 function App() {
-  const [darkState, setDarkState] = React.useState(true);
+  const [darkState, setDarkState] = React.useState(false);
   const paletteType = darkState ? "dark" : "light";
   const mainPrimaryColor = darkState ? '#70a090' : '#ADEFD1';
   const mainSecondaryColor = darkState ? '#102535' : '#394C5E';
