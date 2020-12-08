@@ -89,7 +89,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
     .catch(console.log);
 
     
-  }, [open, gOpen, students, selectedStudent, selectedAssignment]); //[open, gOpen, students, selectedStudent, selectedAssignment]
+  }, [gOpen, selectedAssignment]); //[open, gOpen, students, selectedStudent, selectedAssignment]
 
   function addSubmissionsToList(res){
     submissionsRef.current = res.data;
