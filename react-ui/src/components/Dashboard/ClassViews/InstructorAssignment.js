@@ -267,7 +267,7 @@ const setGradeClicked = (student) => () =>{
   })
   }
   else{
-    axios.put(`/grades/update/`, {
+    axios.put(`/grades/`, {
       userID: student.id,
       assignmentID: selectedAssignment.assignment_id,
       grade: grade
