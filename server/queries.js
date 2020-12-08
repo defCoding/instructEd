@@ -1709,6 +1709,20 @@ const checkOnlineStatus = (req, res) => {
   })
 }
 
+const getAssignmentGrades = (req, res) => {
+  const assignmentID = req.params.assignmentID;
+  const values = [assignmentID];
+  const sql = 'SELECT grade FROM Grades WHERE assignment_id=$1;';
+
+  client.query(sql, values, (err, result) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      res.status(200).send(result.rows);
+    }
+  })
+}
+
 module.exports = {
   client,
   createUser,
@@ -1767,5 +1781,7 @@ module.exports = {
   getUserInfo,
   getSyllabus,
   updateSyllabus,
-  checkOnlineStatus
+  checkOnlineStatus,
+  //Added by Shaun
+  getAssignmentGrades
 };
