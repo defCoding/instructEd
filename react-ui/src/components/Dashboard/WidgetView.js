@@ -2,14 +2,18 @@ import React from 'react';
 import WidgetCase from './WidgetCase';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
+import LightBackground from './assets/background.jpg';
 
 const useStyles = makeStyles((theme) => ({
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
     padding: theme.spacing(3),
+    minHeight: '100vh',
+    backgroundImage: 'url(' + LightBackground + ')',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'cover',
   },
 }));
 

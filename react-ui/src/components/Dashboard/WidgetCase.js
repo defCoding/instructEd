@@ -20,7 +20,6 @@ const ITEM_HEIGHT = 50;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100%",
   },
   menuButton: {
     marginRight: theme.spacing(3),
