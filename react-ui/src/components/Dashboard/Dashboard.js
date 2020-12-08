@@ -94,7 +94,7 @@ export default function Dashboard(props) {
       <Navbar darkState={props.darkState} handleThemeChange={props.handleThemeChange} />
       <div className={classes.toolbar} />
       <UserDrawer courses={courses}/>
-      <WidgetView displayWidgets={currentRoleWidgets} />
+      <WidgetView displayWidgets={currentRoleWidgets} darkState={props.darkState} />
     </Paper>
   );
 }

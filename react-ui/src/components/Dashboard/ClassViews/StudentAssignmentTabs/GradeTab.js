@@ -17,7 +17,7 @@ export default function GradeTab(props) {
   const checkGrade = (gradeList) => {
     console.log(gradeList);
     if(gradeList.length == 0){
-      setGrade('');
+      setGrade('Instructor is working on grades still...');
     }
     else{
       setGrade(String(gradeList[0].grade) + " %");

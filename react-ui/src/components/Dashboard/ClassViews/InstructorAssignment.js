@@ -252,18 +252,34 @@ const setGradeClicked = (student) => () =>{
   var maxPoints = parseFloat(gradeString[1]);
   var grade = (givenPoints / maxPoints) * 100.0;
   console.log(grade);
-  axios.post(`/grades/`, {
-    userID: student.id,
-    assignmentID: selectedAssignment.assignment_id,
-    grade: grade
-  }).then(res =>{
-    if(res.status === 400){
-      alert(res.statusText);
-    }
-    alert('Grade Submitted');
-    setNewGrade('');
-    setOpen(false);
+  if(oldGrade === "Assignment currently ungraded."){
+    axios.post(`/grades/`, {
+      userID: student.id,
+      assignmentID: selectedAssignment.assignment_id,
+      grade: grade
+    }).then(res =>{
+      if(res.status === 400){
+        alert(res.statusText);
+      }
+      alert('Grade Submitted');
+      setNewGrade('');
+      setOpen(false);
   })
+  }
+  else{
+    axios.put(`/grades/`, {
+      userID: student.id,
+      assignmentID: selectedAssignment.assignment_id,
+      grade: grade
+    }).then(res =>{
+      if(res.status === 400){
+        alert(res.statusText);
+      }
+      alert('Grade Updated');
+      setNewGrade('');
+      setOpen(false);
+  })
+  }
 }
 
 

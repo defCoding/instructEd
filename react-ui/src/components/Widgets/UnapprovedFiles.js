@@ -137,7 +137,7 @@ export default function UnapprovedFiles(){
                             secondary={dateString}></ListItemText>
                             <ListItemSecondaryAction>
                                 <Button onClick={viewBtnClicked(file)} variant="contained" color="secondary" size="small">
-                                    Approve/Disapprove
+                                    Review
                                 </Button>
                             </ListItemSecondaryAction>
 

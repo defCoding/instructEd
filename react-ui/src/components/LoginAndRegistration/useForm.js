@@ -14,7 +14,7 @@ export default function useForm(initialValues) {
   const useStyle = makeStyles(theme => ({
     root: {
       '& .MuiFormControl-root': {
-        width:'75%',
+        width:'60%',
         margin:theme.spacing(1),
         display:'flex'
       }
@@ -43,7 +43,6 @@ export default function useForm(initialValues) {
     },
     facebookButton: {
       margin: theme.spacing(2),
-      width: '75%',
     }
   }))
 
