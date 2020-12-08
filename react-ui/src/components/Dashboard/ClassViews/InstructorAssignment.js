@@ -55,55 +55,69 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   const [students, setStudents] = useState([]);
   const [averageGrade, setAverageGrade] = useState('');
   const studentsRef = useRef([]);
+  const gradesRef = useRef([]);
   const submissionsRef = useRef([]);
   const [selectedStudent, setSelectedStudent] = useState({id: -1, first_name: '', last_name: ''});
   const [gOpen, setGopen] = React.useState(false);
   const [submissionsPerStudent, setSubmissionsPerStudent] = useState([]);
 
   useEffect(() => {
+    //get request to retrieve all users who are students of this class
+    axios.get(`/courses/${courseID}/students`)
+      .then(res => {
+        addStudentsToList(res);
+      })
+      .catch(console.log);
 
-    async function getStudentsAndSetGrades() {
-      studentsRef.current = [];
-      //Place for get request to retrieve all users who are students of this class
-      const gotStudents = axios.get(`/courses/${courseID}/students`)
-        .then(res => {
-          addStudentsToList(res);
-        })
-        .catch(console.log);
+    //get request to retrieve all grades for this assignment
 
-      await gotStudents;
-    }
+    axios.get(`/assignment/grades/${selectedAssignment.assignment_id}`)
+    .then(res => {
+      if(res.data.length == 0){
+        setAverageGrade('Class Average: Not Availaible');        
+      }
+      else{
+        gradesRef.current = res.data;
+        let totalGrade = 0;
+        var x;
+        for(x of gradesRef.current){
+          totalGrade = totalGrade + x.grade;
+        }
+        setAverageGrade('Class Average: ' + String(totalGrade / gradesRef.current.length) + ' %');
+      }
+    })
+    .catch(console.log);
 
-    getStudentsAndSetGrades();
-  }, [gOpen]);
+    
+  }, [gOpen, selectedAssignment]); //[open, gOpen, students, selectedStudent, selectedAssignment]
 
   function addSubmissionsToList(res){
-    submissionsRef.current = submissionsRef.current.concat(res.data);
+    submissionsRef.current = res.data;
     setSubmissionsPerStudent(submissionsRef.current);
     console.log(submissionsRef.current);
   }
 
 
   function addStudentsToList(res){
-    studentsRef.current = studentsRef.current.concat(res.data);
+    studentsRef.current = res.data;
     setStudents(studentsRef.current);
   }
 
   const studentClicked = (student) => () =>{
     console.log(student);
-    if(selectedStudent == null){
+    if(selectedStudent.id === -1){
       axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
       .then(res => {addSubmissionsToList(res)}).catch(console.log);
       //setSubmissionsPerStudent([{file_name: 'file1', url: 'file1'}, {file_name: 'file2', url: 'file2'}]);
       setSelectedStudent(student);
     }
-    else if(selectedStudent != null){
-      if(student.id == selectedStudent.id){
+    else if(selectedStudent.id !== -1){
+      if(student.id === selectedStudent.id){
         setSubmissionsPerStudent([]);
         submissionsRef.current = [];
-        setSelectedStudent(null);
+        setSelectedStudent({id: -1, first_name: '', last_name: ''});
       }
-      else{
+      else if (selectedStudent.id !== student.id){
         axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
         .then(res => {addSubmissionsToList(res)}).catch(console.log);
         //setSubmissionsPerStudent([{file_name: 'file1', url: 'file1'}, {file_name: 'file2', url: 'file2'}]);
@@ -123,6 +137,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   }
 
   const handleClose = () => {
+    setAverageGrade('');
     setOpen(false);
   };
 
@@ -135,6 +150,9 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
         </IconButton>
         <Typography variant="h6" className={classes.title}>
           {selectedAssignment.assignment_name}
+        </Typography>
+        <Typography variant="h6">
+          {averageGrade}
         </Typography>
       </Toolbar>
     </AppBar>
@@ -190,7 +208,7 @@ function GradingDialog({selectedStudent, selectedAssignment, open, setOpen}){
   const [studentName, setStudentName] = useState('');
   const [oldGrade, setOldGrade] = useState('');
   useEffect (() => {
-    if(selectedStudent != null){
+    if(selectedStudent.id !== -1){
       setStudentName(selectedStudent.first_name + " " + selectedStudent.last_name);
 
       axios.get(`/grades/${selectedAssignment.assignment_id}/${selectedStudent.id}`)
@@ -206,7 +224,7 @@ function GradingDialog({selectedStudent, selectedAssignment, open, setOpen}){
     }
 
     
-  })
+  }, [selectedStudent])
 /*
   const checkGrade = (gradeList) => {
     console.log(gradeList.data);
@@ -219,7 +237,8 @@ function GradingDialog({selectedStudent, selectedAssignment, open, setOpen}){
   }
 */
 const handleClose = () => {
-  setNewGrade('');  
+  setNewGrade('');
+  setOldGrade('');  
   setOpen(false);
 };
 

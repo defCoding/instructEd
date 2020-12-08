@@ -141,6 +141,10 @@ app.get('/syllabus/:courseID', withDuoAuth, db.getSyllabus);
 app.put('/syllabus/', withDuoAuth, db.updateSyllabus);
 app.get('/online_users/:userID', withDuoAuth, db.checkOnlineStatus);
 
+//Added by Shaun
+
+app.get('/assignment/grades/:assignmentID', withDuoAuth, db.getAssignmentGrades);
+
 // Catch All
 app.use(express.static(path.join(__dirname, '../react-ui/build')));
 app.get('*', serveIndex);
