@@ -19,17 +19,16 @@ export default function UpcomingAssignments() {
     }, []);
 
     return (
-        <List>
+        <List style={{maxHeight: '300px', overflow: 'auto'}}>
             {
                 assignments.map((assignment) => {
                     let assignmentdate = moment(assignment.deadline).local();
                     assignmentdate = assignmentdate.format('[Due on] MM-DD-YY [at] h:mm A');
 
                     return (<>
-                        <ListItem>
+                        <ListItem style={{borderBottom: '1px solid #e0e0e0'}}>
                             <ListItemText primary={assignment.assignment_name} secondary={assignmentdate} />
                         </ListItem>
-                        <Divider />
                     </>);
                 })
             }

@@ -38,7 +38,13 @@ function GetAnnouncementList(props) {
               date.toLowerCase().includes(props.searchValue.toLowerCase())) {
                 return (
                   <ListItem button style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginBottom: '1em' }}
-                  onClick={() => setSelectedAnnouncement(announcement)}>
+                  onClick={() => {
+                      if (announcement === selectedAnnouncement) {
+                          setSelectedAnnouncement(undefined);
+                      } else {
+                          setSelectedAnnouncement(announcement)
+                      }
+                  }}>
                     <ListItemText disableTypography primary={<Typography variant='h7' style={{ fontWeight: 'bold' }}>
                       {announcement.announcement_name}
                       </Typography>}

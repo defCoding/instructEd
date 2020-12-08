@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { List, ListItemText, ListItem, Divider } from '@material-ui/core';
+import { List, ListItemText, ListItem, Divider, Typography } from '@material-ui/core';
 import moment from 'moment';
 //const announcements = [{"header":"P465", "body":"This is announcement 1"}, {"header":"P465", "body":"This is announcement 2"}];
 
 export default function Announcements(props) {
     const [announcements, setAnnouncements] = useState([]);
+    const [selectedAnnouncement, setSelectedAnnouncement] = useState(undefined);
     const announcementsRef = useRef([]);
 
     useEffect(() => {
@@ -35,7 +36,7 @@ export default function Announcements(props) {
     }
 
     return (
-        <List>
+        <List style={{maxHeight: '300px', overflow: 'auto'}}>
             {announcements.map((announcement) => {
                 const title = announcement.course_name + ": " + announcement.announcement_name;
                 let date = moment(announcement.date_created).local();
@@ -43,10 +44,28 @@ export default function Announcements(props) {
 
                 return (
                 <>
-                    <ListItem>
-                        <ListItemText primary={title} secondary={date} />
+                  <ListItem button style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', borderBottom: '1px solid #e0e0e0'}}
+                  onClick={() => {
+                      if (announcement === selectedAnnouncement) {
+                          setSelectedAnnouncement(undefined);
+                      } else {
+                          setSelectedAnnouncement(announcement)
+                      }
+                  }}>
+                        <ListItemText disableTypography primary={<Typography variant='h7' style={{ fontWeight: 'bold' }}>
+                        {title}
+                        </Typography>}
+                        secondary={
+                            <Typography style={{ color: 'grey' }}>
+                            {date}
+                            </Typography>
+                    } />
+                        <ListItemText primary={
+                        selectedAnnouncement && selectedAnnouncement === announcement ? 
+                        (announcement.announcement_description) :
+                        (announcement.announcement_description.slice(0, 80) + (announcement.announcement_description.length > 80 ? '...' : '')) 
+                        } />
                     </ListItem>
-                    <Divider />
                 </>
                 );
             })}
