@@ -19,6 +19,12 @@ const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
   },
+  title: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(1),
+  },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
   dialog: {
@@ -137,7 +143,6 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   }
 
   const handleClose = () => {
-    setAverageGrade('');
     setOpen(false);
   };
 
@@ -151,7 +156,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
         <Typography variant="h6" className={classes.title}>
           {selectedAssignment.assignment_name}
         </Typography>
-        <Typography variant="h6">
+        <Typography variant="h6" className={classes.menuButton}>
           {averageGrade}
         </Typography>
       </Toolbar>
