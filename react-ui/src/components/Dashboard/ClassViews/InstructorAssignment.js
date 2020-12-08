@@ -78,7 +78,7 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
   }, [gOpen]);
 
   function addSubmissionsToList(res){
-    submissionsRef.current = submissionsRef.current.concat(res.data);
+    submissionsRef.current = res.data;
     setSubmissionsPerStudent(submissionsRef.current);
     console.log(submissionsRef.current);
   }
@@ -91,19 +91,19 @@ export default function InstructorAssignment({selectedAssignment, open, setOpen,
 
   const studentClicked = (student) => () =>{
     console.log(student);
-    if(selectedStudent == null){
+    if(selectedStudent.id === -1){
       axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
       .then(res => {addSubmissionsToList(res)}).catch(console.log);
       //setSubmissionsPerStudent([{file_name: 'file1', url: 'file1'}, {file_name: 'file2', url: 'file2'}]);
       setSelectedStudent(student);
     }
-    else if(selectedStudent != null){
+    else if(selectedStudent.id !== -1){
       if(student.id == selectedStudent.id){
         setSubmissionsPerStudent([]);
         submissionsRef.current = [];
-        setSelectedStudent(null);
+        setSelectedStudent({id: -1, first_name: '', last_name: ''});
       }
-      else{
+      else if (selectedStudent.id !== student.id){
         axios.get(`/submissions/assignment/${selectedAssignment.assignment_id}/student/${student.id}`)
         .then(res => {addSubmissionsToList(res)}).catch(console.log);
         //setSubmissionsPerStudent([{file_name: 'file1', url: 'file1'}, {file_name: 'file2', url: 'file2'}]);
