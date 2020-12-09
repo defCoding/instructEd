@@ -9,7 +9,9 @@ const ITEM_HEIGHT = 50;
 const useStyle = makeStyles(theme => ({
   items: {
     margin:theme.spacing(1),
+    paddingRight: theme.spacing(2)
   },
+  /*
   root: {
     '& .MuiFormControl-root': {
       width:'75%',
@@ -17,6 +19,7 @@ const useStyle = makeStyles(theme => ({
       display:'flex'
     }
   },
+  */
 }))
 
 export default function CreateAnnouncement() {
@@ -124,10 +127,10 @@ export default function CreateAnnouncement() {
             </Toolbar>
           </Grid>
           <Grid item xs="12">
-            <TextField className={classes.items} color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
+            <TextField className={classes.items} color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} fullWidth/>
           </Grid>
           <Grid item xs="12">
-            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} />
+            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} rows="4" fullWidth/>
           </Grid>
           <Grid item xs="12" classname={classes.items}>
             <Button className={classes.items} variant="contained" color="secondary" onClick={onClick}>Post Announcement</Button>

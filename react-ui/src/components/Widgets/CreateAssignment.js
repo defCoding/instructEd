@@ -9,7 +9,8 @@ const ITEM_HEIGHT = 50;
 
 const useStyle = makeStyles(theme => ({
   items: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
+    paddingRight: theme.spacing(2)
   },
 }))
 
@@ -166,10 +167,10 @@ export default function CreateAssignment() {
             </Toolbar>
           </Grid>
           <Grid item xs="12">
-            <TextField className={classes.items} color="secondary" variant="outlined" label="Assignment Name" value={assignmentName} name="assignmentName" onChange={handleAssignmentChange} />
+            <TextField className={classes.items} color="secondary" variant="outlined" label="Assignment Name" value={assignmentName} name="assignmentName" onChange={handleAssignmentChange} fullWidth/>
           </Grid>
           <Grid item xs="12">
-            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={description} name="description" onChange={handleDescriptionChange} />
+            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={description} name="description" onChange={handleDescriptionChange} rows="4" fullWidth/>
           </Grid>
           <Grid item xs="12">
           <Calendar
@@ -179,7 +180,7 @@ export default function CreateAssignment() {
             />
           </Grid>
           <Grid item xs="12">
-            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Time" value={time} name="time" onChange={handleTimeChange}  />
+            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Time" value={time} name="time" onChange={handleTimeChange}  fullWidth/>
             <Toolbar variant="dense">
               <Menu
                 id="time-menu"
