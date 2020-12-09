@@ -21,23 +21,25 @@ export default function WidgetView(props) {
   const darkState = props.darkState;
   const classes = useStyles();
   const currentWidgets = props.displayWidgets;
+  const widgetNum = props.widgetNum;
+  var i;
+
+  function Display() {
+    const items = [];
+    for (i = 0; i < widgetNum; i++) {
+      items.push(
+      <Grid item sm={12} md={6} maxHeight={300}>
+        <WidgetCase displayWidgets={currentWidgets} widgetPosn={0}/>
+      </Grid>);
+    }
+    return items;
+  }
   
   return(
     <main className={classes.content} style={{ backgroundImage: (darkState ? ('url(' + DarkBackground + ')') : ('url(' + LightBackground + ')'))}} >
       <div className={classes.toolbar} />
       <Grid container height="100%" spacing={1}>
-        <Grid item sm={12} md={6} maxHeight={300}>
-          <WidgetCase displayWidgets={currentWidgets} widgetPosn={0}/>
-        </Grid>
-        <Grid item sm={12} md={6} maxHeight={300}>
-          <WidgetCase displayWidgets={currentWidgets} widgetPosn={1}/>
-        </Grid>
-        <Grid item sm={12} md={6} maxHeight={300}>
-          <WidgetCase displayWidgets={currentWidgets} widgetPosn={2}/>
-        </Grid>
-        <Grid item sm={12} md={6} maxHeight={300}>
-          <WidgetCase displayWidgets={currentWidgets} widgetPosn={3}/>
-        </Grid>
+        <Display />
       </Grid>
     </main>
   );

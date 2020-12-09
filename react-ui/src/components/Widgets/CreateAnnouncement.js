@@ -92,7 +92,8 @@ export default function CreateAnnouncement() {
           <Grid item xs="12">
             <Toolbar variant="dense">
               <Menu
-              className={classes.items}
+                className={classes.items}
+                outlined
                 id="long-menu"
                 anchorEl={anchorEl}
                 keepMounted

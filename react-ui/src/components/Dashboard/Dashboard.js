@@ -40,8 +40,17 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard(props) {
   const classes = useStyles();
+  const [widgetNum, setWidgetNum] = React.useState(2);
   const [courses, setCourses] = useState([]);
   const coursesRef = useRef([]);
+
+  function removeWidgetClick() {
+    setWidgetNum(widgetNum - 1);
+  }
+
+  function addWidgetClick() {
+    setWidgetNum(widgetNum + 1);
+  }
 
   function getCoursesFromResponse(res) {
     coursesRef.current = coursesRef.current.concat(res.data);
@@ -92,10 +101,10 @@ export default function Dashboard(props) {
 
   return (
     <Paper className={classes.root}>
-      <Navbar darkState={props.darkState} handleThemeChange={props.handleThemeChange} />
+      <Navbar darkState={props.darkState} handleThemeChange={props.handleThemeChange} addWidgetClick={addWidgetClick} removeWidgetClick={removeWidgetClick} widgetNum={widgetNum} />
       <div className={classes.toolbar} />
       <UserDrawer courses={courses}/>
-      <WidgetView displayWidgets={currentRoleWidgets} darkState={props.darkState} />
+      <WidgetView displayWidgets={currentRoleWidgets} darkState={props.darkState} widgetNum={widgetNum} />
     </Paper>
   );
 }

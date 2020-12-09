@@ -12,20 +12,24 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 function App() {
   const [darkState, setDarkState] = React.useState(false);
   const paletteType = darkState ? "dark" : "light";
-  const mainPrimaryColor = darkState ? '#70a090' : '#ADEFD1';
-  const mainSecondaryColor = darkState ? '#091530' : '#394C5E';
-
+  const greenColor = darkState ? '#3E5465' : '#ADEFD1';
+  const blueColor = darkState ? '#171F26' : '#394C5E';
+  const backgroundColor = darkState ? '#263440' : '#F2F4F7';
+  
   console.log(darkState);
 
   const theme = createMuiTheme({
     palette: {
       primary: {
-        main: mainPrimaryColor,
+        main: greenColor,
       },
       secondary: {
-        main: mainSecondaryColor,
+        main: blueColor,
       },
       type: paletteType,
+      background: {
+        paper: backgroundColor,
+      }
     },
   });
 
