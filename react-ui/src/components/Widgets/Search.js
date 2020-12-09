@@ -7,7 +7,8 @@ const ITEM_HEIGHT = 50;
 
 const useStyle = makeStyles(theme => ({
   items: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
+    paddingRight: theme.spacing(2)
   },
   root: {
     '& .MuiFormControl-root': {
@@ -115,17 +116,15 @@ export default function Search() {
   return (
     <Grid height="100%" spacing={1}>
       <Grid item xs="12">
-        <div style={{ width: 300 }}>
           <TextField 
             onChange={handleSearchChange}
-            label="Search..." 
-            margin="normal" 
+            color="secondary"
+            label="Search..."
             variant="outlined" 
-            className={classes.items} />
-        </div>
+            className={classes.items} fullWidth/>
       </Grid>
       <Grid item xs="12">
-        <FormControl color="secondary" variant="outlined" className={classes.items}>
+        <FormControl color="secondary" variant="outlined" className={classes.items} fullWidth>
           <InputLabel>Filter</InputLabel>
           <Select
               color="secondary"

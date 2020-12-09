@@ -5,7 +5,8 @@ import axios from 'axios';
 
 const useStyle = makeStyles(theme => ({
   items: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
+    paddingRight: theme.spacing(2)
   },
   root: {
     '& .MuiFormControl-root': {
@@ -53,18 +54,18 @@ export default function AddCourse() {
       <form>
         <Grid height="100%" spacing={1}>
           <Grid item xs="12">
-            <TextField color="secondary" variant="outlined" label="Class Name" name="courseName" className={classes.items} onChange={handleInputChange} />
+            <TextField color="secondary" variant="outlined" label="Class Name" name="courseName" className={classes.items} onChange={handleInputChange} fullWidth/>
           </Grid>
           <Grid item xs="12">
-            <TextField color="secondary" variant="outlined" label="Class Number" name="courseNumber" className={classes.items} onChange={handleInputChange} />
+            <TextField color="secondary" variant="outlined" label="Class Number" name="courseNumber" className={classes.items} onChange={handleInputChange} fullWidth/>
           </Grid>
           <Grid item xs="12">
-            <TextField color="secondary" variant="outlined" label="Department" name="courseDept" className={classes.items} onChange={handleInputChange} />
+            <TextField color="secondary" variant="outlined" label="Department" name="courseDept" className={classes.items} onChange={handleInputChange} fullWidth/>
           </Grid>
           <Grid item xs="12">
-            <TextField color="secondary" variant="outlined" label="Instructor ID" name="instructorID" className={classes.items} onChange={handleInputChange} />
+            <TextField color="secondary" variant="outlined" label="Instructor ID" name="instructorID" className={classes.items} onChange={handleInputChange} fullWidth/>
           </Grid>
-          <FormControl color="secondary" variant="outlined" className={classes.items}>
+          <FormControl color="secondary" variant="outlined" className={classes.items} fullWidth>
             <InputLabel id="demo-simple-select-outlined-label">Term</InputLabel>
             <Select
               color="secondary"
