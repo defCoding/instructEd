@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, TextField, Grid, Button, IconButton, Menu, MenuItem, Typography, Toolbar, Divider } from '@material-ui/core';
+import { FormControl, InputLabel, Select, Paper, TextField, Grid, Button, IconButton, Menu, MenuItem, Typography, Toolbar, Divider } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
@@ -16,7 +16,7 @@ const useStyle = makeStyles(theme => ({
 
 export default function CreateAssignment() {
   const classes = useStyle();
-  const noCourse = {course_id: undefined, course_name: 'None', course_term: ''};
+  const noCourse = {course_id: undefined, course_name: 'Select a Course', course_term: ''};
   const [courses, setCourses] = useState([]);
   const [currentCourse, setCurrentCourse] = useState(noCourse);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -46,6 +46,9 @@ export default function CreateAssignment() {
     setTAnchorEl(event.currentTarget);
   }
 
+  const handleCourseChange = (event) => {
+    setCurrentCourse(event.target.value);
+  }
   function handleCloseCourse(course) {
     setAnchorEl(null);
     setCurrentCourse(course);
@@ -65,6 +68,11 @@ export default function CreateAssignment() {
     setDateString(date.toDateString());
     console.log(date.toDateString());
   }
+
+  const getCurrentCourseName = () => {
+    return currentCourse.course_name;
+  }
+
 
   const onClick = (e) => {
     //e.preventDefault();
@@ -125,46 +133,27 @@ export default function CreateAssignment() {
       <form>
         <Grid height="100%" spacing={1}>
           <Grid item xs="12">
-            <Typography align="left" variant="h6" color="inherit">
-            Course Name
-            </Typography>
-          </Grid>
-          <Grid item xs="12">
-            <Toolbar variant="dense">
-              <Menu
-                id="course-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={open}
-                onClose={() => handleCloseCourse(noCourse)}
-                PaperProps={{
-                  style: {
-                    maxHeight: ITEM_HEIGHT * 4.5,
-                    width: '20ch',
-                  },
-                }}>
+          <FormControl color="secondary" variant="outlined" className={classes.items} fullWidth>
+          <InputLabel>Course</InputLabel>
+          <Select
+              color="secondary"
+              displayEmpty={true}
+              onChange={handleCourseChange}
+              value={currentCourse}
+              renderValue={getCurrentCourseName}
+              label="Course"
+              name="course"
+              required
+            >
                 {courses.map((course) => (
                   <MenuItem 
                     key={course.course_name} 
-                    selected={course === currentCourse} 
-                    onClick={() => handleCloseCourse(course)}>
+                    value={course}>
                     {course.course_name}
                   </MenuItem>
                 ))}
-              </Menu>
-              <Typography align="right" variant="h6" color="inherit">
-                {currentCourse.course_name}
-              </Typography>
-              <IconButton
-                aria-label="more"
-                aria-controls="course-menu"
-                aria-haspopup="true"
-                onClick={handleClick}
-                color="secondary"
-              >
-                <ArrowDropDownIcon />
-              </IconButton>
-            </Toolbar>
+          </Select>
+        </FormControl>
           </Grid>
           <Grid item xs="12">
             <TextField className={classes.items} color="secondary" variant="outlined" label="Assignment Name" value={assignmentName} name="assignmentName" onChange={handleAssignmentChange} fullWidth/>
