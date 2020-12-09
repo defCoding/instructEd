@@ -49,6 +49,7 @@ export default function Announcements(props) {
         setAnnouncements(announcementsRef.current);
     }
 
+<<<<<<< HEAD
     return (
         <List style={{maxHeight: '300px', overflow: 'auto'}}>
             {announcements.map((announcement) => {
@@ -85,4 +86,52 @@ export default function Announcements(props) {
             })}
         </List>
     );
+||||||| 75a835f
+    return (
+        <List>
+            {announcements.map((announcement) => {
+                const title = announcement.course_name + ": " + announcement.announcement_name;
+                let date = moment(announcement.date_created).local();
+                date = date.format('MM-DD-YY h:mm A');
+
+                return (
+                <>
+                    <ListItem>
+                        <ListItemText primary={title} secondary={date} />
+                    </ListItem>
+                    <Divider />
+                </>
+                );
+            })}
+        </List>
+    );
+=======
+    {
+        if (announcements.length > 0) {
+            return (
+                <List>
+                {announcements.map((announcement) => {
+                    const title = announcement.course_name + ": " + announcement.announcement_name;
+                    let date = moment(announcement.date_created).local();
+                    date = date.format('MM-DD-YY h:mm A');
+        
+                    return (
+                    <>
+                        <ListItem>
+                            <ListItemText primary={title} secondary={date} />
+                        </ListItem>
+                        <Divider />
+                    </>
+                    );
+                })}
+                </List>
+            );
+        }
+        else {
+            return (
+                <Typography variant="body" className={classes.items}>No announcements to display!</Typography>
+            );
+        }
+    }
+>>>>>>> frontend
 }
