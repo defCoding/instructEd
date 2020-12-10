@@ -86,26 +86,8 @@ export default function Announcements(props) {
             })}
         </List>
     );
-||||||| 75a835f
-    return (
-        <List>
-            {announcements.map((announcement) => {
-                const title = announcement.course_name + ": " + announcement.announcement_name;
-                let date = moment(announcement.date_created).local();
-                date = date.format('MM-DD-YY h:mm A');
-
-                return (
-                <>
-                    <ListItem>
-                        <ListItemText primary={title} secondary={date} />
-                    </ListItem>
-                    <Divider />
-                </>
-                );
-            })}
-        </List>
-    );
-=======
+}
+||||||| 9b94ef8
     {
         if (announcements.length > 0) {
             return (
@@ -133,5 +115,34 @@ export default function Announcements(props) {
             );
         }
     }
->>>>>>> frontend
 }
+=======
+    {
+        if (announcements.length > 0) {
+            return (
+                <List>
+                {announcements.reverse().map((announcement) => {
+                    const title = announcement.course_name + ": " + announcement.announcement_name;
+                    let date = moment(announcement.date_created).local();
+                    date = date.format('MM-DD-YY h:mm A');
+        
+                    return (
+                    <>
+                        <ListItem>
+                            <ListItemText primary={title} secondary={date} />
+                        </ListItem>
+                        <Divider />
+                    </>
+                    );
+                })}
+                </List>
+            );
+        }
+        else {
+            return (
+                <Typography variant="body" className={classes.items}>No announcements to display!</Typography>
+            );
+        }
+    }
+}
+>>>>>>> frontend

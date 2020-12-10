@@ -8,6 +8,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import axios from 'axios';
 import ChatIcon from '@material-ui/icons/Chat';
 import Chat from './Chat';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 
 var notifications = [{"type": "File Upload", "body": "Upload approval"}, 
                         {"type": "Message", "body": "Message notification"},
@@ -97,6 +99,7 @@ function Navbar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
+  let widgetNum = props.widgetNum;
   
   const handleAccountClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -124,6 +127,17 @@ function Navbar(props) {
           <Typography color="secondary" align="left" variant="h6" className={classes.title}>
             instructED
           </Typography>
+          <IconButton
+            color="secondary"
+            onClick={props.removeWidgetClick} >
+            <RemoveIcon />
+          </IconButton>
+          <IconButton
+            color="secondary"
+            onClick={props.addWidgetClick}
+            className={classes.menuButton} >
+            <AddIcon />
+          </IconButton>
           <Switch
             checked={props.darkState}
             onChange={props.handleThemeChange}

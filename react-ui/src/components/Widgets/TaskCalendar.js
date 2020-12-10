@@ -5,6 +5,7 @@ import { List, ListItemText, Paper, IconButton, Drawer, Divider, ListItem, Typog
 import CloseIcon from '@material-ui/icons/Close';
 import axios from 'axios';
 import moment from 'moment';
+import './styles/Calendar.css';
 
 const drawerWidth = 250;
 
@@ -28,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   dialog: {
     padding: theme.spacing(3),
     height: "100vh",
-  }
+  },
 }));
 
 function AssignmentDialog({dateSelected, open, setOpen}) {
@@ -87,7 +88,6 @@ function AssignmentDialog({dateSelected, open, setOpen}) {
 export default function TaskCalendar() {
   const [date, setDate] = useState(new Date(Date.now()));
   const [open, setOpen] = React.useState(false);
-
 
   //const onChange = date => {
     //setDate(date);

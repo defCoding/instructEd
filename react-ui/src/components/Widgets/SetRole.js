@@ -5,7 +5,8 @@ import axios from 'axios';
 
 const useStyle = makeStyles(theme => ({
   items: {
-    margin: theme.spacing(1)
+    margin: theme.spacing(1),
+    paddingRight: theme.spacing(2)
   },
   root: {
     '& .MuiFormControl-root': {
@@ -47,9 +48,9 @@ export default function SetRole() {
       <form>
         <Grid height="100%" spacing={1}>
           <Grid item xs="12">
-            <TextField required color="secondary" variant="outlined" label="User ID" name="userID" className={classes.items} onChange={handleInputChange} />
+            <TextField required color="secondary" variant="outlined" label="User ID" name="userID" className={classes.items} onChange={handleInputChange} fullWidth/>
           </Grid>
-          <FormControl color="secondary" variant="outlined" className={classes.items}>
+          <FormControl color="secondary" variant="outlined" className={classes.items} fullWidth>
             <InputLabel id="demo-simple-select-outlined-label">Role</InputLabel>
             <Select
               color="secondary"

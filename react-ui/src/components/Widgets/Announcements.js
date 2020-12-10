@@ -49,40 +49,46 @@ export default function Announcements(props) {
         setAnnouncements(announcementsRef.current);
     }
 
+  if (announcements.length > 0) {
     return (
-        <List style={{maxHeight: '300px', overflow: 'auto'}}>
-            {announcements.map((announcement) => {
-                const title = announcement.course_name + ": " + announcement.announcement_name;
-                let date = moment(announcement.date_created).local();
-                date = date.format('MM-DD-YY h:mm A');
+      <List style={{maxHeight: '300px', overflow: 'auto'}}>
+      {announcements.map((announcement) => {
+        const title = announcement.course_name + ": " + announcement.announcement_name;
+        let date = moment(announcement.date_created).local();
+        date = date.format('MM-DD-YY h:mm A');
 
-                return (
-                <>
-                  <ListItem button style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', borderBottom: '1px solid #e0e0e0'}}
-                  onClick={() => {
-                      if (announcement === selectedAnnouncement) {
-                          setSelectedAnnouncement(undefined);
-                      } else {
-                          setSelectedAnnouncement(announcement)
-                      }
-                  }}>
-                        <ListItemText disableTypography primary={<Typography variant='h7' style={{ fontWeight: 'bold' }}>
-                        {title}
-                        </Typography>}
-                        secondary={
-                            <Typography style={{ color: 'grey' }}>
-                            {date}
-                            </Typography>
-                    } />
-                        <ListItemText primary={
-                        selectedAnnouncement && selectedAnnouncement === announcement ? 
-                        (announcement.announcement_description) :
-                        (announcement.announcement_description.slice(0, 80) + (announcement.announcement_description.length > 80 ? '...' : '')) 
-                        } />
-                    </ListItem>
-                </>
-                );
-            })}
-        </List>
+        return (
+          <>
+          <ListItem button style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', borderBottom: '1px solid #e0e0e0'}}
+          onClick={() => {
+            if (announcement === selectedAnnouncement) {
+              setSelectedAnnouncement(undefined);
+            } else {
+              setSelectedAnnouncement(announcement)
+            }
+          }}>
+          <ListItemText disableTypography primary={<Typography variant='h7' style={{ fontWeight: 'bold' }}>
+            {title}
+            </Typography>}
+          secondary={
+            <Typography style={{ color: 'grey' }}>
+            {date}
+            </Typography>
+          } />
+          <ListItemText primary={
+            selectedAnnouncement && selectedAnnouncement === announcement ? 
+            (announcement.announcement_description) :
+            (announcement.announcement_description.slice(0, 80) + (announcement.announcement_description.length > 80 ? '...' : '')) 
+          } />
+          </ListItem>
+          </>
+        );
+      })}
+      </List>);
+  } else {
+    return (
+      <Typography variant="body" className={classes.items}>No announcements to display!</Typography>
     );
+  }
+  
 }
