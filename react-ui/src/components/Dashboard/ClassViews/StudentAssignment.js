@@ -86,19 +86,15 @@ function IsSubmitted({submitted, classes, assignmentID}) {
         anchor="bottom">
           <AppBar position="static">
             <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
-              <Tab label="Submission" {...a11yProps(0)} />
+              <Tab label="Grade" {...a11yProps(0)} />
               <Tab label="Comments" {...a11yProps(1)} />
-              <Tab label="Grade" {...a11yProps(2)} />
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0}>
-            <SubmissionTab classes={classes} data={{assignmentID}} />
+            <GradeTab classes={classes} data={{assignmentID}} />
           </TabPanel>
           <TabPanel value={value} index={1}>
             <CommentsTab classes={classes} data={{assignmentID}} />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <GradeTab classes={classes} data={{assignmentID}} />
           </TabPanel>
       </Drawer>
     );

@@ -8,10 +8,7 @@ export default function CommentsTab(props) {
     <Box height={200}>
       <Grid container height="100%" spacing={1}>
         <Grid item xs={12}>
-          <Typography className={classes.panelItems}>Comments</Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography className={classes.panelItems}>Comments from professor on grade here.</Typography>
+          <Typography className={classes.panelItems} variant="h5">No comments to display</Typography>
         </Grid>
       </Grid>
     </Box>

@@ -11,7 +11,7 @@ export default function SubmissionTab(props) {
           <Typography className={classes.panelItems}>Submission</Typography>
         </Grid>
         <Grid item xs={12}>
-          <Typography className={classes.panelItems}>Uploaded files or text submission</Typography>
+          <Typography className={classes.panelItems}></Typography>
         </Grid>
       </Grid>
     </Box>

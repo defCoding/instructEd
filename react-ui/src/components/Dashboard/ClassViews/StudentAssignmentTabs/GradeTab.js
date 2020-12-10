@@ -28,10 +28,7 @@ export default function GradeTab(props) {
     <Box height={200}>
       <Grid container height="100%" spacing={1}>
         <Grid item xs={12}>
-          <Typography className={classes.panelItems}>Grade</Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h2" className={classes.panelItems}>{grade}</Typography>
+          <Typography variant="h5" className={classes.panelItems}>{grade}</Typography>
         </Grid>
       </Grid>
     </Box>
