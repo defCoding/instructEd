@@ -40,6 +40,15 @@ export default function ConversationsProvider({ user, courseID, children }) {
                         c = res.data;
                     }
 
+                    regC = c.filter(convo => convo.recipients.length <= 2);
+                    courseC = c.find(convo => convo.recipients.length > 2);
+
+                    if (courseC) {
+                        c = [courseC, ...regC];
+                    } else {
+                        c = regC;
+                    }
+
                     // Set online status
                     c = await Promise.all(c.map(async conversation => {
                         let recipients = await Promise.all(conversation.recipients.map(async r => {
