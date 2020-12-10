@@ -71,19 +71,25 @@ export default function LecturePanel({courseID}) {
         </Typography>
         <List>
         {lectureList.map((file) => (
+          <>
           <ListItem button key={file.file_name} onClick={() => {
-            setOpen(true);
-            setSelectedLecture(file);
+            if (selectedLecture && selectedLecture.file_name == file.file_name) {
+              setOpen(false);
+              setSelectedLecture(null);
+            } else {
+              setOpen(true);
+              setSelectedLecture(file);
+            }
           }}>
             <Typography color='secondary'>{file.file_name}</Typography>
           </ListItem>
+          {selectedLecture && selectedLecture.file_name==file.file_name && open && <VideoPlayer videoFile={selectedLecture} />}
+          </>
         ))}
         </List>
       </Paper>
-      <VideoPlayer open={open} setOpen={setOpen} videoFile={selectedLecture}/>
     </>
-    );
-
+    )
   }
   else if(role == 1){
 
