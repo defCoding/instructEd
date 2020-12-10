@@ -17,26 +17,29 @@ import CloseIcon from '@material-ui/icons/Close';
 const ITEM_HEIGHT = 50;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  appBar: {
+    width: '100%',
+    display: 'flex',
   },
-  menuButton: {
-    marginRight: theme.spacing(3),
+  root: {
+    width: '100%',
+  },
+  crossButton: {
+    marginLeft: theme.spacing(-2),
+  },
+  fullScreenButton: {
+    marginLeft: theme.spacing(-0.5),
+    marginRight: theme.spacing(-1.25),
   },
   dialog: {
     padding: theme.spacing(3),
     height: "100vh",
-  },
-  appBar: {
-    position: 'relative',
   },
   allWidgets: {
     padding: theme.spacing(1),
   },
   // necessary for content to be below app bar
   toolbar: theme.mixins.toolbar,
-  title: {
-    flexGrow: 1,
-  }
 }));
 
 function WidgetSelect({currentWidget}) {
@@ -117,12 +120,18 @@ export default function WidgetCase({currentRoleWidgets, currentWidget, removeWid
   return (
     <Paper className={classes.root}>
       <div>
-        <AppBar position="static">
+        <AppBar position="static" className={classes.appBar}>
           <Toolbar variant="dense">
+            <IconButton
+              color="secondary"
+              onClick={() => removeWidgetClick(currentWidgetPosn)}
+              className={classes.crossButton}>
+                <CloseIcon />
+            </IconButton>
             <IconButton 
               color="secondary"
-              edge="end"
-              onClick={() => setOpenDialog(true)}>
+              onClick={() => setOpenDialog(true)}
+              className={classes.fullScreenButton}>
               <FullscreenIcon />
             </IconButton>
             <IconButton
@@ -155,31 +164,26 @@ export default function WidgetCase({currentRoleWidgets, currentWidget, removeWid
                 </MenuItem>
               ))}
             </Menu>
-            <Typography align="right" variant="h6" color="inherit">
+            <Typography align="right" variant="h6" color="secondary">
               {currentWidgetName}
             </Typography>
-            <IconButton
-              color="secondary"
-              className={classes.title}
-              onClick={() => removeWidgetClick(currentWidgetPosn)}>
-              <CloseIcon />
-            </IconButton>
           </Toolbar>
         </AppBar>
       </div>
       <WidgetSelect currentWidget={currentWidgetName} />
-      <Dialog fullScreen open={openDialog} onClose={() => setOpenDialog(false)}>
+      <Dialog fullScreen className={classes.root} open={openDialog} onClose={() => setOpenDialog(false)}>
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
             <IconButton edge="start" color="inherit" onClick={() => setOpenDialog(false)} aria-label="close">
               <CloseIcon />
             </IconButton>
-            <Typography variant="h6" className={classes.title}>
+            <Typography variant="h6" color="secondary">
               {currentWidgetName}
             </Typography>
           </Toolbar>
         </AppBar>
-        <Paper style={{ height: "100vh" }}>
+        <div className={classes.toolbar} />
+        <Paper>
           <WidgetSelect currentWidget={currentWidgetName} className={classes.allWidgets} />
         </Paper>
       </Dialog>

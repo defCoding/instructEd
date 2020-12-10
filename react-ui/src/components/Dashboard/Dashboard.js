@@ -49,7 +49,6 @@ export default function Dashboard(props) {
     initialWidgets.push({posn: i, name: currentRoleWidgets[i]});
   }
 
-
   const [openWidgets, setOpenWidgets] = useLocalStorage('widgets', initialWidgets);
   const coursesRef = useRef([]);
 
@@ -73,15 +72,14 @@ export default function Dashboard(props) {
     setOpenWidgets(firstHalf.concat(lastHalf));
   }
 
-  function updateWidgetClick(newName, posn) {
-    console.log(newName);
-    var newWidgetList = openWidgets;
-    newWidgetList.map(widget => {
-      if (widget.posn === posn) {
-        widget.name = newName;
-      }
-    })
-    setOpenWidgets(newWidgetList);
+  function updateWidgetClick(name, posn) {
+
+    var oldFirstHalf = openWidgets.slice(0, posn);
+    var newWidget = [{posn, name}];
+    var firstHalf = oldFirstHalf.concat(newWidget);
+    var lastHalf = openWidgets.slice(posn + 1, openWidgets.length);
+
+    setOpenWidgets(firstHalf.concat(lastHalf));
   }
 
   function getCoursesFromResponse(res) {
@@ -135,7 +133,7 @@ export default function Dashboard(props) {
       <Navbar darkState={props.darkState} handleThemeChange={props.handleThemeChange} addWidgetClick={addWidgetClick} />
       <div className={classes.toolbar} />
       <UserDrawer courses={courses}/>
-      <WidgetView currentRoleWidgets={currentRoleWidgets} darkState={props.darkState} removeWidgetClick={removeWidgetClick} openWidgets={openWidgets} updateWidgetClick={updateWidgetClick}/>
+      <WidgetView currentRoleWidgets={currentRoleWidgets} darkState={props.darkState} addWidgetClick={addWidgetClick} removeWidgetClick={removeWidgetClick} openWidgets={openWidgets} updateWidgetClick={updateWidgetClick}/>
     </Paper>
   );
 }
