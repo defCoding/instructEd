@@ -24,7 +24,7 @@ export default function ConversationsProvider({ user, courseID, children }) {
 
                     res = await axios.get(`/courses/${courseID}/people`);
                     let people = res.data;
-                    if (people.length > c.length) {
+                    if (people.length - 1 > c.length) {
                         people = people.filter(p => p.id != user.id);
 
                         const recipients = people.map(p => p.id);

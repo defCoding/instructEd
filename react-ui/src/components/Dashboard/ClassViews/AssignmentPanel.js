@@ -31,7 +31,7 @@ function GetAssignmentList(props) {
   if (props.searchValue === '') {
     return (
       <List>
-        {props.assignmentList.map(assignment => {
+        {props.assignmentList.reverse().map(assignment => {
         let date = moment(assignment.deadline).local();
         date = date.format('[Due on] MM-DD-YY [at] h:mm A');
         

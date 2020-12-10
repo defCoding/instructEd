@@ -50,25 +50,7 @@ export default function UpcomingAssignments() {
             }
         </List>
     );
-||||||| 75a835f
-    return (
-        <List>
-            {
-                assignments.map((assignment) => {
-                    let assignmentdate = moment(assignment.deadline).local();
-                    assignmentdate = assignmentdate.format('[Due on] MM-DD-YY [at] h:mm A');
-
-                    return (<>
-                        <ListItem>
-                            <ListItemText primary={assignment.assignment_name} secondary={assignmentdate} />
-                        </ListItem>
-                        <Divider />
-                    </>);
-                })
-            }
-        </List>
-    );
-=======
+||||||| 9b94ef8
     {
         if (assignments.length > 0) {
             return (
@@ -77,23 +59,15 @@ export default function UpcomingAssignments() {
                     assignments.map((assignment) => {
                         let assignmentdate = moment(assignment.deadline).local();
                         assignmentdate = assignmentdate.format('[Due on] MM-DD-YY [at] h:mm A');
+=======
+    {
+        if (assignments.length > 0) {
+            return (
+                <List>
+                {
+                    assignments.reverse().map((assignment) => {
+                        let assignmentdate = moment(assignment.deadline).local();
+                        assignmentdate = assignmentdate.format('[Due on] MM-DD-YY [at] h:mm A');
 >>>>>>> frontend
     
-                        return (<>
-                            <ListItem>
-                                <ListItemText primary={assignment.assignment_name} secondary={assignmentdate} />
-                            </ListItem>
-                            <Divider />
-                        </>);
-                    })
-                }
-                </List>
-            );
-        }
-        else {
-            return (
-                <Typography variant="body" className={classes.items}>No assignments to display!</Typography>
-            );
-        }
-    }
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Paper, TextField, Grid, Button, IconButton, Menu, MenuItem, Typography, Toolbar } from '@material-ui/core';
+import { FormControl, InputLabel, Select, Paper, TextField, Grid, Button, IconButton, Menu, MenuItem, Typography, Toolbar } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
@@ -9,7 +9,9 @@ const ITEM_HEIGHT = 50;
 const useStyle = makeStyles(theme => ({
   items: {
     margin:theme.spacing(1),
+    paddingRight: theme.spacing(2)
   },
+  /*
   root: {
     '& .MuiFormControl-root': {
       width:'75%',
@@ -17,11 +19,12 @@ const useStyle = makeStyles(theme => ({
       display:'flex'
     }
   },
+  */
 }))
 
 export default function CreateAnnouncement() {
   const classes = useStyle();
-  const noCourse = {course_id: undefined, course_name: 'None', course_term: ''};
+  const noCourse = {course_id: undefined, course_name: 'Select a Course', course_term: ''};
   const [courses, setCourses] = useState([]);
   const [currentCourse, setCurrentCourse] = useState(noCourse);
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -44,6 +47,14 @@ export default function CreateAnnouncement() {
   function handleClose(course) {
     setAnchorEl(null);
     setCurrentCourse(course);
+  }
+
+  const handleCourseChange = (event) => {
+    setCurrentCourse(event.target.value);
+  }
+
+  const getCurrentCourseName = () => {
+    return currentCourse.course_name;
   }
 
   const onClick = (e) => {
@@ -87,47 +98,33 @@ export default function CreateAnnouncement() {
       <form>
         <Grid height="100%" spacing={1} classname={classes.items}>
           <Grid item xs="12">
-            <Toolbar variant="dense">
-              <Menu
-              className={classes.items}
-                id="long-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                open={open}
-                onClose={() => handleClose(noCourse)}
-                PaperProps={{
-                  style: {
-                    maxHeight: ITEM_HEIGHT * 4.5,
-                  },
-                }}>
+          <FormControl color="secondary" variant="outlined" className={classes.items} fullWidth>
+          <InputLabel>Course</InputLabel>
+          <Select
+              color="secondary"
+              displayEmpty={true}
+              onChange={handleCourseChange}
+              value={currentCourse}
+              renderValue={getCurrentCourseName}
+              label="Course"
+              name="course"
+              required
+            >
                 {courses.map((course) => (
                   <MenuItem 
                     key={course.course_name} 
-                    selected={course === currentCourse} 
-                    onClick={() => handleClose(course)}>
+                    value={course}>
                     {course.course_name}
                   </MenuItem>
                 ))}
-              </Menu>
-              <Typography align="right" variant="h6" color="inherit">
-                {currentCourse.course_name}
-              </Typography>
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={handleClick}
-                color="secondary"
-              >
-                <ArrowDropDownIcon />
-              </IconButton>
-            </Toolbar>
+          </Select>
+        </FormControl>
           </Grid>
           <Grid item xs="12">
-            <TextField className={classes.items} color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} />
+            <TextField className={classes.items} color="secondary" variant="outlined" label="Announcement Title" value={values.announcementName} name="announcementName" onChange={handleInputChange} fullWidth/>
           </Grid>
           <Grid item xs="12">
-            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} />
+            <TextField className={classes.items} color="secondary" multiline="true" variant="outlined" label="Description" value={values.description} name="description" onChange={handleInputChange} rows="4" fullWidth/>
           </Grid>
           <Grid item xs="12" classname={classes.items}>
             <Button className={classes.items} variant="contained" color="secondary" onClick={onClick}>Post Announcement</Button>
