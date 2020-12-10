@@ -28,7 +28,7 @@ function GetAnnouncementList(props) {
   if (props.searchValue === '') {
     return (
       <List>
-        {props.announcementList.map(announcement => {
+        {props.announcementList.reverse().map(announcement => {
             let date = moment(announcement.date_created).local();
             date = date.format('MM-DD-YY [at] h:mm A');
 

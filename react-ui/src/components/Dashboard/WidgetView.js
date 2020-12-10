@@ -29,7 +29,7 @@ export default function WidgetView(props) {
     for (i = 0; i < widgetNum; i++) {
       items.push(
       <Grid item sm={12} md={6} maxHeight={300}>
-        <WidgetCase displayWidgets={currentWidgets} widgetPosn={0}/>
+        <WidgetCase displayWidgets={currentWidgets} widgetPosn={0} />
       </Grid>);
     }
     return items;

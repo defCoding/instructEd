@@ -98,6 +98,7 @@ export default function WidgetCase(props) {
   const [openDialog, setOpenDialog] = React.useState(false);
   const open = Boolean(anchorEl);
   const classes = useStyles();
+  const darkState = props.darkState;
   
   useEffect(() => {
     setCurrentWidget(props.displayWidgets[props.widgetPosn]);

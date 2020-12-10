@@ -12,6 +12,7 @@ const adminWidgets = ['Add Course', 'Add User to Class', 'Set Role', 'Unapproved
 const studentWidgets = ['Announcements', 'Assignments', 'Calendar', 'None'];
 const instructorWidgets = ['Announcements', 'Assignments', 'Calendar', 'Create Announcement', 'Create Assignment'];
 let currentRoleWidgets = [];
+let currentOpenWidgets = [];
 
 const useStyles = makeStyles((theme) => ({
   root: {

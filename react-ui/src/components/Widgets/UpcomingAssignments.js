@@ -38,7 +38,7 @@ export default function UpcomingAssignments() {
             return (
                 <List>
                 {
-                    assignments.map((assignment) => {
+                    assignments.reverse().map((assignment) => {
                         let assignmentdate = moment(assignment.deadline).local();
                         assignmentdate = assignmentdate.format('[Due on] MM-DD-YY [at] h:mm A');
     

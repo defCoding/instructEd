@@ -52,7 +52,7 @@ export default function Announcements(props) {
         if (announcements.length > 0) {
             return (
                 <List>
-                {announcements.map((announcement) => {
+                {announcements.reverse().map((announcement) => {
                     const title = announcement.course_name + ": " + announcement.announcement_name;
                     let date = moment(announcement.date_created).local();
                     date = date.format('MM-DD-YY h:mm A');
