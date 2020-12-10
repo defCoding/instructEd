@@ -21,7 +21,6 @@ export default function ConversationsProvider({ user, courseID, children }) {
                 try {
                     let res = await axios.get(`/chat/conversations/${courseID}`)
                     let c = res.data;
-                    console.log(c);
 
                     res = await axios.get(`/courses/${courseID}/people`);
                     let people = res.data;
@@ -29,7 +28,8 @@ export default function ConversationsProvider({ user, courseID, children }) {
                         people = people.filter(p => p.id != user.id);
 
                         const recipients = people.map(p => p.id);
-                        const oldRecipients = c.flatMap(convo => convo.recipients.map(p => p.id));
+                        const fc = c.filter(convo => convo.recipients.length <= 2);
+                        const oldRecipients = fc.flatMap(convo => convo.recipients.map(p => p.id));
                         for (const recipient of recipients) {
                             if (!oldRecipients.includes(recipient)) {
                                 await axios.post('chat/conversations', { recipients: [recipient, user.id], courseID });
