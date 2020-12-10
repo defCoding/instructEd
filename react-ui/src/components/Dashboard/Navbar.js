@@ -99,7 +99,6 @@ function Navbar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
-  let widgetNum = props.widgetNum;
   
   const handleAccountClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -127,11 +126,6 @@ function Navbar(props) {
           <Typography color="secondary" align="left" variant="h6" className={classes.title}>
             instructED
           </Typography>
-          <IconButton
-            color="secondary"
-            onClick={props.removeWidgetClick} >
-            <RemoveIcon />
-          </IconButton>
           <IconButton
             color="secondary"
             onClick={props.addWidgetClick}

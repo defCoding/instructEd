@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, useEffect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Login from './components/LoginAndRegistration/Login'
 import Registration from './components/LoginAndRegistration/Registration';
 import ForgotPassword from './components/LoginAndRegistration/ForgotPassword';
