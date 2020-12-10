@@ -32,7 +32,7 @@ function GetFileList(props) {
         {props.fileList.map((file) => (
           <a href={file.url} target="_blank">
           <ListItem button key={file.file_name}>
-            <Typography color='secondary'>{file.file_name}</Typography>
+            <Typography>{file.file_name}</Typography>
           </ListItem>
           </a>
         ))}
@@ -47,7 +47,7 @@ function GetFileList(props) {
             return (
               <a href={file.url} target="_blank">
               <ListItem button key={file.file_name}>
-                <Typography color='secondary'>{file.file_name}</Typography>
+                <Typography>{file.file_name}</Typography>
               </ListItem>
               </a>
             );

@@ -75,7 +75,7 @@ export default function LecturePanel({courseID}) {
             setOpen(true);
             setSelectedLecture(file);
           }}>
-            <Typography color='secondary'>{file.file_name}</Typography>
+            <Typography>{file.file_name}</Typography>
           </ListItem>
         ))}
         </List>
@@ -105,7 +105,7 @@ export default function LecturePanel({courseID}) {
               setSelectedLecture(file);
             }
           }}>
-            <Typography color='secondary'>{file.file_name}</Typography>
+            <Typography>{file.file_name}</Typography>
           </ListItem>
           {selectedLecture && selectedLecture.file_name==file.file_name && open && <VideoPlayer videoFile={selectedLecture} />}
           </>
