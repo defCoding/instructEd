@@ -40,8 +40,8 @@ export default function ConversationsProvider({ user, courseID, children }) {
                         c = res.data;
                     }
 
-                    regC = c.filter(convo => convo.recipients.length <= 2);
-                    courseC = c.find(convo => convo.recipients.length > 2);
+                    const regC = c.filter(convo => convo.recipients.length <= 2);
+                    const courseC = c.find(convo => convo.recipients.length > 2);
 
                     if (courseC) {
                         c = [courseC, ...regC];
