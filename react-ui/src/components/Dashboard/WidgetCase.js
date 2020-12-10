@@ -2,8 +2,6 @@ import React, { useEffect } from 'react'; import { Paper, IconButton, Menu, Menu
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { makeStyles } from '@material-ui/core/styles';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
-import CloseIcon from '@material-ui/icons/Close';
-
 import Announcements from '../Widgets/Announcements';
 import Calendar from '../Widgets/TaskCalendar';
 import AddCourse from '../Widgets/AddCourse';
@@ -14,21 +12,28 @@ import UpcomingAssignments from '../Widgets/UpcomingAssignments';
 import CreateAssignment from '../Widgets/CreateAssignment';
 import UnapprovedFiles from '../Widgets/UnapprovedFiles';
 import Search from '../Widgets/Search';
+import CloseIcon from '@material-ui/icons/Close';
 
 const ITEM_HEIGHT = 50;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  appBar: {
+    width: '100%',
+    display: 'flex',
   },
-  menuButton: {
-    marginRight: theme.spacing(3),
+  root: {
+    width: '100%',
+  },
+  crossButton: {
+    marginLeft: theme.spacing(-2),
+  },
+  fullScreenButton: {
+    marginLeft: theme.spacing(-0.5),
+    marginRight: theme.spacing(-1.25),
   },
   dialog: {
     padding: theme.spacing(3),
     height: "100vh",
-  },
-  appBar: {
-    position: 'relative',
   },
   allWidgets: {
     padding: theme.spacing(1),
@@ -64,7 +69,7 @@ function WidgetSelect({currentWidget}) {
   }
 }
 
-function WidgetDialog ({currentWidget, openDialog, setOpenDialog}) {
+function WidgetDialog ({currentWidgetName, openDialog, setOpenDialog}) {
   const classes = useStyles();
 
   const handleClose = () => {
@@ -79,48 +84,54 @@ function WidgetDialog ({currentWidget, openDialog, setOpenDialog}) {
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            {currentWidget}
+            {currentWidgetName}
           </Typography>
         </Toolbar>
       </AppBar>
       <Paper className={classes.dialog}>
-        <WidgetSelect currentWidget={currentWidget} />
+        <WidgetSelect currentWidget={currentWidgetName} />
       </Paper>
     </Dialog>
   );
 }
 
-export default function WidgetCase(props) {
-  const options = props.displayWidgets;
-  const [currentWidget, setCurrentWidget] = React.useState(undefined);
+export default function WidgetCase({currentRoleWidgets, currentWidget, removeWidgetClick, updateWidgetClick}) {
+  const currentWidgetPosn = currentWidget.posn;
+  const currentWidgetName = currentWidget.name;
+  //const [currentWidget, setCurrentWidget] = React.useState(undefined);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const open = Boolean(anchorEl);
   const classes = useStyles();
-  const darkState = props.darkState;
-  
+  /*
   useEffect(() => {
     setCurrentWidget(props.displayWidgets[props.widgetPosn]);
   }, [props]);
-
+*/
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
   function handleClose(name) {
     setAnchorEl(null);
-    setCurrentWidget(name);
+    updateWidgetClick(name, currentWidgetPosn);
   }
 
   return (
     <Paper className={classes.root}>
       <div>
-        <AppBar position="static">
+        <AppBar position="static" className={classes.appBar}>
           <Toolbar variant="dense">
+            <IconButton
+              color="secondary"
+              onClick={() => removeWidgetClick(currentWidgetPosn)}
+              className={classes.crossButton}>
+                <CloseIcon />
+            </IconButton>
             <IconButton 
               color="secondary"
-              edge="end"
-              onClick={() => setOpenDialog(true)}>
+              onClick={() => setOpenDialog(true)}
+              className={classes.fullScreenButton}>
               <FullscreenIcon />
             </IconButton>
             <IconButton
@@ -137,42 +148,43 @@ export default function WidgetCase(props) {
               anchorEl={anchorEl}
               keepMounted
               open={open}
-              onClose={() => handleClose('None')}
+              onClose={() => handleClose('Select a widget...')}
               PaperProps={{
                 style: {
                   maxHeight: ITEM_HEIGHT * 4.5,
                 },
               }}
             >
-              {options.map((option) => (
+              {currentRoleWidgets.map((option) => (
                 <MenuItem 
-                  key={option} 
-                  selected={option === currentWidget} 
+                  key={option}
+                  selected={option === currentWidgetName}
                   onClick={() => handleClose(option)}>
                   {option}
                 </MenuItem>
               ))}
             </Menu>
-            <Typography align="right" variant="h6" color="inherit">
-              {currentWidget}
+            <Typography align="right" variant="h6" color="secondary">
+              {currentWidgetName}
             </Typography>
           </Toolbar>
         </AppBar>
       </div>
-      <WidgetSelect currentWidget={currentWidget} />
-      <Dialog fullScreen open={openDialog} onClose={() => setOpenDialog(false)}>
+      <WidgetSelect currentWidget={currentWidgetName} />
+      <Dialog fullScreen className={classes.root} open={openDialog} onClose={() => setOpenDialog(false)}>
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
             <IconButton edge="start" color="inherit" onClick={() => setOpenDialog(false)} aria-label="close">
               <CloseIcon />
             </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              {currentWidget}
+            <Typography variant="h6" color="secondary">
+              {currentWidgetName}
             </Typography>
           </Toolbar>
         </AppBar>
-        <Paper style={{ height: "100vh" }}>
-          <WidgetSelect currentWidget={currentWidget} className={classes.allWidgets} />
+        <div className={classes.toolbar} />
+        <Paper>
+          <WidgetSelect currentWidget={currentWidgetName} className={classes.allWidgets} />
         </Paper>
       </Dialog>
     </Paper>

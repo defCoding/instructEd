@@ -143,8 +143,6 @@ export default function Search() {
         </FormControl>
       </Grid>
       <Grid item xs="12">
-        
-        <Typography className={classes.items}>{filter}</Typography>
       </Grid>
       <Grid item xs="12">
         <DisplaySearchResults filter={filter} searchResults={searchResults} />

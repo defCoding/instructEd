@@ -57,7 +57,7 @@ export default function Chat({ open, setOpen, darkState }) {
           <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
             <CloseIcon />
           </IconButton>
-          <Typography variant="h6" s>
+          <Typography variant="h6">
             Chat
           </Typography>
         </Toolbar>

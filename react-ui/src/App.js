@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, useEffect } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Login from './components/LoginAndRegistration/Login'
 import Registration from './components/LoginAndRegistration/Registration';
 import ForgotPassword from './components/LoginAndRegistration/ForgotPassword';
@@ -13,9 +13,9 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 function App() {
   const [darkState, setDarkState] = useLocalStorage('dark', false);
   const paletteType = darkState ? "dark" : "light";
-  const greenColor = darkState ? '#3E5465' : '#ADEFD1';
-  const blueColor = darkState ? '#171F26' : '#394C5E';
-  const backgroundColor = darkState ? '#263440' : '#F2F4F7';
+  const greenColor = darkState ? '#465F72' : '#ADEFD1';
+  const blueColor = darkState ? '#0F151A' : '#394C5E';
+  const backgroundColor = darkState ? '#2F3E4C' : '#F2F4F7';
   
   console.log(darkState);
 

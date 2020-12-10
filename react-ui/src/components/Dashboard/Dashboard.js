@@ -5,13 +5,13 @@ import UserDrawer from './Drawer';
 import Navbar from './Navbar';
 import WidgetView from './WidgetView';
 import axios from 'axios';
+import useLocalStorage from '../../useLocalStorage';
 
 const drawerWidth = 250;
 
 const adminWidgets = ['Add Course', 'Add User to Class', 'Set Role', 'Unapproved Files', 'Search'];
-const studentWidgets = ['Announcements', 'Assignments', 'Calendar', 'None'];
+const studentWidgets = ['Announcements', 'Assignments', 'Calendar'];
 const instructorWidgets = ['Announcements', 'Assignments', 'Calendar', 'Create Announcement', 'Create Assignment'];
-let currentRoleWidgets = [];
 let currentOpenWidgets = [];
 
 const useStyles = makeStyles((theme) => ({
@@ -41,17 +41,45 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard(props) {
   const classes = useStyles();
-  const [widgetNum, setWidgetNum] = React.useState(2);
   const [courses, setCourses] = useState([]);
   const [currentRoleWidgets, setCurrentRoleWidgets] = useState(studentWidgets);
-  const coursesRef = useRef([]);
 
-  function removeWidgetClick() {
-    setWidgetNum(widgetNum - 1);
+  var initialWidgets = [];
+  for (var i = 0; i < currentRoleWidgets.length; i++) {
+    initialWidgets.push({posn: i, name: currentRoleWidgets[i]});
   }
 
+  const [openWidgets, setOpenWidgets] = useLocalStorage('widgets', initialWidgets);
+  const coursesRef = useRef([]);
+
   function addWidgetClick() {
-    setWidgetNum(widgetNum + 1);
+    var posn;
+    if (openWidgets.length === 0) {
+      posn = 0;
+    }
+    else {
+      posn = openWidgets[openWidgets.length - 1].posn + 1;
+    }
+    var name = currentRoleWidgets[0];
+    var newWidget = [{posn, name}];
+    setOpenWidgets(openWidgets.concat(newWidget));
+  }
+
+  function removeWidgetClick(posn) {
+    var firstHalf = openWidgets.slice(0, posn);
+    var lastHalf = openWidgets.slice(posn + 1, openWidgets.length);
+    lastHalf.map(widget => (widget.posn = widget.posn - 1));
+    setOpenWidgets(firstHalf.concat(lastHalf));
+  }
+
+  function updateWidgetClick(name, posn) {
+
+    var oldFirstHalf = openWidgets.slice(0, posn);
+    var newWidget = [{posn, name}];
+    var firstHalf = oldFirstHalf.concat(newWidget);
+    var lastHalf = openWidgets.slice(posn + 1, openWidgets.length);
+
+    setOpenWidgets(firstHalf.concat(lastHalf));
   }
 
   function getCoursesFromResponse(res) {
@@ -102,10 +130,10 @@ export default function Dashboard(props) {
 
   return (
     <Paper className={classes.root}>
-      <Navbar darkState={props.darkState} handleThemeChange={props.handleThemeChange} addWidgetClick={addWidgetClick} removeWidgetClick={removeWidgetClick} widgetNum={widgetNum} />
+      <Navbar darkState={props.darkState} handleThemeChange={props.handleThemeChange} addWidgetClick={addWidgetClick} />
       <div className={classes.toolbar} />
       <UserDrawer courses={courses}/>
-      <WidgetView displayWidgets={currentRoleWidgets} darkState={props.darkState} widgetNum={widgetNum} />
+      <WidgetView currentRoleWidgets={currentRoleWidgets} darkState={props.darkState} addWidgetClick={addWidgetClick} removeWidgetClick={removeWidgetClick} openWidgets={openWidgets} updateWidgetClick={updateWidgetClick}/>
     </Paper>
   );
 }

@@ -9,12 +9,6 @@ import axios from 'axios';
 import ChatIcon from '@material-ui/icons/Chat';
 import Chat from './Chat';
 import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-
-var notifications = [{"type": "File Upload", "body": "Upload approval"}, 
-                        {"type": "Message", "body": "Message notification"},
-                        {"type": "File Upload", "body": "Upload approval"}, 
-                        {"type": "Message", "body": "Message notification"}];
 
 const drawerWidth = 250;
 
@@ -31,33 +25,6 @@ const useStyles = makeStyles((theme) => ({
   },
   notificationButton: {
     margin: theme.spacing(2),
-  },
-  search: {
-    margin: theme.spacing(2),
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: 'auto',
-    },
-  },
-  searchIcon: {
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  inputRoot: {
-    color: 'inherit',
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -99,7 +66,6 @@ function Navbar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [open, setOpen] = React.useState(false);
-  let widgetNum = props.widgetNum;
   
   const handleAccountClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -127,11 +93,6 @@ function Navbar(props) {
           <Typography color="secondary" align="left" variant="h6" className={classes.title}>
             instructED
           </Typography>
-          <IconButton
-            color="secondary"
-            onClick={props.removeWidgetClick} >
-            <RemoveIcon />
-          </IconButton>
           <IconButton
             color="secondary"
             onClick={props.addWidgetClick}
